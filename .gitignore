@@ -1,0 +1,10 @@
+*.swp
+*.aux
+*.lof
+*.log
+*.lot
+*.pdf
+*.toc
+.DS_Store
+._.*
+._*
