@@ -1,1 +1,13 @@
+#-------------------------------
+# Generates pdf without images:
+#-------------------------------
+
 pdflatex plantilla_tfc.tex
+
+#----------------------------
+# Generates pdf with images:
+#----------------------------
+
+latex plantilla_tfc.tex
+dvips -Ppdf plantilla_tfc.dvi
+ps2pdf plantilla_tfc.ps
