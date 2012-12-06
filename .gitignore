@@ -5,6 +5,8 @@
 *.lot
 *.pdf
 *.toc
+*.dvi
+*.ps
 .DS_Store
 ._.*
 ._*
