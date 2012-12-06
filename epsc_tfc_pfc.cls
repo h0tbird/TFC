@@ -67,8 +67,8 @@
 %\CurrentOption
 
 %% EXECUTION OF OPTIONS
-% default options if not specified 
-\ExecuteOptions{twoside,final}  
+% default options if not specified
+\ExecuteOptions{twoside,final}
 
 \ProcessOptions
 
@@ -83,7 +83,7 @@
 %%% FancyHeadings and  Calc packages are required
 \RequirePackage{fancyhdr}
 \RequirePackage{calc}
-\RequirePackage[dvips]{graphics}                
+\RequirePackage[dvips]{graphics}
 \RequirePackage{epsfig}
 \RequirePackage{graphicx}
 \RequirePackage{tocloft}  %% controls typografic design of the TOC, LOF etc...
@@ -118,7 +118,7 @@
 %% PAGE LAYOUT                                                                              %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% NOTE!!: All margin dimensions are measured from a point one inch from top and side of page.  
+% NOTE!!: All margin dimensions are measured from a point one inch from top and side of page.
 
 % HORIZONTAL SPACING
 %%%%%%%%%%%%%%%%%%%%
@@ -142,7 +142,7 @@
 % Top of page:
 \setlength{\headheight}{1\baselineskip}  %    Height of box containing running head.
 \setlength{\headsep}{8mm}                %    Space between running head and text.
-\setlength{\topmargin}{-0.04cm - \headheight - \headsep}          
+\setlength{\topmargin}{-0.04cm - \headheight - \headsep}
                                          %    Nominal distance from top of page to top of box containing running head.
 % Bottom of page:
 \setlength{\footskip}{25mm}       %    Distance from baseline of box containing foot to baseline of last line of text.
@@ -150,7 +150,7 @@
 % DIMENSION OF TEXT
 %%%%%%%%%%%%%%%%%%%
 
-\setlength{\textheight}{24.6cm}    % \textheight is the height of text 
+\setlength{\textheight}{24.6cm}    % \textheight is the height of text
                                    %(including footnotes and figures, excluding running head and foot).
 \setlength{\textwidth}{15cm}       % Width of text line.
 
@@ -160,9 +160,9 @@
 
 % FOOTNOTES
 %%%%%%%%%%%
-\setlength{\footnotesep}{8.4pt}    % Height of strut placed at the beginning of every footnote = 
+\setlength{\footnotesep}{8.4pt}    % Height of strut placed at the beginning of every footnote =
                                    % height of normal \footnotesize strut, so no extra space between footnotes.
-%%\skip\footins 10.8pt plus 4pt minus 2pt  % Space between last line of text and 
+%%\skip\footins 10.8pt plus 4pt minus 2pt  % Space between last line of text and
                                          % top of first footnote.
 
 % FLOATS: (a float is something like a figure or table)
@@ -180,13 +180,13 @@
 
 %  FOR FLOATS ON A SEPARATE FLOAT PAGE OR COLUMN
 %    ONE-COLUMN MODE OR SINGLE-COLUMN FLOATS IN TWO-COLUMN MODE:
-\setlength{\@fptop}{0pt plus 1fil}      % Stretch at top of float page/column. (Must be 0pt plus ...)          
-\setlength{\@fpsep}{10pt plus 2fil}     % Space between floats on float page/column.       
-\setlength{\@fpbot}{0pt plus 1fil}      % Stretch at bottom of float page/column. (Must be 0pt plus ... )    
+\setlength{\@fptop}{0pt plus 1fil}      % Stretch at top of float page/column. (Must be 0pt plus ...)
+\setlength{\@fpsep}{10pt plus 2fil}     % Space between floats on float page/column.
+\setlength{\@fpbot}{0pt plus 1fil}      % Stretch at bottom of float page/column. (Must be 0pt plus ... )
 %   DOUBLE-COLUMN FLOATS IN TWO-COLUMN MODE.
 \setlength{\@dblfptop}{0pt plus 1fil}   % Stretch at top of float page. (Must be 0pt plus ...)
 \setlength{\@dblfpsep}{10pt plus 2fil}  % Space between floats on float page.
-\setlength{\@dblfpbot}{0pt plus 1fil}   % Stretch at bottom of float page. (Must be 0pt plus ... )     
+\setlength{\@dblfpbot}{0pt plus 1fil}   % Stretch at bottom of float page. (Must be 0pt plus ... )
 
 % MARGINAL NOTES
 %%%%%%%%%%%%%%%%
@@ -293,7 +293,7 @@
     \begin{tabular}{|p{\textwidth}|}
       \hline
       \vspace{0.5em}
-      
+
     }
     {
          \vspace*{\Hoverview} \\
@@ -325,7 +325,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% NEW COMMANDS or MACRO DEFINITIONS                                                        %%   
+%% NEW COMMANDS or MACRO DEFINITIONS                                                        %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Xevi's macros for brackets...
@@ -366,11 +366,11 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% TABLE OF CONTENTS DEFINITION                                                             %%   
+%% TABLE OF CONTENTS DEFINITION                                                             %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \tocloftpagestyle{empty}
-    
+
 %% TOC title configuration
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setlength{\cftbeforetoctitleskip}{0ex}
@@ -396,32 +396,32 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Chapters
-\setlength{\cftbeforechapskip}{2em}   
+\setlength{\cftbeforechapskip}{2em}
 \setlength{\cftchapindent}{0em}
 \setlength{\cftchapnumwidth}{7em}
 \renewcommand{\cftchapleader}{\bfseries\cftsecleader}
 \renewcommand{\cftchapfont}{\large\sffamily\bfseries}
-\renewcommand{\cftchappagefont}{\large\sffamily\bfseries} 
+\renewcommand{\cftchappagefont}{\large\sffamily\bfseries}
 \renewcommand{\cftchappresnum}{\MakeUppercase \@chapapp{} \space}%
 \renewcommand{\cftchapaftersnum}{. \space}%
 %\renewcommand{\cftchapaftersnumb}{}%
 
 %% Sections
-\setlength{\cftbeforesecskip}{1em}   
+\setlength{\cftbeforesecskip}{1em}
 \setlength{\cftsecindent}{0em}
 \setlength{\cftsecnumwidth}{2em}
 \renewcommand{\cftsecfont}{\normalsize\sffamily\bfseries}
-\renewcommand{\cftsecpagefont}{\normalsize\sffamily\bfseries} 
+\renewcommand{\cftsecpagefont}{\normalsize\sffamily\bfseries}
 \renewcommand{\cftsecpresnum}{}%
 \renewcommand{\cftsecaftersnum}{}%
 %\renewcommand{\cftsecaftersnumb}{}%
 
 %% Subsections
-\setlength{\cftbeforesubsecskip}{0.2em}   
+\setlength{\cftbeforesubsecskip}{0.2em}
 \setlength{\cftsubsecindent}{3em}
 \setlength{\cftsubsecnumwidth}{3em}
 \renewcommand{\cftsubsecfont}{\normalsize\sffamily}
-\renewcommand{\cftsubsecpagefont}{\normalsize\sffamily} 
+\renewcommand{\cftsubsecpagefont}{\normalsize\sffamily}
 \renewcommand{\cftsubsecpresnum}{}%
 \renewcommand{\cftsubsecaftersnum}{}%
 %\renewcommand{\cftsecaftersnumb}{}%
@@ -449,18 +449,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% PARAGRAPHING                                                                             %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
+
 \setlength{\parskip}{2ex}          % Extra vertical space between paragraphs (added to \baselineskip)
 \setlength{\parindent}{0em}        % Width of paragraph indentation.
 
-\setlength{\topsep}{0.5ex}         % Extra vertical space, in addition to 
+\setlength{\topsep}{0.5ex}         % Extra vertical space, in addition to
                                    % \parskip, added above and below list and
                                    % paragraphing environments.
-\setlength{\partopsep}{0.5ex}      % Extra vertical space, in addition to 
+\setlength{\partopsep}{0.5ex}      % Extra vertical space, in addition to
                                    % \parskip and \topsep, added when user
                                    % leaves blank line before environment.
 
-\setlength{\itemsep}{1pt}          % Extra vertical space, in addition to 
+\setlength{\itemsep}{1pt}          % Extra vertical space, in addition to
                                    % \parskip, added between list items.
 
 % The following page-breaking penalties are defined
@@ -514,9 +514,9 @@
   \noindent                             % No indentation in this paragraph
   \thispagestyle{fancy}
   \begin{center}                    % Prints chapter name etc...
-    \LARGE\sffamily\bfseries\MakeUppercase 
+    \LARGE\sffamily\bfseries\MakeUppercase
     \@chapapp{} \thechapter . \MakeUppercase{#1} \par\nobreak  %% \@chapapp{} prints ``CHAPTER'' according to selected language
-  \end{center}                     
+  \end{center}
   \vspace{3ex}
 }
 
@@ -536,21 +536,21 @@
 %% SECTIONS HEADINGS
 %%%%%%%%%%%%%%%%%%%%
 
-% \@startsection {NAME}{LEVEL}{INDENT}{BEFORESKIP}{AFTERSKIP}{STYLE} 
+% \@startsection {NAME}{LEVEL}{INDENT}{BEFORESKIP}{AFTERSKIP}{STYLE}
 %            optional * [ALTHEADING]{HEADING}
-%    Generic command to start a section.  
+%    Generic command to start a section.
 %    NAME       : e.g., 'subsection'
 %    LEVEL      : a number, denoting depth of section -- e.g., chapter=1,
 %                 section = 2, etc.  A section number will be printed if
 %                 and only if LEVEL < or = the value of the secnumdepth
 %                 counter.
 %    INDENT     : Indentation of heading from left margin
-%    BEFORESKIP : Absolute value = skip to leave above the heading.  
-%                 If negative, then paragraph indent of text following 
+%    BEFORESKIP : Absolute value = skip to leave above the heading.
+%                 If negative, then paragraph indent of text following
 %                 heading is suppressed.
 %    AFTERSKIP  : if positive, then skip to leave below heading,
 %                       else - skip to leave to right of run-in heading.
-%    STYLE      : commands to set heading style 
+%    STYLE      : commands to set heading style
 %  If '*' missing, then increments the counter.  If it is present, then
 %  there should be no [ALTHEADING] argument.  A sectioning command
 %  is normally defined to \@startsection + its first six arguments.
@@ -603,7 +603,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \DeclareRobustCommand{\changetoapp}{%
-  \setlength{\cftbeforechapskip}{2em}  
+  \setlength{\cftbeforechapskip}{2em}
   \setlength{\cftchapindent}{0em}
   \setlength{\cftchapnumwidth}{7em}
   \renewcommand{\cftchapleader}{\bfseries\cftsecleader}
@@ -616,33 +616,33 @@
 \let\oldappendix\appendix
 
 \renewcommand*{\appendix}{
-  \oldappendix 
+  \oldappendix
   \addtocontents{toc}{\changetoapp}
  % \addtocontents{toc}{\protect\clearpage\par}
 %  \addtocontents{toc}{{\Large\sffamily\bfseries Annexos}\par}
 %  \addtocontents{toc}{\protect\apprule \par}
-  
+
   \addtocontents{lof}{\changetoapp}
 %  \addtocontents{lof}{\protect\clearpage\par}
 %  \addtocontents{lof}{{\Large\sffamily\bfseries Annexos}\par}
  % \addtocontents{lof}{\protect\apprule \par}
 
-  \addtocontents{lot}{\changetoapp} 
+  \addtocontents{lot}{\changetoapp}
 %  \addtocontents{lot}{\protect\clearpage\par}
 %  \addtocontents{lot}{{\Large\sffamily\bfseries Annexos}\par}
 %  \addtocontents{lot}{\protect\apprule \par}
 
 
   \cleardoublepage
-  
+
 }
 
 \newcommand{\senseportada}{
-  \vspace*{\stretch{1}}                
+  \vspace*{\stretch{1}}
   \begin{center}                    % Prints chapter name etc...
     \Huge\sffamily\bfseries AP\`ENDIXS  \par
-  \end{center}                     
-  \vspace*{\stretch{2}}                
+  \end{center}
+  \vspace*{\stretch{2}}
   \thispagestyle{empty}                 % Page style
   \newpage
   \thispagestyle{empty}                 % Page style
