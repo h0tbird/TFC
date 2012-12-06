@@ -216,7 +216,7 @@
 \ifthenelse{\boolean{PFC}}{\begin{center}\Huge\sffamily\bfseries  PROJECTE DE FI DE CARRERA \end{center}  \\[5cm]}{}
 \fbox{\parbox{\textwidth}{
         \vspace{2ex}
-        \ifthenelse{\boolean{TFC}}{{\normalsize\bf\sffamily  T\'ITOL DEL TFC : \titledoc}  \\[2ex]}{}
+        \ifthenelse{\boolean{TFC}}{{\normalsize\bf\sffamily  T\'ITOL: \titledoc}  \\[2ex]}{}
         \ifthenelse{\boolean{PFC}}{{\normalsize\bf\sffamily  T\'ITOL DEL PFC : \titledoc}  \\[2ex]}{}
         {\normalsize\bf\sffamily  TITULACI\'O: \titulacio    }  \\[2ex]
         \ifthenelse{\boolean{ONEauthor}}{{\normalsize\bf\sffamily AUTOR: \authordoc  } \\[2ex]}{}
