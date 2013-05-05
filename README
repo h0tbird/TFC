@@ -1,12 +1,6 @@
-#-------------------------------
-# Generates pdf without images:
-#-------------------------------
-
-pdflatex plantilla_tfc.tex
-
-#----------------------------
-# Generates pdf with images:
-#----------------------------
+#---------------------------------------------
+# Render a pure Encapsulated PostScript (eps)
+#---------------------------------------------
 
 latex plantilla_tfc.tex
 dvips -Ppdf plantilla_tfc.dvi
