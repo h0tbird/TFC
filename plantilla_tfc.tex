@@ -1,12 +1,18 @@
-%----------
-% Formato:
-%----------
-
 \documentclass[a4paper,12pt,spanish,final]{epsc_tfc_pfc}
+
+%-----------
+% Preamble:
+%-----------
+
 \usepackage[spanish,english]{babel}
 \usepackage[latin1]{inputenc}
-\usepackage{amssymb,amsmath, amsfonts}
+\usepackage{amssymb,amsmath,amsfonts}
 \usepackage{array}
+
+%-------------------------------
+% Content is about to commence:
+%-------------------------------
+
 \begin{document}
 \pagestyle{empty}
 \selectlanguage{spanish}
@@ -58,7 +64,7 @@ En el contexto de este trabajo entendemos por \emph{aprovisionamiento de un sist
 
 Aprovisionar un sistema de forma manual puede suponer entre 20 y 30 minutos. La mayor parte del tiempo se invierte esperando y respondiendo al asistente de instalación. Para ello, además, es necesario tener acceso a la entrada y salida estandar del equipo para visualizar e interactuar con el asistente. Típicamente, con un teclado y un monitor o una redirección de los mismos mediante protocolos tipo \emph{Remote Frame Buffer} o \emph{X Window System Core Protocol}.
 
-Aprovisionar de forma manual es un requisito previo a la automatización ya que nos ayuda a entender las dependencias de orden y a identificar las acciones básicas que se deben realiza para conseguir un sistema funcional. Existe, sin embargo, un elemento mucho mas difícil de reemplazar, capaz de explorar el entorno, identificar casuísticas y en definitiva tomar decisiones. El cerebro humano.
+Aprovisionar de forma manual es un requisito previo a la automatización ya que nos ayuda a entender las dependencias de orden y a identificar las acciones básicas que se deben realiza para conseguir un sistema funcional.
 
 No se trata de dar mucha inteligencia al sistema de aprovisionamiento sinó de consensar un modelo sencillo y predictible que resulte eficaz en su funcionamiento y simple de mantener. A lo largo de la etapa de aprovisionado intervienen distintas tecnologías que se complementan entre sí: PXE, DHCP, TFTP, DNS, Kickstart, YUM, KOAN, Libvirt y KVM\@. La solución propuesta, utiliza una herramienta de código abierto llamada \emph{Cobbler} que combina y centraliza la gestión de muchas de las tecnologías mencionadas.
 
@@ -66,23 +72,26 @@ Una vez aprovisionados, los sistemas sirven de base sobre la que podemos despleg
 
 A vista de pájaro el sistema está compuesto por dos grandes bloques funcionales que aglutinan varios servicios; el primer bloque, representado por Cobbler, se encarga de todas las funciones relacionadas con el aprovisionamiento de sistemas. El segundo bloque, representado por Puppet, se encarga de desplegar los servicios y de mantenerlos en el estado deseado.
 
-\begin{figure}[t]
+\begin{figure}[b]
   \centering
-    \includegraphics[scale=0.83]{intro}
-  \caption{A vista de pájaro.}
+    \includegraphics[scale=0.50]{intro}
+      \caption{A vista de pájaro.}
 \end{figure}
 
 \end{intro}
 
 \pagestyle{fancy}
 
-%----------
-% Cobbler:
-%----------
+%----------------
+% Bootstrapping:
+%----------------
 
-\chapter{Cobbler}
-Cobbler is a Linux installation server that allows for rapid setup of network installation environments. It glues together and automates many associated Linux tasks so you do not have to hop between lots of various commands and applications when rolling out new systems, and, in some cases, changing existing ones. It can help with installation, DNS, DHCP, package updates, power management, configuration management orchestration, and much more.
-\section{Tecnologías}
+\chapter{Bootstrapping}
+\section{Pre arranque}
+Al pulsar el botón de encendido en un servidor, se inicia el proceso de pre arranque o 'pre boot sequence'. En el mismo instante en que existe diferencia de potencial, se empiezan a ejecutar una serie de procedimientos basados en hardware que realizan comprobaciones funcionales de la propia electrónica del equipo.
+
+Aquellos componentes electrónicos que dispongan de capacidades POST (Power-On Self Test), ejecutarán sus rutinas como parte de la secuencia de pre arranque. Si se produjera un error en esta fase, se cancelaría la siguiente fase de arranque y se notificaría el hecho mediante señales acústicas, leds o displays, si el equipo dispone de ellos.
+
 \subsection{PXE: Preboot eXecution Environment}
 \subsection{Kickstart}
 \subsection{YUM: Yellowdog Updater Modified}
