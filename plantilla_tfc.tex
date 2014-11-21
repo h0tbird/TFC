@@ -92,11 +92,55 @@ Al pulsar el botón de encendido en un servidor, se inicia el proceso de pre arra
 
 Aquellos componentes electrónicos que dispongan de capacidades POST (Power-On Self Test), ejecutarán sus rutinas como parte de la secuencia de pre arranque. Si se produjera un error en esta fase, se cancelaría la siguiente fase de arranque y se notificaría el hecho mediante señales acústicas, leds o displays, si el equipo dispone de ellos.
 
-\subsection{PXE: Preboot eXecution Environment}
-\subsection{Kickstart}
-\subsection{YUM: Yellowdog Updater Modified}
-\subsection{KOAN: Kickstart Over A Network}
-\section{Aprovisionado}
+\section{Arranque}
+Durante el arranque o 'bootstrapping' se pasa por una serie de fases encadenadas. Cada fase se encarga de preparar el entorno para cargar y ejecutar la siguiente de manera que, en cada fase, se aumentan las funcionalidades y la complejidad del código ejecutado.
+
+La lógica y los datos de las funcionalidades más básicas constituyen el 'firmware' del equipo. Éste se encuentra a salvo en direcciones fijas dentro de chips de memoria persistente (ROM, EPROM, Flash) y suele limitarse a proporcionar servicios a una capa superior de software. La vieja y conocida BIOS (Basic Input/Output System) o la nueva UEFI (Unified Extensible Firmware Interface), son buenos ejemplos de ello.
+
+Una de las funcionalidades del 'firmware' que más nos interesa es la de 'first-stage boot loader' que se ocupa de localizar, recuperar, cargar en memoria y transferir el control de ejecución al software de arranque o 'bootstrap program'.
+
+Ejemplos típicos de aplicaciones que encontramos en la categoría de software de arranque son: LILO, GRUB, Syslinux, PXELinux.0 e incluso podríamos considerar al mismo 'kernel' de Linux en esta categoría. Los cuatro primeros se utilizan como 'second-stage boot loaders' y permiten al usuario gestionar una gran diversidad de opciones de arranque.
+
+LILO, GRUB y Syslinux suelen encontrarse ubicados en el MBR (Master Boot Record) del dispositivo de arranque, pudiendo ser éste un disco duro, un disquete o un DVD. PXELinux.0 es una variante de Syslinux que, a diferencia de los anteriores, se encuentra ubicado en un equipo remoto de la red local.
+
+Puesto que no es lo mismo recuperar el software de arranque desde un MBR que desde un equipo remoto, el 'firmware' que quiera ejecutar 'PXELinux.0', va a tener que implementar una solución específica. A continuación veremos las tecnologías que lo hacen posible.
+
+\section{PXE}
+PXE (Pre-Execution Environment) extiende las funcionalidades del 'firmware' dotándolo de capacidades comunicativas gracias a la inclusión de los protocolos IPv4, UDP, DHCP y TFTP, estos dos últimos con leves modificaciones. Con estas extensiones, el 'firmware' es capaz de localizar, descargar y transferir el control de ejecución al software de arranque 'PXELinux.0', también conocido con el nombre genérico de NBP (Network Bootstrap Program), que se encuentra ubicado en otro equipo de la red local.
+
+De forma resumida, la mecánica del protocolo PXE funciona de la siguiente manera. El cliente inicia el protocolo mediante un broadcast conocido como DHCPDISCOVER que contiene unas extensiones (opciones 128 a 135 del RFC 4578) que identifican la solicitud como procedente de un equipo que implementa el protocolo PXE. En el log del servidor que recive la solicitud podemos ver los siguientes detalles:
+
+Asumiendo que en la red existe un servidor DHCP o un proxy DHCP que también implementa las mismas extensiones del protocolo DHCP, el servidor envía al cliente una lista de servidores de arranque (el servidor redirige al cliente) y el nombre del fichero de arranque que el cliente tiene que descargar (pxelinux.0 en nuestro caso).
+
+A continuación, el cliente utiliza TFTP para descargar el NBP de uno de los servidores de arranque. Finalmente, el 'firmware' del cliente transfiere el control de ejecución a la imagen descargada.
+
+\subsection{PXELinux.0}
+'PXELinux.0' actua como 'Second Stage Boot Loader' permitiendo localizar, descargar y pasar el control de ejecución al 'kernel' de Linux y a su correspondiente 'initramfs' (Initial RAM File System). 'PXELinux.0' comunica al 'kernel' la dirección de memoria en la que ha cargado el 'initramfs'. La ejecución del 'kernel' puede ser parametrizada mediante un fichero de configuración que además, permite definir menús interactivos. El primer fichero que 'PXELinux.0' intenta descargar del servidor 'TFTP' es por tanto, su propio fichero de configuración.
+
+Cada cliente puede disponer de su propio fichero de configuración. El nombre del fichero de cada equipo queda determinado por su direcin MAC o la conversión a hexadecimal de su direción IP. Si no existe fichero alguno con ese nombre, se procede a eliminar un dígito hexadecimal del final del nombre y se repite la búsqueda sucesivamente tal y como se muestra en la siguiente captura:
+
+Si finalmente no se encuentra ninguna configuración se utilizará el fichero por defecto llamado 'default'. Para la realización de este proyecto se ha definido que todos los equipos físicos dispongan de configuración específica y las máquinas virtuales usen la configuración por defecto. Por ejemplo, al equipo físico que realizará funciones de hipervisor se le aplica la siguiente configuración:
+
+Tras descargar el fichero de configuración, 'PXELinux.0' procede a su interpretación. La primera línea (DEFAULT menu.c32) provoca la descarga mediante 'TFTP' de otro binario cuya única función es presentar un menú interactivo en la consola del sistema. El resto del fichero contiene la configuración de dicho menú. Cada elemento seleccionable contiene información necesaria para localizar una pareja de 'kernel' y 'initramfs' así como los parámetros adicionales que se quieran entregar al 'kernel'.
+
+El aspecto del menú que nos presenta 'menu.c32' es el siguiente:
+
+Si pulsamos [Tab] sobre la opción 'Unattended CentOS 7 installation' veremos el correspondiente comando:
+
+Los parámetros que no tienen el prefijo 'inst' serán interpretados directamente por el 'kernel' o por el subsistema 'Dracut'. Los parámetros que si que tienen el prefijo 'inst' van a ser interpretados más adelante por el instalador 'Anaconda'. El parámetro 'BOOTIF' que aparece al final es consequencia de la opción 'IPAPPEND 2' que hemos añadido en la configuración de 'PXELinux.0'. La dirección MAC que aparece, corresponde con la interfície de red que ha iniciado el proceso 'PXE', este valor también será usado por 'Anaconda'.
+
+\subsection{Diagrama de sequencia}
+En el siguiente diagrama de sequencia se pueden apreciar las interacciones que se producen entre el servidor de arranque 'boot01.demo.lan' y el cliente que queremos aprovisionar 'kvm01.demo.lan'.
+
+\section{Dracut}
+Con el 'kernel' y el 'initramfs' ya cargados en memoria, 'PXELinux' entrega el control de ejecución (y la dirección de memoria donde se encuentra el 'initramfs') al 'kernel' de Linux. El 'kernel' se descomprime a sí mismo y extrae el 'initramfs' (que se encuentra en formato 'cpio') dentro del 'rootfs' para, finalmente, transferir el control de ejecución al binario '/init' que ahora se encuentra en la raiz del nuevo 'rootfs'.
+
+En este contexto, 'Dracut' tiene dos roles. Por un lado, es la herramienta que se usa para crear el propio 'initramfs' y por otro lado, es el propio sistema que se encierra dentro del 'initramfs' y que es invocado al ejecutar '/init'. La única tarea del subsistema 'Dracut' es localizar y conmutar al 'rootfs' final.
+
+Normalmente no va a ser necesario crear un 'initramfs' a medida. Sinembargo, uno de los servidores que se han usado para realizar este proyecto necesita soporte específico para una tarjeta de red Nvidia.
+
+En un sistema ya instalado el 'rootfs' final se suele encontrar por norma general, en el disco duro.
+
 \subsection{Físico}
 \subsection{Virtual}
 
