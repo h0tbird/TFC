@@ -54,17 +54,17 @@ Escriure aquí opcionalment la dedicatòria.
 
 \begin{intro}{Introducción}
 
-En el contexto de este trabajo entendemos por \emph{provisionamiento de un sistema} al conjunto de acciones que se deben realizar para disponer de un equipo, ya sea físico o virtual, con un mínimo sistema operativo instanciado y accesible a nivel TCP/IP\@. En el caso de los sistemas físicos, no consideramos las tareas de desempaquetado, ensamblaje, enracado y cableado de los hierros porque se deben realizar en cada centro de datos por un equipo local de operaciones.
+En el contexto de este trabajo entendemos por \emph{aprovisionamiento de un sistema} al conjunto de acciones que se deben realizar para disponer de un equipo, ya sea físico o virtual, con un mínimo sistema operativo instanciado y accesible a nivel TCP/IP\@. En el caso de los sistemas físicos, no consideramos las tareas de desempaquetado, ensamblaje, enracado y cableado de los hierros porque se deben realizar en cada centro de datos por un equipo local de operaciones.
 
-Provisionar un sistema de forma manual puede suponer entre 20 y 30 minutos. La mayor parte del tiempo se invierte esperando y respondiendo al asistente de instalación. Para ello, además, es necesario tener acceso a la entrada y salida estandar del equipo para visualizar e interactuar con el asistente. Típicamente, con un teclado y un monitor o una redirección de los mismos mediante protocolos tipo \emph{Remote Frame Buffer} o \emph{X Window System Core Protocol}.
+Aprovisionar un sistema de forma manual puede suponer entre 20 y 30 minutos. La mayor parte del tiempo se invierte esperando y respondiendo al asistente de instalación. Para ello, además, es necesario tener acceso a la entrada y salida estandar del equipo para visualizar e interactuar con el asistente. Típicamente, con un teclado y un monitor o una redirección de los mismos mediante protocolos tipo \emph{Remote Frame Buffer} o \emph{X Window System Core Protocol}.
 
-Provisionar de forma manual es un requisito previo a la automatización ya que nos ayuda a entender las dependencias de orden y a identificar las acciones básicas que se deben realiza para conseguir un sistema funcional. Existe, sin embargo, un elemento mucho mas difícil de reemplazar, capaz de explorar el entorno, identificar casuísticas y en definitiva tomar decisiones. El cerebro humano.
+Aprovisionar de forma manual es un requisito previo a la automatización ya que nos ayuda a entender las dependencias de orden y a identificar las acciones básicas que se deben realiza para conseguir un sistema funcional. Existe, sin embargo, un elemento mucho mas difícil de reemplazar, capaz de explorar el entorno, identificar casuísticas y en definitiva tomar decisiones. El cerebro humano.
 
-No se trata de dar mucha inteligencia al sistema de provisionamiento sinó de consensar un modelo sencillo y predictible que resulte eficaz en su funcionamiento y simple de mantener. A lo largo de la etapa de provisionado intervienen distintas tecnologías que se complementan entre sí: PXE, DHCP, TFTP, DNS, Kickstart, YUM, KOAN, Libvirt y KVM\@. La solución propuesta, utiliza una herramienta de código abierto llamada \emph{Cobbler} que combina y centraliza la gestión de muchas de las tecnologías mencionadas.
+No se trata de dar mucha inteligencia al sistema de aprovisionamiento sinó de consensar un modelo sencillo y predictible que resulte eficaz en su funcionamiento y simple de mantener. A lo largo de la etapa de aprovisionado intervienen distintas tecnologías que se complementan entre sí: PXE, DHCP, TFTP, DNS, Kickstart, YUM, KOAN, Libvirt y KVM\@. La solución propuesta, utiliza una herramienta de código abierto llamada \emph{Cobbler} que combina y centraliza la gestión de muchas de las tecnologías mencionadas.
 
-Una vez provisionados, los sistemas sirven de base sobre la que podemos desplegar servicios. Los servicios determinan el rol o la razón de ser de cada equipo. Si bien en la fase de provisionado este rol se perfila sutilmente, no es hasta la fase de despliegue, donde se definen con exactitud las funciones de cada equipo y las interrelaciones entre los mismos.
+Una vez aprovisionados, los sistemas sirven de base sobre la que podemos desplegar servicios. Los servicios determinan el rol o la razón de ser de cada equipo. Si bien en la fase de aprovisionado este rol se perfila sutilmente, no es hasta la fase de despliegue, donde se definen con exactitud las funciones de cada equipo y las interrelaciones entre los mismos.
 
-A vista de pájaro el sistema está compuesto por dos grandes bloques funcionales que aglutinan varios servicios; el primer bloque, representado por Cobbler, se encarga de todas las funciones relacionadas con el provisionamiento de sistemas. El segundo bloque, representado por Puppet, se encarga de desplegar los servicios y de mantenerlos en el estado deseado.
+A vista de pájaro el sistema está compuesto por dos grandes bloques funcionales que aglutinan varios servicios; el primer bloque, representado por Cobbler, se encarga de todas las funciones relacionadas con el aprovisionamiento de sistemas. El segundo bloque, representado por Puppet, se encarga de desplegar los servicios y de mantenerlos en el estado deseado.
 
 \begin{figure}[t]
   \centering
@@ -92,7 +92,7 @@ Cobbler is a Linux installation server that allows for rapid setup of network in
 \subsection{Kickstart}
 \subsection{YUM: Yellowdog Updater Modified}
 \subsection{KOAN: Kickstart Over A Network}
-\section{Provisionado}
+\section{Aprovisionado}
 \subsection{Físico}
 \subsection{Virtual}
 
