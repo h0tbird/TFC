@@ -8,6 +8,16 @@
 \usepackage[latin1]{inputenc}
 \usepackage{amssymb,amsmath,amsfonts}
 \usepackage{array}
+\usepackage{listings}
+\usepackage{color}
+
+%---------------------------------
+% Code snippets style definition:
+%---------------------------------
+
+\definecolor{softgray}{RGB}{245,245,245}
+\definecolor{softred}{RGB}{222,55,55}
+\lstdefinestyle{dnsmasq}{basicstyle=\footnotesize,frame=single,backgroundcolor=\color{softgray},escapeinside={(*@}{@*)}}
 
 %-------------------------------
 % Content is about to commence:
@@ -16,7 +26,7 @@
 \begin{document}
 \pagestyle{empty}
 \selectlanguage{spanish}
-\portada
+\portada{}
 
 %----------
 % Resumen:
@@ -45,13 +55,13 @@ Escriure aquí opcionalment la dedicatòria.
 
 \thispagestyle{empty}
 \tableofcontents
-\cleardoublepage
+\cleardoublepage{}
 \thispagestyle{empty}
 \listoffigures
-\cleardoublepage
+\cleardoublepage{}
 \thispagestyle{empty}
 \listoftables
-\cleardoublepage
+\cleardoublepage{}
 \pagestyle{fancy}
 
 %---------------
@@ -109,7 +119,7 @@ Ejemplos típicos de aplicaciones que encontramos en la categoría de software de 
 
 \begin{figure}[h]
   \centering
-    \includegraphics[scale=1]{arranque}
+    \includegraphics[scale=0.9]{arranque}
       \caption{Arranque.}
 \end{figure}
 
@@ -120,9 +130,35 @@ Puesto que no es lo mismo recuperar el software de arranque desde un \emph{MBR} 
 \subsection{PXE}
 \emph{PXE} (\emph{Pre-Execution Environment}) extiende las funcionalidades del \emph{`firmware'} dotándolo de capacidades comunicativas gracias a la inclusión de los protocolos \emph{IPv4}, \emph{UDP}, \emph{DHCP} y \emph{TFTP}, estos dos últimos con leves modificaciones. Con estas extensiones, el \emph{`firmware'} es capaz de localizar, descargar y transferir el control de ejecución al software de arranque \emph{`PXELinux.0'}, también conocido con el nombre genérico de \emph{NBP} (\emph{Network Bootstrap Program}), que se encuentra ubicado en otro equipo de la red local.
 
-De forma resumida, la mecánica del protocolo \emph{PXE} funciona de la siguiente manera. El cliente inicia el protocolo mediante un broadcast conocido como \emph{DHCPDISCOVER} que contiene unas extensiones (opciones 128 a 135 del \emph{RFC} 4578) que identifican la solicitud como procedente de un equipo que implementa el protocolo \emph{PXE}. En el log del servidor que recive la solicitud podemos ver los siguientes detalles:
+De forma resumida, la mecánica del protocolo \emph{PXE} funciona de la siguiente manera. El cliente inicia el protocolo mediante un broadcast conocido como \emph{DHCPDISCOVER} que contiene unas extensiones (opciones 128 a 135 del \emph{RFC} 4578) que identifican la solicitud como procedente de un equipo que implementa el protocolo \emph{PXE}. En el log del servidor que recive la solicitud podemos ver los siguientes detalles:\\
 
-Asumiendo que en la red existe un servidor \emph{DHCP} o un proxy \emph{DHCP} que también implementa las mismas extensiones del protocolo \emph{DHCP}, el servidor envía al cliente una lista de servidores de arranque (el servidor redirige al cliente) y el nombre del fichero de arranque que el cliente tiene que descargar (\emph{pxelinux.0} en nuestro caso).
+\begin{lstlisting}[style=dnsmasq]
+DHCPDISCOVER(eth1) 00:30:1b:a0:6f:cc
+requested options: 1:netmask, 2:time-offset, 3:router, 5, 6:dns-server,
+requested options: 11, 12:hostname, 13:boot-file-size, 15:domain-name,
+requested options: 16:swap-server, 17:root-path, 18:extension-path,
+requested options: 43:vendor-encap, 54:server-identifier, 60:vendor-class,
+requested options: 67:bootfile-name, (*@\textcolor{softred}{128}@*), (*@\textcolor{softred}{129}@*), (*@\textcolor{softred}{130}@*), (*@\textcolor{softred}{131}@*), (*@\textcolor{softred}{132}@*),
+requested options: (*@\textcolor{softred}{133}@*), (*@\textcolor{softred}{134}@*), (*@\textcolor{softred}{135}@*)
+\end{lstlisting}
+
+Asumiendo que en la red existe un servidor \emph{DHCP} o un proxy \emph{DHCP} que también implementa las mismas extensiones del protocolo \emph{DHCP}, el servidor envía al cliente una lista de servidores de arranque (el servidor redirige al cliente) y el nombre del fichero de arranque que el cliente tiene que descargar (\emph{pxelinux.0} en nuestro caso).\\
+
+\begin{lstlisting}[style=dnsmasq]
+dnsmasq-dhcp[15]: DHCPOFFER(eth1) 192.168.1.51 00:30:1b:a0:6f:cc
+dnsmasq-dhcp[15]: (*@\textcolor{softred}{next server: 192.168.1.2}@*)
+dnsmasq-dhcp[15]: sent size:  1 option: 53 message-type  2
+dnsmasq-dhcp[15]: option: 54 server-identifier  192.168.1.2
+dnsmasq-dhcp[15]: option: 51 lease-time  12h
+dnsmasq-dhcp[15]: option: 58 T1  6h
+dnsmasq-dhcp[15]: option: 59 T2  10h30m
+dnsmasq-dhcp[15]: option: 67 (*@\textcolor{softred}{bootfile-name  pxelinux.0}@*)
+dnsmasq-dhcp[15]: option:  1 netmask  255.255.255.0
+dnsmasq-dhcp[15]: option: 28 broadcast  192.168.1.255
+dnsmasq-dhcp[15]: option:  3 router  192.168.1.1
+dnsmasq-dhcp[15]: option:  6 dns-server  192.168.1.2
+dnsmasq-dhcp[15]: available DHCP range: 192.168.1.50 -- 192.168.1.150
+\end{lstlisting}
 
 A continuación, el cliente utiliza \emph{TFTP} para descargar el \emph{NBP} de uno de los servidores de arranque. Finalmente, el \emph{`firmware'} del cliente transfiere el control de ejecución a la imagen descargada.
 
