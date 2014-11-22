@@ -160,12 +160,30 @@ dnsmasq-dhcp[15]: option:  6 dns-server  192.168.1.2
 dnsmasq-dhcp[15]: available DHCP range: 192.168.1.50 -- 192.168.1.150
 \end{lstlisting}
 
-A continuación, el cliente utiliza \emph{TFTP} para descargar el \emph{NBP} de uno de los servidores de arranque. Finalmente, el \emph{`firmware'} del cliente transfiere el control de ejecución a la imagen descargada.
+A continuación, el cliente utiliza \emph{TFTP} para descargar el \emph{NBP} de uno de los servidores de arranque. Finalmente, el \emph{`firmware'} del cliente transfiere el control de ejecución a la imagen descargada.\\
+
+\begin{lstlisting}[style=dnsmasq]
+dnsmasq-tftp[15]: (*@\textcolor{softred}{sent /tftpboot/pxelinux.0 to 192.168.1.51}@*)
+\end{lstlisting}
 
 \subsubsection{PXELinux.0}
 \emph{`PXELinux.0'} actua como \emph{`Second Stage Boot Loader'} permitiendo localizar, descargar y pasar el control de ejecución al \emph{`kernel'} de Linux y a su correspondiente \emph{`initramfs'} (\emph{Initial RAM File System}). \emph{`PXELinux.0'} comunica al \emph{`kernel'} la dirección de memoria en la que ha cargado el \emph{`initramfs'}. La ejecución del \emph{`kernel'} puede ser parametrizada mediante un fichero de configuración que además, permite definir menús interactivos. El primer fichero que \emph{`PXELinux.0'} intenta descargar del servidor \emph{`TFTP'} es por tanto, su propio fichero de configuración.
 
-Cada cliente puede disponer de su propio fichero de configuración. El nombre del fichero de cada equipo queda determinado por su direcin \emph{MAC} o la conversión a hexadecimal de su direción \emph{IP}. Si no existe fichero alguno con ese nombre, se procede a eliminar un dígito hexadecimal del final del nombre y se repite la búsqueda sucesivamente tal y como se muestra en la siguiente captura:
+Cada cliente puede disponer de su propio fichero de configuración. El nombre del fichero de cada equipo queda determinado por su direcin \emph{MAC} o la conversión a hexadecimal de su direción \emph{IP}. Si no existe fichero alguno con ese nombre, se procede a eliminar un dígito hexadecimal del final del nombre y se repite la búsqueda sucesivamente tal y como se muestra en la siguiente captura:\\
+
+\begin{lstlisting}[style=dnsmasq]
+dnsmasq-tftp[15]: file /tftpboot/pxelinux.cfg/01-00-30-1b-a0-6f-cc not found
+dnsmasq-tftp[15]: file /tftpboot/pxelinux.cfg/C0A80233 not found
+dnsmasq-tftp[15]: file /tftpboot/pxelinux.cfg/C0A8023 not found
+dnsmasq-tftp[15]: file /tftpboot/pxelinux.cfg/C0A802 not found
+dnsmasq-tftp[15]: file /tftpboot/pxelinux.cfg/C0A80 not found
+dnsmasq-tftp[15]: file /tftpboot/pxelinux.cfg/C0A8 not found
+dnsmasq-tftp[15]: file /tftpboot/pxelinux.cfg/C0A not found
+dnsmasq-tftp[15]: file /tftpboot/pxelinux.cfg/C0 not found
+dnsmasq-tftp[15]: file /tftpboot/pxelinux.cfg/C not found
+dnsmasq-tftp[15]: (*@\textcolor{softred}{sent /tftpboot/pxelinux.cfg/default to 192.168.1.51}@*)
+dnsmasq-tftp[15]: (*@\textcolor{softred}{sent /tftpboot/menu.c32 to 192.168.1.51}@*)
+\end{lstlisting}
 
 Si finalmente no se encuentra ninguna configuración se utilizará el fichero por defecto llamado \emph{`default'}. Para la realización de este proyecto se ha definido que todos los equipos físicos dispongan de configuración específica y las máquinas virtuales usen la configuración por defecto. Por ejemplo, al equipo físico que realizará funciones de hipervisor se le aplica la siguiente configuración:
 
