@@ -115,7 +115,7 @@ Ejemplos típicos de aplicaciones que encontramos en la categoría de software de 
 
 \emph{LILO}, \emph{GRUB} y \emph{Syslinux} suelen encontrarse ubicados en el \emph{MBR} (\emph{Master Boot Record}) del dispositivo de arranque, pudiendo ser éste un disco duro, un disquete o un \emph{DVD}. \emph{PXELinux.0} es una variante de \emph{Syslinux} que, a diferencia de los anteriores, se encuentra ubicado en un equipo remoto de la red local.
 
-Puesto que no es lo mismo recuperar el software de arranque desde un MBR que desde un equipo remoto, el \emph{`firmware'} que quiera ejecutar \emph{`PXELinux.0'}, va a tener que implementar una solución específica. A continuación veremos las tecnologías que lo hacen posible.
+Puesto que no es lo mismo recuperar el software de arranque desde un \emph{MBR} que desde un equipo remoto, el \emph{`firmware'} que quiera ejecutar \emph{`PXELinux.0'}, va a tener que implementar una solución específica. A continuación veremos las tecnologías que lo hacen posible.
 
 \subsection{PXE}
 \emph{PXE} (\emph{Pre-Execution Environment}) extiende las funcionalidades del \emph{`firmware'} dotándolo de capacidades comunicativas gracias a la inclusión de los protocolos \emph{IPv4}, \emph{UDP}, \emph{DHCP} y \emph{TFTP}, estos dos últimos con leves modificaciones. Con estas extensiones, el \emph{`firmware'} es capaz de localizar, descargar y transferir el control de ejecución al software de arranque \emph{`PXELinux.0'}, también conocido con el nombre genérico de \emph{NBP} (\emph{Network Bootstrap Program}), que se encuentra ubicado en otro equipo de la red local.
@@ -129,29 +129,29 @@ A continuación, el cliente utiliza \emph{TFTP} para descargar el \emph{NBP} de u
 \subsubsection{PXELinux.0}
 \emph{`PXELinux.0'} actua como \emph{`Second Stage Boot Loader'} permitiendo localizar, descargar y pasar el control de ejecución al \emph{`kernel'} de Linux y a su correspondiente \emph{`initramfs'} (\emph{Initial RAM File System}). \emph{`PXELinux.0'} comunica al \emph{`kernel'} la dirección de memoria en la que ha cargado el \emph{`initramfs'}. La ejecución del \emph{`kernel'} puede ser parametrizada mediante un fichero de configuración que además, permite definir menús interactivos. El primer fichero que \emph{`PXELinux.0'} intenta descargar del servidor \emph{`TFTP'} es por tanto, su propio fichero de configuración.
 
-Cada cliente puede disponer de su propio fichero de configuración. El nombre del fichero de cada equipo queda determinado por su direcin MAC o la conversión a hexadecimal de su direción IP. Si no existe fichero alguno con ese nombre, se procede a eliminar un dígito hexadecimal del final del nombre y se repite la búsqueda sucesivamente tal y como se muestra en la siguiente captura:
+Cada cliente puede disponer de su propio fichero de configuración. El nombre del fichero de cada equipo queda determinado por su direcin \emph{MAC} o la conversión a hexadecimal de su direción \emph{IP}. Si no existe fichero alguno con ese nombre, se procede a eliminar un dígito hexadecimal del final del nombre y se repite la búsqueda sucesivamente tal y como se muestra en la siguiente captura:
 
-Si finalmente no se encuentra ninguna configuración se utilizará el fichero por defecto llamado 'default'. Para la realización de este proyecto se ha definido que todos los equipos físicos dispongan de configuración específica y las máquinas virtuales usen la configuración por defecto. Por ejemplo, al equipo físico que realizará funciones de hipervisor se le aplica la siguiente configuración:
+Si finalmente no se encuentra ninguna configuración se utilizará el fichero por defecto llamado \emph{`default'}. Para la realización de este proyecto se ha definido que todos los equipos físicos dispongan de configuración específica y las máquinas virtuales usen la configuración por defecto. Por ejemplo, al equipo físico que realizará funciones de hipervisor se le aplica la siguiente configuración:
 
-Tras descargar el fichero de configuración, 'PXELinux.0' procede a su interpretación. La primera línea (DEFAULT menu.c32) provoca la descarga mediante 'TFTP' de otro binario cuya única función es presentar un menú interactivo en la consola del sistema. El resto del fichero contiene la configuración de dicho menú. Cada elemento seleccionable contiene información necesaria para localizar una pareja de 'kernel' y 'initramfs' así como los parámetros adicionales que se quieran entregar al 'kernel'.
+Tras descargar el fichero de configuración, \emph{`PXELinux.0'} procede a su interpretación. La primera línea (\emph{DEFAULT menu.c32}) provoca la descarga mediante \emph{`TFTP'} de otro binario cuya única función es presentar un menú interactivo en la consola del sistema. El resto del fichero contiene la configuración de dicho menú. Cada elemento seleccionable contiene información necesaria para localizar una pareja de \emph{`kernel'} y \emph{`initramfs'} así como los parámetros adicionales que se quieran entregar al \emph{`kernel'}.
 
-El aspecto del menú que nos presenta 'menu.c32' es el siguiente:
+El aspecto del menú que nos presenta \emph{`menu.c32'} es el siguiente:
 
-Si pulsamos [Tab] sobre la opción 'Unattended CentOS 7 installation' veremos el correspondiente comando:
+Si pulsamos \emph{[Tab]} sobre la opción \emph{`Unattended CentOS 7 installation'} veremos el correspondiente comando:
 
-Los parámetros que no tienen el prefijo 'inst' serán interpretados directamente por el 'kernel' o por el subsistema 'Dracut'. Los parámetros que si que tienen el prefijo 'inst' van a ser interpretados más adelante por el instalador 'Anaconda'. El parámetro 'BOOTIF' que aparece al final es consequencia de la opción 'IPAPPEND 2' que hemos añadido en la configuración de 'PXELinux.0'. La dirección MAC que aparece, corresponde con la interfície de red que ha iniciado el proceso 'PXE', este valor también será usado por 'Anaconda'.
+Los parámetros que no tienen el prefijo \emph{`inst'} serán interpretados directamente por el \emph{`kernel'} o por el subsistema \emph{`Dracut'}. Los parámetros que si que tienen el prefijo \emph{`inst'} van a ser interpretados más adelante por el instalador \emph{`Anaconda'}. El parámetro \emph{`BOOTIF'} que aparece al final es consequencia de la opción \emph{`IPAPPEND 2'} que hemos añadido en la configuración de \emph{`PXELinux.0'}. La dirección \emph{MAC} que aparece, corresponde con la interfície de red que ha iniciado el proceso \emph{`PXE'}, este valor también será usado por \emph{`Anaconda'}.
 
 \subsubsection{Diagrama de sequencia}
-En el siguiente diagrama de sequencia se pueden apreciar las interacciones que se producen entre el servidor de arranque 'boot01.demo.lan' y el cliente que queremos aprovisionar 'kvm01.demo.lan'.
+En el siguiente diagrama de sequencia se pueden apreciar las interacciones que se producen entre el servidor de arranque \emph{`boot01.demo.lan'} y el cliente que queremos aprovisionar \emph{`kvm01.demo.lan'}.
 
 \subsection{Dracut}
-Con el 'kernel' y el 'initramfs' ya cargados en memoria, 'PXELinux' entrega el control de ejecución (y la dirección de memoria donde se encuentra el 'initramfs') al 'kernel' de Linux. El 'kernel' se descomprime a sí mismo y extrae el 'initramfs' (que se encuentra en formato 'cpio') dentro del 'rootfs' para, finalmente, transferir el control de ejecución al binario '/init' que ahora se encuentra en la raiz del nuevo 'rootfs'.
+Con el \emph{`kernel'} y el \emph{`initramfs'} ya cargados en memoria, \emph{`PXELinux'} entrega el control de ejecución (y la dirección de memoria donde se encuentra el \emph{`initramfs'}) al \emph{`kernel'} de Linux. El \emph{`kernel'} se descomprime a sí mismo y extrae el \emph{`initramfs'} (que se encuentra en formato \emph{`cpio'}) dentro del \emph{`rootfs'} para, finalmente, transferir el control de ejecución al binario \emph{`/init'} que ahora se encuentra en la raiz del nuevo \emph{`rootfs'}.
 
-En este contexto, 'Dracut' tiene dos roles. Por un lado, es la herramienta que se usa para crear el propio 'initramfs' y por otro lado, es el propio sistema que se encierra dentro del 'initramfs' y que es invocado al ejecutar '/init'. La única tarea del subsistema 'Dracut' es localizar y conmutar al 'rootfs' final.
+En este contexto, \emph{`Dracut'} tiene dos roles. Por un lado, es la herramienta que se usa para crear el propio \emph{`initramfs'} y por otro lado, es el propio sistema que se encierra dentro del \emph{`initramfs'} y que es invocado al ejecutar \emph{`/init'}. La única tarea del subsistema \emph{`Dracut'} es localizar y conmutar al \emph{`rootfs'} final.
 
-Normalmente no va a ser necesario crear un 'initramfs' a medida. Sinembargo, uno de los servidores que se han usado para realizar este proyecto necesita soporte específico para una tarjeta de red Nvidia.
+Normalmente no va a ser necesario crear un \emph{`initramfs'} a medida. Sinembargo, uno de los servidores que se han usado para realizar este proyecto necesita soporte específico para una tarjeta de red Nvidia.
 
-En un sistema ya instalado el 'rootfs' final se suele encontrar por norma general, en el disco duro.
+En un sistema ya instalado el \emph{`rootfs'} final se suele encontrar por norma general, en el disco duro.
 
 %---------
 % Puppet:
