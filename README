@@ -1,3 +1,10 @@
+#----------------------------------
+# Convert PDF images to EPS images
+#----------------------------------
+
+pdfcrop image.pdf image-temp.pdf
+pdftops image-temp.pdf image.eps
+
 #---------------------------------------------
 # Render a pure Encapsulated PostScript (eps)
 #---------------------------------------------
