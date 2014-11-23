@@ -17,7 +17,7 @@
 
 \definecolor{softgray}{RGB}{245,245,245}
 \definecolor{softred}{RGB}{222,55,55}
-\lstdefinestyle{dnsmasq}{basicstyle=\footnotesize,frame=single,backgroundcolor=\color{softgray},escapeinside={(*@}{@*)}}
+\lstdefinestyle{dnsmasq}{basicstyle=\scriptsize,frame=single,backgroundcolor=\color{softgray},escapeinside={(*@}{@*)}}
 
 %-------------------------------
 % Content is about to commence:
@@ -214,6 +214,26 @@ Tras descargar el fichero de configuración, \emph{`PXELinux.0'} procede a su int
 El aspecto del menú que nos presenta \emph{`menu.c32'} es el siguiente:\\
 
 \begin{lstlisting}[style=dnsmasq]
+                   +----------------------------------------------------------+
+                   |                        Main Menu                         |
+                   +----------------------------------------------------------+
+                   | Boot local hard drive                                    |
+                   | Unattended CentOS 7 installation                         |
+                   |                                                          |
+                   |                                                          |
+                   |                                                          |
+                   |                                                          |
+                   |                                                          |
+                   |                                                          |
+                   |                                                          |
+                   |                                                          |
+                   |                                                          |
+                   |                                                          |
+                   +----------------------------------------------------------+
+
+                                     Press [Tab] to edit options
+
+                                    Automatic boot in 7 seconds...
 \end{lstlisting}
 
 Si pulsamos \emph{[Tab]} sobre la opción \emph{`Unattended CentOS 7 installation'} veremos el correspondiente comando:
