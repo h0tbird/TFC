@@ -185,11 +185,36 @@ dnsmasq-tftp[15]: (*@\textcolor{softred}{sent /tftpboot/pxelinux.cfg/default to 
 dnsmasq-tftp[15]: (*@\textcolor{softred}{sent /tftpboot/menu.c32 to 192.168.1.51}@*)
 \end{lstlisting}
 
-Si finalmente no se encuentra ninguna configuración se utilizará el fichero por defecto llamado \emph{`default'}. Para la realización de este proyecto se ha definido que todos los equipos físicos dispongan de configuración específica y las máquinas virtuales usen la configuración por defecto. Por ejemplo, al equipo físico que realizará funciones de hipervisor se le aplica la siguiente configuración:
+Si finalmente no se encuentra ninguna configuración se utilizará el fichero por defecto llamado \emph{`default'}. Para la realización de este proyecto se ha definido que todos los equipos físicos dispongan de configuración específica y las máquinas virtuales usen la configuración por defecto. Por ejemplo, al equipo físico que realizará funciones de hipervisor se le aplica la siguiente configuración:\\
+
+\begin{lstlisting}[style=dnsmasq]
+DEFAULT menu.c32
+PROMPT 0
+TIMEOUT 100
+ONTIMEOUT local
+
+MENU TITLE Main Menu
+
+LABEL local
+  MENU LABEL Boot local hard drive
+  LOCALBOOT 0
+
+LABEL install
+  MENU LABEL Unattended CentOS 7 installation
+  KERNEL images/centos/7/x86_64/vmlinuz
+  IPAPPEND 2
+  APPEND initrd=images/centos/7/x86_64/initrd.img rd.driver.pre=loop
+         inst.repo=http://repo01.demo.lan/centos/7/os/x86_64/
+         inst.ks=nfs:boot01.demo.lan:/kickstart/kvm.ks
+         inst.geoloc=0 inst.text
+\end{lstlisting}
 
 Tras descargar el fichero de configuración, \emph{`PXELinux.0'} procede a su interpretación. La primera línea (\emph{DEFAULT menu.c32}) provoca la descarga mediante \emph{`TFTP'} de otro binario cuya única función es presentar un menú interactivo en la consola del sistema. El resto del fichero contiene la configuración de dicho menú. Cada elemento seleccionable contiene información necesaria para localizar una pareja de \emph{`kernel'} y \emph{`initramfs'} así como los parámetros adicionales que se quieran entregar al \emph{`kernel'}.
 
-El aspecto del menú que nos presenta \emph{`menu.c32'} es el siguiente:
+El aspecto del menú que nos presenta \emph{`menu.c32'} es el siguiente:\\
+
+\begin{lstlisting}[style=dnsmasq]
+\end{lstlisting}
 
 Si pulsamos \emph{[Tab]} sobre la opción \emph{`Unattended CentOS 7 installation'} veremos el correspondiente comando:
 
