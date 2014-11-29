@@ -85,7 +85,7 @@ A vista de pájaro el sistema está compuesto por dos grandes bloques funcionales 
 \begin{figure}[b]
   \centering
     \includegraphics[scale=0.60]{intro}
-      \caption{A vista de pájaro.}
+      \caption{A vista de pájaro}
 \end{figure}
 
 \end{intro}
@@ -105,7 +105,7 @@ Aquellos componentes electrónicos que dispongan de capacidades \emph{POST} (\emp
 \begin{figure}[h]
   \centering
     \includegraphics[scale=1]{pre_arranque}
-      \caption{Pre arranque.}
+      \caption{Pre arranque}
 \end{figure}
 
 \section{Arranque}
@@ -120,7 +120,7 @@ Ejemplos típicos de aplicaciones que encontramos en la categoría de software de 
 \begin{figure}[h]
   \centering
     \includegraphics[scale=0.9]{arranque}
-      \caption{Arranque.}
+      \caption{Arranque}
 \end{figure}
 
 \emph{LILO}, \emph{GRUB} y \emph{Syslinux} suelen encontrarse ubicados en el \emph{MBR} (\emph{Master Boot Record}) del dispositivo de arranque, pudiendo ser éste un disco duro, un disquete o un \emph{DVD}. \emph{PXELinux.0} es una variante de \emph{Syslinux} que, a diferencia de los anteriores, se encuentra ubicado en un equipo remoto de la red local.
@@ -236,12 +236,15 @@ El aspecto del menú que nos presenta \emph{`menu.c32'} es el siguiente:\\
                                     Automatic boot in 7 seconds...
 \end{lstlisting}
 
-Si pulsamos \emph{[Tab]} sobre la opción \emph{`Unattended CentOS 7 installation'} veremos el correspondiente comando:
+Si pulsamos \emph{[Tab]} sobre la opción \emph{`Unattended CentOS 7 installation'} veremos el correspondiente comando:\\\\
+
+\begin{lstlisting}[style=dnsmasq]
+> images/centos/7/x86_64/vmlinuz initrd=images/centos/7/x86_64/initrd.img rd.driver.pre=loop inst.
+repo=http://repo01.demo.lan/centos/7/os/x86_64/ inst.ks=nfs:boot01.demo.lan:/kickstart/kvm.ks inst
+.geoloc=0 inst.text BOOTIF=01-00-30-1b-a0-6f-cc
+\end{lstlisting}
 
 Los parámetros que no tienen el prefijo \emph{`inst'} serán interpretados directamente por el \emph{`kernel'} o por el subsistema \emph{`Dracut'}. Los parámetros que si que tienen el prefijo \emph{`inst'} van a ser interpretados más adelante por el instalador \emph{`Anaconda'}. El parámetro \emph{`BOOTIF'} que aparece al final es consequencia de la opción \emph{`IPAPPEND 2'} que hemos añadido en la configuración de \emph{`PXELinux.0'}. La dirección \emph{MAC} que aparece, corresponde con la interfície de red que ha iniciado el proceso \emph{`PXE'}, este valor también será usado por \emph{`Anaconda'}.
-
-\subsubsection{Diagrama de sequencia}
-En el siguiente diagrama de sequencia se pueden apreciar las interacciones que se producen entre el servidor de arranque \emph{`boot01.demo.lan'} y el cliente que queremos aprovisionar \emph{`kvm01.demo.lan'}.
 
 \subsection{Dracut}
 Con el \emph{`kernel'} y el \emph{`initramfs'} ya cargados en memoria, \emph{`PXELinux'} entrega el control de ejecución (y la dirección de memoria donde se encuentra el \emph{`initramfs'}) al \emph{`kernel'} de Linux. El \emph{`kernel'} se descomprime a sí mismo y extrae el \emph{`initramfs'} (que se encuentra en formato \emph{`cpio'}) dentro del \emph{`rootfs'} para, finalmente, transferir el control de ejecución al binario \emph{`/init'} que ahora se encuentra en la raiz del nuevo \emph{`rootfs'}.
@@ -251,6 +254,21 @@ En este contexto, \emph{`Dracut'} tiene dos roles. Por un lado, es la herramient
 Normalmente no va a ser necesario crear un \emph{`initramfs'} a medida. Sinembargo, uno de los servidores que se han usado para realizar este proyecto necesita soporte específico para una tarjeta de red Nvidia.
 
 En un sistema ya instalado el \emph{`rootfs'} final se suele encontrar por norma general, en el disco duro.
+
+\section{Instalación}
+
+\subsection{Anaconda}
+
+\section{Diagramas}
+
+\subsection{Diagrama de sequencia}
+En el siguiente diagrama de sequencia se pueden apreciar las interacciones que se producen entre el servidor de arranque \emph{`boot01.demo.lan'} y el cliente que queremos aprovisionar \emph{`kvm01.demo.lan'}.
+
+\begin{figure}[h]
+  \centering
+    \includegraphics[scale=0.65]{bootstrap}
+      \caption{Bootstrapping}
+\end{figure}
 
 %---------
 % Puppet:
