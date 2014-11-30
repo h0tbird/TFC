@@ -111,11 +111,11 @@ Aquellos componentes electrónicos que dispongan de capacidades \emph{POST} (\emp
 \section{Arranque}
 Durante el arranque o \emph{`bootstrapping'} se pasa por una serie de fases encadenadas. Cada fase se encarga de preparar el entorno para cargar y ejecutar la siguiente de manera que, en cada fase, se aumentan las funcionalidades y la complejidad del código ejecutado.
 
-La lógica y los datos de las funcionalidades más básicas constituyen el \emph{`firmware'} del equipo. Éste se encuentra a salvo en direcciones fijas dentro de chips de memoria persistente (\emph{ROM}, \emph{EPROM}, \emph{Flash}) y suele limitarse a proporcionar servicios a una capa superior de software. La vieja y conocida \emph{BIOS} (\emph{Basic Input/Output System}) o la nueva \emph{UEFI} (\emph{Unified Extensible Firmware Interface}), son buenos ejemplos de ello.
+La lógica y los datos de las funcionalidades más básicas constituyen el \emph{firmware} del equipo. Éste se encuentra a salvo en direcciones fijas dentro de chips de memoria persistente (\emph{ROM}, \emph{EPROM}, \emph{Flash}) y suele limitarse a proporcionar servicios a una capa superior de software. La vieja y conocida \emph{BIOS} (\emph{Basic Input/Output System}) o la nueva \emph{UEFI} (\emph{Unified Extensible Firmware Interface}), son buenos ejemplos de ello.
 
-Una de las funcionalidades del \emph{`firmware'} que más nos interesa es la de \emph{`first-stage boot loader'} que se ocupa de localizar, recuperar, cargar en memoria y transferir el control de ejecución al software de arranque o \emph{`bootstrap program'}.
+Una de las funcionalidades del \emph{firmware} que más nos interesa es la de \emph{`first-stage boot loader'} que se ocupa de localizar, recuperar, cargar en memoria y transferir el control de ejecución al software de arranque o \emph{`bootstrap program'}.
 
-Ejemplos típicos de aplicaciones que encontramos en la categoría de software de arranque son: \emph{LILO}, \emph{GRUB}, \emph{Syslinux}, \emph{PXELinux.0} e incluso podríamos considerar al mismo \emph{`kernel'} de Linux en esta categoría. Los cuatro primeros se utilizan como \emph{`second-stage boot loaders'} y permiten al usuario gestionar una gran diversidad de opciones de arranque.
+Ejemplos típicos de aplicaciones que encontramos en la categoría de software de arranque son: \emph{LILO}, \emph{GRUB}, \emph{Syslinux}, \emph{PXELinux.0} e incluso podríamos considerar al mismo \emph{kernel} de Linux en esta categoría. Los cuatro primeros se utilizan como \emph{`second-stage boot loaders'} y permiten al usuario gestionar una gran diversidad de opciones de arranque.
 
 \begin{figure}[h]
   \centering
@@ -125,10 +125,10 @@ Ejemplos típicos de aplicaciones que encontramos en la categoría de software de 
 
 \emph{LILO}, \emph{GRUB} y \emph{Syslinux} suelen encontrarse ubicados en el \emph{MBR} (\emph{Master Boot Record}) del dispositivo de arranque, pudiendo ser éste un disco duro, un disquete o un \emph{DVD}. \emph{PXELinux.0} es una variante de \emph{Syslinux} que, a diferencia de los anteriores, se encuentra ubicado en un equipo remoto de la red local.
 
-Puesto que no es lo mismo recuperar el software de arranque desde un \emph{MBR} que desde un equipo remoto, el \emph{`firmware'} que quiera ejecutar \emph{`PXELinux.0'}, va a tener que implementar una solución específica. A continuación veremos las tecnologías que lo hacen posible.
+Puesto que no es lo mismo recuperar el software de arranque desde un \emph{MBR} que desde un equipo remoto, el \emph{firmware} que quiera ejecutar \emph{PXELinux.0}, va a tener que implementar una solución específica. A continuación veremos las tecnologías que lo hacen posible.
 
 \subsection{PXE}
-\emph{PXE} (\emph{Pre-Execution Environment}) extiende las funcionalidades del \emph{`firmware'} dotándolo de capacidades comunicativas gracias a la inclusión de los protocolos \emph{IPv4}, \emph{UDP}, \emph{DHCP} y \emph{TFTP}, estos dos últimos con leves modificaciones. Con estas extensiones, el \emph{`firmware'} es capaz de localizar, descargar y transferir el control de ejecución al software de arranque \emph{`PXELinux.0'}, también conocido con el nombre genérico de \emph{NBP} (\emph{Network Bootstrap Program}), que se encuentra ubicado en otro equipo de la red local.
+\emph{PXE} (\emph{Pre-Execution Environment}) extiende las funcionalidades del \emph{firmware} dotándolo de capacidades comunicativas gracias a la inclusión de los protocolos \emph{IPv4}, \emph{UDP}, \emph{DHCP} y \emph{TFTP}, estos dos últimos con leves modificaciones. Con estas extensiones, el \emph{firmware} es capaz de localizar, descargar y transferir el control de ejecución al software de arranque \emph{PXELinux.0}, también conocido con el nombre genérico de \emph{NBP} (\emph{Network Bootstrap Program}), que se encuentra ubicado en otro equipo de la red local.
 
 De forma resumida, la mecánica del protocolo \emph{PXE} funciona de la siguiente manera. El cliente inicia el protocolo mediante un broadcast conocido como \emph{DHCPDISCOVER} que contiene unas extensiones (opciones 128 a 135 del \emph{RFC} 4578) que identifican la solicitud como procedente de un equipo que implementa el protocolo \emph{PXE}. En el log del servidor que recive la solicitud podemos ver los siguientes detalles:\\
 
@@ -160,14 +160,14 @@ dnsmasq-dhcp[15]: option:  6 dns-server  192.168.1.2
 dnsmasq-dhcp[15]: available DHCP range: 192.168.1.50 -- 192.168.1.150
 \end{lstlisting}
 
-A continuación, el cliente utiliza \emph{TFTP} para descargar el \emph{NBP} de uno de los servidores de arranque. Finalmente, el \emph{`firmware'} del cliente transfiere el control de ejecución a la imagen descargada.\\
+A continuación, el cliente utiliza \emph{TFTP} para descargar el \emph{NBP} de uno de los servidores de arranque. Finalmente, el \emph{firmware} del cliente transfiere el control de ejecución a la imagen descargada.\\
 
 \begin{lstlisting}[style=dnsmasq]
 dnsmasq-tftp[15]: (*@\textcolor{softred}{sent /tftpboot/pxelinux.0 to 192.168.1.51}@*)
 \end{lstlisting}
 
 \subsubsection{PXELinux.0}
-\emph{`PXELinux.0'} actua como \emph{`Second Stage Boot Loader'} permitiendo localizar, descargar y pasar el control de ejecución al \emph{`kernel'} de Linux y a su correspondiente \emph{`initramfs'} (\emph{Initial RAM File System}). \emph{`PXELinux.0'} comunica al \emph{`kernel'} la dirección de memoria en la que ha cargado el \emph{`initramfs'}. La ejecución del \emph{`kernel'} puede ser parametrizada mediante un fichero de configuración que además, permite definir menús interactivos. El primer fichero que \emph{`PXELinux.0'} intenta descargar del servidor \emph{`TFTP'} es por tanto, su propio fichero de configuración.
+\emph{PXELinux.0} actua como \emph{`Second Stage Boot Loader'} permitiendo localizar, descargar y pasar el control de ejecución al \emph{kernel} de Linux y a su correspondiente \emph{initramfs} (\emph{Initial RAM File System}). \emph{PXELinux.0} comunica al \emph{kernel} la dirección de memoria en la que ha cargado el \emph{initramfs}. La ejecución del \emph{kernel} puede ser parametrizada mediante un fichero de configuración que además, permite definir menús interactivos. El primer fichero que \emph{PXELinux.0} intenta descargar del servidor \emph{TFTP} es por tanto, su propio fichero de configuración.
 
 Cada cliente puede disponer de su propio fichero de configuración. El nombre del fichero de cada equipo queda determinado por su direcin \emph{MAC} o la conversión a hexadecimal de su direción \emph{IP}. Si no existe fichero alguno con ese nombre, se procede a eliminar un dígito hexadecimal del final del nombre y se repite la búsqueda sucesivamente tal y como se muestra en la siguiente captura:\\
 
@@ -185,7 +185,7 @@ dnsmasq-tftp[15]: (*@\textcolor{softred}{sent /tftpboot/pxelinux.cfg/default to 
 dnsmasq-tftp[15]: (*@\textcolor{softred}{sent /tftpboot/menu.c32 to 192.168.1.51}@*)
 \end{lstlisting}
 
-Si finalmente no se encuentra ninguna configuración se utilizará el fichero por defecto llamado \emph{`default'}. Para la realización de este proyecto se ha definido que todos los equipos físicos dispongan de configuración específica y las máquinas virtuales usen la configuración por defecto. Por ejemplo, al equipo físico que realizará funciones de hipervisor se le aplica la siguiente configuración:\\
+Si finalmente no se encuentra ninguna configuración, se utilizará el fichero por defecto llamado \emph{`default'}. Para la realización de este proyecto se ha definido que todos los equipos físicos dispongan de configuración específica y que las máquinas virtuales usen la configuración por defecto. Por ejemplo, al equipo físico que realizará funciones de hipervisor se le aplica la siguiente configuración:\\
 
 \begin{lstlisting}[style=dnsmasq]
 DEFAULT menu.c32
@@ -209,9 +209,9 @@ LABEL install
          inst.geoloc=0 inst.text
 \end{lstlisting}
 
-Tras descargar el fichero de configuración, \emph{`PXELinux.0'} procede a su interpretación. La primera línea (\emph{DEFAULT menu.c32}) provoca la descarga mediante \emph{`TFTP'} de otro binario cuya única función es presentar un menú interactivo en la consola del sistema. El resto del fichero contiene la configuración de dicho menú. Cada elemento seleccionable contiene información necesaria para localizar una pareja de \emph{`kernel'} y \emph{`initramfs'} así como los parámetros adicionales que se quieran entregar al \emph{`kernel'}.
+Tras descargar el fichero de configuración de \emph{PXELinux.0} se procede a su interpretación. La primera línea (\emph{DEFAULT menu.c32}) provoca la descarga mediante \emph{TFTP} de otro binario cuya única función es presentar un menú interactivo en la consola del sistema. El resto del fichero contiene la configuración de dicho menú. Cada elemento seleccionable contiene la información necesaria para localizar a una pareja de \emph{kernel} y \emph{initramfs} así como los parámetros adicionales que se le quieran entregar al \emph{kernel} en el momento de su ejecución.
 
-El aspecto del menú que nos presenta \emph{`menu.c32'} es el siguiente:\\
+El aspecto del menú que nos presenta \emph{menu.c32} es el siguiente:\\
 
 \begin{lstlisting}[style=dnsmasq]
                    +----------------------------------------------------------+
@@ -236,7 +236,7 @@ El aspecto del menú que nos presenta \emph{`menu.c32'} es el siguiente:\\
                                     Automatic boot in 7 seconds...
 \end{lstlisting}
 
-Si pulsamos \emph{[Tab]} sobre la opción \emph{`Unattended CentOS 7 installation'} veremos el correspondiente comando:\\\\
+Si pulsamos \emph{[Tab]} sobre la opción \emph{`Unattended CentOS 7 installation'} podremos editar la línea del comando que se ejecuta al seleccionar esta opción:\\
 
 \begin{lstlisting}[style=dnsmasq]
 > images/centos/7/x86_64/vmlinuz initrd=images/centos/7/x86_64/initrd.img rd.driver.pre=loop inst.
@@ -244,16 +244,32 @@ repo=http://repo01.demo.lan/centos/7/os/x86_64/ inst.ks=nfs:boot01.demo.lan:/kic
 .geoloc=0 inst.text BOOTIF=01-00-30-1b-a0-6f-cc
 \end{lstlisting}
 
-Los parámetros que no tienen el prefijo \emph{`inst'} serán interpretados directamente por el \emph{`kernel'} o por el subsistema \emph{`Dracut'}. Los parámetros que si que tienen el prefijo \emph{`inst'} van a ser interpretados más adelante por el instalador \emph{`Anaconda'}. El parámetro \emph{`BOOTIF'} que aparece al final es consequencia de la opción \emph{`IPAPPEND 2'} que hemos añadido en la configuración de \emph{`PXELinux.0'}. La dirección \emph{MAC} que aparece, corresponde con la interfície de red que ha iniciado el proceso \emph{`PXE'}, este valor también será usado por \emph{`Anaconda'}.
+Los parámetros que no tienen el prefijo \emph{`inst'} serán interpretados directamente por el \emph{kernel} o por el subsistema \emph{Dracut}. Los parámetros que si que tienen el prefijo \emph{`inst'} van a ser interpretados más adelante por el instalador \emph{Anaconda}. El parámetro \emph{BOOTIF} que aparece al final, es consequencia de la opción \emph{IPAPPEND 2} que hemos añadido en la configuración de \emph{PXELinux.0}. La dirección \emph{MAC} que aparece, corresponde con la interfície de red que ha iniciado el proceso \emph{PXE}, este valor también será usado más adelante por \emph{Anaconda}.
 
 \subsection{Dracut}
-Con el \emph{`kernel'} y el \emph{`initramfs'} ya cargados en memoria, \emph{`PXELinux'} entrega el control de ejecución (y la dirección de memoria donde se encuentra el \emph{`initramfs'}) al \emph{`kernel'} de Linux. El \emph{`kernel'} se descomprime a sí mismo y extrae el \emph{`initramfs'} (que se encuentra en formato \emph{`cpio'}) dentro del \emph{`rootfs'} para, finalmente, transferir el control de ejecución al binario \emph{`/init'} que ahora se encuentra en la raiz del nuevo \emph{`rootfs'}.
+Con el \emph{kernel} y el \emph{initramfs} ya cargados en memoria, \emph{PXELinux.0} entrega el control de ejecución, la dirección de memoria donde se encuentra el \emph{initramfs} y los parámetros de arranque al \emph{kernel} de Linux. El \emph{kernel} se descomprime a sí mismo y extrae el \emph{initramfs} (que se encuentra en formato \emph{cpio}) montándolo en \emph{rootfs} para, finalmente, transferir el control de ejecución al binario \emph{/init} que ahora se encuentra en la raiz del nuevo \emph{rootfs}.
 
-En este contexto, \emph{`Dracut'} tiene dos roles. Por un lado, es la herramienta que se usa para crear el propio \emph{`initramfs'} y por otro lado, es el propio sistema que se encierra dentro del \emph{`initramfs'} y que es invocado al ejecutar \emph{`/init'}. La única tarea del subsistema \emph{`Dracut'} es localizar y conmutar al \emph{`rootfs'} final.
+En este contexto \emph{Dracut} tiene dos roles. Por un lado, es la herramienta de línea de comandos que se usa para crear el \emph{initramfs} y por otro lado, es el propio subsistema que se encierra dentro del \emph{initramfs} y que es invocado al ejecutar \emph{/init}. La única tarea del subsistema \emph{Dracut} es localizar, cargar y conmutar a la imagen final de \emph{rootfs} que se usará durante el posterior proceso de instalación.
 
-Normalmente no va a ser necesario crear un \emph{`initramfs'} a medida. Sinembargo, uno de los servidores que se han usado para realizar este proyecto necesita soporte específico para una tarjeta de red Nvidia.
+\subsubsection{Línea de comandos}
+Normalmente no va a ser necesario crear un \emph{initramfs} a medida. Sinembargo, uno de los servidores que se han usado para realizar este proyecto necesita soporte específico para una tarjeta de red \emph{Nvidia}.
+Para generar el nuevo \emph{initramfs} que incorpora el driver obsoleto \emph{forcedeth}, se ha utilizado un contenedor de \emph{Docker} tal y como se muestra a continuación:\\
 
-En un sistema ya instalado el \emph{`rootfs'} final se suele encontrar por norma general, en el disco duro.
+\begin{lstlisting}[style=dnsmasq]
+$ docker run -it --rm -e KVER='3.10.0-123' -v ${PWD}/initramfs:/initramfs h0tbird/centos bash -c "
+sed -i '/exclude/d' /etc/yum.conf && \
+yum clean all && \
+yum -y update && \
+yum install -y kernel-\${KVER}.el7 *dracut* vi tar gzip dd rpcbind nfs-utils \
+http://elrepo.org/linux/elrepo/el7/x86_64/RPMS/kmod-forcedeth-0.64-1.el7.elrepo.x86_64.rpm && \
+depmod \${KVER}.el7.x86_64 && \
+echo loop > /usr/lib/modules-load.d/loop.conf && \
+echo 'options loop max_loop=8' > /usr/lib/modprobe.d/eightloop.conf && \
+dracut -v -m 'anaconda base plymouth kernel-modules' --add-drivers forcedeth \
+-f /initramfs/forcedeth.img --kver \${KVER}.el7.x86_64"
+\end{lstlisting}
+
+Tras ejecutar el comando anterior, aparecerá un nuevo subdirectorio en el directorio actual con el nombre \emph{initramfs}. Dentro se encuentra el \emph{initramfs} que acabamos de generar. Para listar su contenido podemos ejecutar \emph{`lsinitcpio initramfs/forcedeth.img'}.
 
 \section{Instalación}
 
