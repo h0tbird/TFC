@@ -5,7 +5,7 @@
 %-----------
 
 \usepackage[spanish,english]{babel}
-\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage{amssymb,amsmath,amsfonts}
 \usepackage{array}
 \usepackage{listings}
@@ -33,7 +33,7 @@
 %----------
 
 \begin{resum}{16cm}
-Aquesx document contÈ les pautes del format de presentaciÛ del treball o projecte de final de carrera. En tot cas, cal tenir en compte el que estableix la ``Normativa del treball de fi de carrera (TFC) i del projecte de fi de carrera (PFC)'' aprovada per la ComissiÛ Permanent de l'EPSC, especialment l'apartat ``Requeriments del treball''.
+Aquest document cont√© les pautes del format de presentaci√≥ del treball o projecte de final de carrera. En tot cas, cal tenir en compte el que estableix la ``Normativa del treball de fi de carrera (TFC) i del projecte de fi de carrera (PFC)'' aprovada per la Comissi√≥ Permanent de l'EPSC, especialment l'apartat ``Requeriments del treball''.
 \end{resum}
 \selectlanguage{english}
 \begin{overview}{15cm}
@@ -46,7 +46,7 @@ This document contains guidelines for writing your TFC/PFC\@. However, you shoul
 %--------------
 
 \begin{dedicatoria}
-Escriure aquÌ opcionalment la dedicatÚria.
+Escriure aqu√≠ opcionalment la dedicat√≤ria.
 \end{dedicatoria}
 
 %-------------------
@@ -65,27 +65,27 @@ Escriure aquÌ opcionalment la dedicatÚria.
 \pagestyle{fancy}
 
 %---------------
-% IntroducciÛn:
+% Introducci√≥n:
 %---------------
 
-\begin{intro}{IntroducciÛn}
+\begin{intro}{Introducci√≥n}
 
-En el contexto de este trabajo entendemos por \emph{aprovisionamiento de un sistema} al conjunto de acciones que se deben realizar para disponer de un equipo, ya sea fÌsico o virtual, con un mÌnimo sistema operativo instanciado y accesible a nivel TCP/IP\@. En el caso de los sistemas fÌsicos, no consideramos las tareas de desempaquetado, ensamblaje, enracado y cableado de los hierros porque se deben realizar en cada centro de datos por un equipo local de operaciones.
+En el contexto de este trabajo entendemos por \emph{aprovisionamiento de un sistema} al conjunto de acciones que se deben realizar para disponer de un equipo, ya sea f√≠sico o virtual, con un m√≠nimo sistema operativo instanciado y accesible a nivel TCP/IP\@. En el caso de los sistemas f√≠sicos, no consideramos las tareas de desempaquetado, ensamblaje, enracado y cableado de los hierros porque se deben realizar en cada centro de datos por un equipo local de operaciones.
 
-Aprovisionar un sistema de forma manual puede suponer entre 20 y 30 minutos. La mayor parte del tiempo se invierte esperando y respondiendo al asistente de instalaciÛn. Para ello, adem·s, es necesario tener acceso a la entrada y salida estandar del equipo para visualizar e interactuar con el asistente. TÌpicamente, con un teclado y un monitor o una redirecciÛn de los mismos mediante protocolos tipo \emph{Remote Frame Buffer} o \emph{X Window System Core Protocol}.
+Aprovisionar un sistema de forma manual puede suponer entre 20 y 30 minutos. La mayor parte del tiempo se invierte esperando y respondiendo al asistente de instalaci√≥n. Para ello, adem√°s, es necesario tener acceso a la entrada y salida estandar del equipo para visualizar e interactuar con el asistente. T√≠picamente, con un teclado y un monitor o una redirecci√≥n de los mismos mediante protocolos tipo \emph{Remote Frame Buffer} o \emph{X Window System Core Protocol}.
 
-Aprovisionar de forma manual es un requisito previo a la automatizaciÛn ya que nos ayuda a entender las dependencias de orden y a identificar las acciones b·sicas que se deben realiza para conseguir un sistema funcional.
+Aprovisionar de forma manual es un requisito previo a la automatizaci√≥n ya que nos ayuda a entender las dependencias de orden y a identificar las acciones b√°sicas que se deben realiza para conseguir un sistema funcional.
 
-No se trata de dar mucha inteligencia al sistema de aprovisionamiento sinÛ de consensar un modelo sencillo y predictible que resulte eficaz en su funcionamiento y simple de mantener. A lo largo de la etapa de aprovisionado intervienen distintas tecnologÌas que se complementan entre sÌ.
+No se trata de dar mucha inteligencia al sistema de aprovisionamiento sin√≥ de consensar un modelo sencillo y predictible que resulte eficaz en su funcionamiento y simple de mantener. A lo largo de la etapa de aprovisionado intervienen distintas tecnolog√≠as que se complementan entre s√≠.
 
-Una vez aprovisionados, los sistemas sirven de base sobre la que podemos desplegar servicios. Los servicios determinan el rol o la razÛn de ser de cada equipo. Si bien en la fase de aprovisionado este rol se perfila sutilmente, no es hasta la fase de despliegue, donde se definen con exactitud las funciones de cada equipo y las interrelaciones entre los mismos.
+Una vez aprovisionados, los sistemas sirven de base sobre la que podemos desplegar servicios. Los servicios determinan el rol o la raz√≥n de ser de cada equipo. Si bien en la fase de aprovisionado este rol se perfila sutilmente, no es hasta la fase de despliegue, donde se definen con exactitud las funciones de cada equipo y las interrelaciones entre los mismos.
 
-A vista de p·jaro el sistema est· compuesto por dos grandes bloques funcionales que aglutinan varios servicios; el primer bloque, representado por Cobbler, se encarga de todas las funciones relacionadas con el aprovisionamiento de sistemas. El segundo bloque, representado por Puppet, se encarga de desplegar los servicios y de mantenerlos en el estado deseado.
+A vista de p√°jaro el sistema est√° compuesto por dos grandes bloques funcionales que aglutinan varios servicios; el primer bloque, representado por Cobbler, se encarga de todas las funciones relacionadas con el aprovisionamiento de sistemas. El segundo bloque, representado por Puppet, se encarga de desplegar los servicios y de mantenerlos en el estado deseado.
 
 \begin{figure}[b]
   \centering
     \includegraphics[scale=0.60]{intro}
-      \caption{A vista de p·jaro}
+      \caption{A vista de p√°jaro}
 \end{figure}
 
 \end{intro}
@@ -98,9 +98,9 @@ A vista de p·jaro el sistema est· compuesto por dos grandes bloques funcionales 
 
 \chapter{Bootstrapping}
 \section{Pre arranque}
-Al pulsar el botÛn de encendido en un servidor, se inicia el proceso de pre arranque o \emph{`pre boot sequence'}. En el mismo instante en que existe diferencia de potencial, se empiezan a ejecutar una serie de procedimientos basados en hardware que realizan comprobaciones funcionales de la propia electrÛnica del equipo.
+Al pulsar el bot√≥n de encendido en un servidor, se inicia el proceso de pre arranque o \emph{`pre boot sequence'}. En el mismo instante en que existe diferencia de potencial, se empiezan a ejecutar una serie de procedimientos basados en hardware que realizan comprobaciones funcionales de la propia electr√≥nica del equipo.
 
-Aquellos componentes electrÛnicos que dispongan de capacidades \emph{POST} (\emph{Power-On Self Test}), ejecutar·n sus rutinas como parte de la secuencia de pre arranque. Si se produjera un error en esta fase, se cancelarÌa la siguiente fase de arranque y se notificarÌa el hecho mediante seÒales ac˙sticas, leds o displays, si el equipo dispone de ellos.
+Aquellos componentes electr√≥nicos que dispongan de capacidades \emph{POST} (\emph{Power-On Self Test}), ejecutar√°n sus rutinas como parte de la secuencia de pre arranque. Si se produjera un error en esta fase, se cancelar√≠a la siguiente fase de arranque y se notificar√≠a el hecho mediante se√±ales ac√∫sticas, leds o displays, si el equipo dispone de ellos.
 
 \begin{figure}[h]
   \centering
@@ -109,13 +109,13 @@ Aquellos componentes electrÛnicos que dispongan de capacidades \emph{POST} (\emp
 \end{figure}
 
 \section{Arranque}
-Durante el arranque o \emph{`bootstrapping'} se pasa por una serie de fases encadenadas. Cada fase se encarga de preparar el entorno para cargar y ejecutar la siguiente de manera que, en cada fase, se aumentan las funcionalidades y la complejidad del cÛdigo ejecutado.
+Durante el arranque o \emph{`bootstrapping'} se pasa por una serie de fases encadenadas. Cada fase se encarga de preparar el entorno para cargar y ejecutar la siguiente de manera que, en cada fase, se aumentan las funcionalidades y la complejidad del c√≥digo ejecutado.
 
-La lÛgica y los datos de las funcionalidades m·s b·sicas constituyen el \emph{firmware} del equipo. …ste se encuentra a salvo en direcciones fijas dentro de chips de memoria persistente (\emph{ROM}, \emph{EPROM}, \emph{Flash}) y suele limitarse a proporcionar servicios a una capa superior de software. La vieja y conocida \emph{BIOS} (\emph{Basic Input/Output System}) o la nueva \emph{UEFI} (\emph{Unified Extensible Firmware Interface}), son buenos ejemplos de ello.
+La l√≥gica y los datos de las funcionalidades m√°s b√°sicas constituyen el \emph{firmware} del equipo. √âste se encuentra a salvo en direcciones fijas dentro de chips de memoria persistente (\emph{ROM}, \emph{EPROM}, \emph{Flash}) y suele limitarse a proporcionar servicios a una capa superior de software. La vieja y conocida \emph{BIOS} (\emph{Basic Input/Output System}) o la nueva \emph{UEFI} (\emph{Unified Extensible Firmware Interface}), son buenos ejemplos de ello.
 
-Una de las funcionalidades del \emph{firmware} que m·s nos interesa es la de \emph{`first-stage boot loader'} que se ocupa de localizar, recuperar, cargar en memoria y transferir el control de ejecuciÛn al software de arranque o \emph{`bootstrap program'}.
+Una de las funcionalidades del \emph{firmware} que m√°s nos interesa es la de \emph{`first-stage boot loader'} que se ocupa de localizar, recuperar, cargar en memoria y transferir el control de ejecuci√≥n al software de arranque o \emph{`bootstrap program'}.
 
-Ejemplos tÌpicos de aplicaciones que encontramos en la categorÌa de software de arranque son: \emph{LILO}, \emph{GRUB}, \emph{Syslinux}, \emph{PXELinux.0} e incluso podrÌamos considerar al mismo \emph{kernel} de Linux en esta categorÌa. Los cuatro primeros se utilizan como \emph{`second-stage boot loaders'} y permiten al usuario gestionar una gran diversidad de opciones de arranque.
+Ejemplos t√≠picos de aplicaciones que encontramos en la categor√≠a de software de arranque son: \emph{LILO}, \emph{GRUB}, \emph{Syslinux}, \emph{PXELinux.0} e incluso podr√≠amos considerar al mismo \emph{kernel} de Linux en esta categor√≠a. Los cuatro primeros se utilizan como \emph{`second-stage boot loaders'} y permiten al usuario gestionar una gran diversidad de opciones de arranque.
 
 \begin{figure}[h]
   \centering
@@ -123,14 +123,14 @@ Ejemplos tÌpicos de aplicaciones que encontramos en la categorÌa de software de 
       \caption{Arranque}
 \end{figure}
 
-\emph{LILO}, \emph{GRUB} y \emph{Syslinux} suelen encontrarse ubicados en el \emph{MBR} (\emph{Master Boot Record}) del dispositivo de arranque, pudiendo ser Èste un disco duro, un disquete o un \emph{DVD}. \emph{PXELinux.0} es una variante de \emph{Syslinux} que, a diferencia de los anteriores, se encuentra ubicado en un equipo remoto de la red local.
+\emph{LILO}, \emph{GRUB} y \emph{Syslinux} suelen encontrarse ubicados en el \emph{MBR} (\emph{Master Boot Record}) del dispositivo de arranque, pudiendo ser √©ste un disco duro, un disquete o un \emph{DVD}. \emph{PXELinux.0} es una variante de \emph{Syslinux} que, a diferencia de los anteriores, se encuentra ubicado en un equipo remoto de la red local.
 
-Puesto que no es lo mismo recuperar el software de arranque desde un \emph{MBR} que desde un equipo remoto, el \emph{firmware} que quiera ejecutar \emph{PXELinux.0}, va a tener que implementar una soluciÛn especÌfica. A continuaciÛn veremos las tecnologÌas que lo hacen posible.
+Puesto que no es lo mismo recuperar el software de arranque desde un \emph{MBR} que desde un equipo remoto, el \emph{firmware} que quiera ejecutar \emph{PXELinux.0}, va a tener que implementar una soluci√≥n espec√≠fica. A continuaci√≥n veremos las tecnolog√≠as que lo hacen posible.
 
 \subsection{PXE}
-\emph{PXE} (\emph{Pre-Execution Environment}) extiende las funcionalidades del \emph{firmware} dot·ndolo de capacidades comunicativas gracias a la inclusiÛn de los protocolos \emph{IPv4}, \emph{UDP}, \emph{DHCP} y \emph{TFTP}, estos dos ˙ltimos con leves modificaciones. Con estas extensiones, el \emph{firmware} es capaz de localizar, descargar y transferir el control de ejecuciÛn al software de arranque \emph{PXELinux.0}, tambiÈn conocido con el nombre genÈrico de \emph{NBP} (\emph{Network Bootstrap Program}), que se encuentra ubicado en otro equipo de la red local.
+\emph{PXE} (\emph{Pre-Execution Environment}) extiende las funcionalidades del \emph{firmware} dot√°ndolo de capacidades comunicativas gracias a la inclusi√≥n de los protocolos \emph{IPv4}, \emph{UDP}, \emph{DHCP} y \emph{TFTP}, estos dos √∫ltimos con leves modificaciones. Con estas extensiones, el \emph{firmware} es capaz de localizar, descargar y transferir el control de ejecuci√≥n al software de arranque \emph{PXELinux.0}, tambi√©n conocido con el nombre gen√©rico de \emph{NBP} (\emph{Network Bootstrap Program}), que se encuentra ubicado en otro equipo de la red local.
 
-De forma resumida, la mec·nica del protocolo \emph{PXE} funciona de la siguiente manera. El cliente inicia el protocolo mediante un broadcast conocido como \emph{DHCPDISCOVER} que contiene unas extensiones (opciones 128 a 135 del \emph{RFC} 4578) que identifican la solicitud como procedente de un equipo que implementa el protocolo \emph{PXE}. En el log del servidor que recive la solicitud podemos ver los siguientes detalles:\\
+De forma resumida, la mec√°nica del protocolo \emph{PXE} funciona de la siguiente manera. El cliente inicia el protocolo mediante un broadcast conocido como \emph{DHCPDISCOVER} que contiene unas extensiones (opciones 128 a 135 del \emph{RFC} 4578) que identifican la solicitud como procedente de un equipo que implementa el protocolo \emph{PXE}. En el log del servidor que recive la solicitud podemos ver los siguientes detalles:\\
 
 \begin{lstlisting}[style=dnsmasq]
 DHCPDISCOVER(eth1) 00:30:1b:a0:6f:cc
@@ -142,7 +142,7 @@ requested options: 67:bootfile-name, (*@\textcolor{softred}{128}@*), (*@\textcol
 requested options: (*@\textcolor{softred}{133}@*), (*@\textcolor{softred}{134}@*), (*@\textcolor{softred}{135}@*)
 \end{lstlisting}
 
-Asumiendo que en la red existe un servidor \emph{DHCP} o un proxy \emph{DHCP} que tambiÈn implementa las mismas extensiones del protocolo \emph{DHCP}, el servidor envÌa al cliente una lista de servidores de arranque (el servidor redirige al cliente) y el nombre del fichero de arranque que el cliente tiene que descargar (\emph{pxelinux.0} en nuestro caso).\\
+Asumiendo que en la red existe un servidor \emph{DHCP} o un proxy \emph{DHCP} que tambi√©n implementa las mismas extensiones del protocolo \emph{DHCP}, el servidor env√≠a al cliente una lista de servidores de arranque (el servidor redirige al cliente) y el nombre del fichero de arranque que el cliente tiene que descargar (\emph{pxelinux.0} en nuestro caso).\\
 
 \begin{lstlisting}[style=dnsmasq]
 dnsmasq-dhcp[15]: DHCPOFFER(eth1) 192.168.1.51 00:30:1b:a0:6f:cc
@@ -160,16 +160,16 @@ dnsmasq-dhcp[15]: option:  6 dns-server  192.168.1.2
 dnsmasq-dhcp[15]: available DHCP range: 192.168.1.50 -- 192.168.1.150
 \end{lstlisting}
 
-A continuaciÛn, el cliente utiliza \emph{TFTP} para descargar el \emph{NBP} de uno de los servidores de arranque. Finalmente, el \emph{firmware} del cliente transfiere el control de ejecuciÛn a la imagen descargada.\\
+A continuaci√≥n, el cliente utiliza \emph{TFTP} para descargar el \emph{NBP} de uno de los servidores de arranque. Finalmente, el \emph{firmware} del cliente transfiere el control de ejecuci√≥n a la imagen descargada.\\
 
 \begin{lstlisting}[style=dnsmasq]
 dnsmasq-tftp[15]: (*@\textcolor{softred}{sent /tftpboot/pxelinux.0 to 192.168.1.51}@*)
 \end{lstlisting}
 
 \subsubsection{PXELinux.0}
-\emph{PXELinux.0} actua como \emph{`Second Stage Boot Loader'} permitiendo localizar, descargar y pasar el control de ejecuciÛn al \emph{kernel} de Linux y a su correspondiente \emph{initramfs} (\emph{Initial RAM File System}). \emph{PXELinux.0} comunica al \emph{kernel} la direcciÛn de memoria en la que ha cargado el \emph{initramfs}. La ejecuciÛn del \emph{kernel} puede ser parametrizada mediante un fichero de configuraciÛn que adem·s, permite definir men˙s interactivos. El primer fichero que \emph{PXELinux.0} intenta descargar del servidor \emph{TFTP} es por tanto, su propio fichero de configuraciÛn.
+\emph{PXELinux.0} actua como \emph{`Second Stage Boot Loader'} permitiendo localizar, descargar y pasar el control de ejecuci√≥n al \emph{kernel} de Linux y a su correspondiente \emph{initramfs} (\emph{Initial RAM File System}). \emph{PXELinux.0} comunica al \emph{kernel} la direcci√≥n de memoria en la que ha cargado el \emph{initramfs}. La ejecuci√≥n del \emph{kernel} puede ser parametrizada mediante un fichero de configuraci√≥n que adem√°s, permite definir men√∫s interactivos. El primer fichero que \emph{PXELinux.0} intenta descargar del servidor \emph{TFTP} es por tanto, su propio fichero de configuraci√≥n.
 
-Cada cliente puede disponer de su propio fichero de configuraciÛn. El nombre del fichero de cada equipo queda determinado por su direcin \emph{MAC} o la conversiÛn a hexadecimal de su direciÛn \emph{IP}. Si no existe fichero alguno con ese nombre, se procede a eliminar un dÌgito hexadecimal del final del nombre y se repite la b˙squeda sucesivamente tal y como se muestra en la siguiente captura:\\
+Cada cliente puede disponer de su propio fichero de configuraci√≥n. El nombre del fichero de cada equipo queda determinado por su direcin \emph{MAC} o la conversi√≥n a hexadecimal de su direci√≥n \emph{IP}. Si no existe fichero alguno con ese nombre, se procede a eliminar un d√≠gito hexadecimal del final del nombre y se repite la b√∫squeda sucesivamente tal y como se muestra en la siguiente captura:\\
 
 \begin{lstlisting}[style=dnsmasq]
 dnsmasq-tftp[15]: file /tftpboot/pxelinux.cfg/01-00-30-1b-a0-6f-cc not found
@@ -185,7 +185,7 @@ dnsmasq-tftp[15]: (*@\textcolor{softred}{sent /tftpboot/pxelinux.cfg/default to 
 dnsmasq-tftp[15]: (*@\textcolor{softred}{sent /tftpboot/menu.c32 to 192.168.1.51}@*)
 \end{lstlisting}
 
-Si finalmente no se encuentra ninguna configuraciÛn, se utilizar· el fichero por defecto llamado \emph{`default'}. Para la realizaciÛn de este proyecto se ha definido que todos los equipos fÌsicos dispongan de configuraciÛn especÌfica y que las m·quinas virtuales usen la configuraciÛn por defecto. Por ejemplo, al equipo fÌsico que realizar· funciones de hipervisor se le aplica la siguiente configuraciÛn:\\
+Si finalmente no se encuentra ninguna configuraci√≥n, se utilizar√° el fichero por defecto llamado \emph{`default'}. Para la realizaci√≥n de este proyecto se ha definido que todos los equipos f√≠sicos dispongan de configuraci√≥n espec√≠fica y que las m√°quinas virtuales usen la configuraci√≥n por defecto. Por ejemplo, al equipo f√≠sico que realizar√° funciones de hipervisor se le aplica la siguiente configuraci√≥n:\\
 
 \begin{lstlisting}[style=dnsmasq]
 DEFAULT menu.c32
@@ -209,9 +209,9 @@ LABEL install
          inst.geoloc=0 inst.text
 \end{lstlisting}
 
-Tras descargar el fichero de configuraciÛn de \emph{PXELinux.0} se procede a su interpretaciÛn. La primera lÌnea (\emph{DEFAULT menu.c32}) provoca la descarga mediante \emph{TFTP} de otro binario cuya ˙nica funciÛn es presentar un men˙ interactivo en la consola del sistema. El resto del fichero contiene la configuraciÛn de dicho men˙. Cada elemento seleccionable contiene la informaciÛn necesaria para localizar a una pareja de \emph{kernel} y \emph{initramfs} asÌ como los par·metros adicionales que se le quieran entregar al \emph{kernel} en el momento de su ejecuciÛn.
+Tras descargar el fichero de configuraci√≥n de \emph{PXELinux.0} se procede a su interpretaci√≥n. La primera l√≠nea (\emph{DEFAULT menu.c32}) provoca la descarga mediante \emph{TFTP} de otro binario cuya √∫nica funci√≥n es presentar un men√∫ interactivo en la consola del sistema. El resto del fichero contiene la configuraci√≥n de dicho men√∫. Cada elemento seleccionable contiene la informaci√≥n necesaria para localizar a una pareja de \emph{kernel} y \emph{initramfs} as√≠ como los par√°metros adicionales que se le quieran entregar al \emph{kernel} en el momento de su ejecuci√≥n.
 
-El aspecto del men˙ que nos presenta \emph{menu.c32} es el siguiente:\\
+El aspecto del men√∫ que nos presenta \emph{menu.c32} es el siguiente:\\
 
 \begin{lstlisting}[style=dnsmasq]
                    +----------------------------------------------------------+
@@ -236,7 +236,7 @@ El aspecto del men˙ que nos presenta \emph{menu.c32} es el siguiente:\\
                                     Automatic boot in 7 seconds...
 \end{lstlisting}
 
-Si pulsamos \emph{[Tab]} sobre la opciÛn \emph{`Unattended CentOS 7 installation'} podremos editar la lÌnea del comando que se ejecuta al seleccionar esta opciÛn:\\
+Si pulsamos \emph{[Tab]} sobre la opci√≥n \emph{`Unattended CentOS 7 installation'} podremos editar la l√≠nea del comando que se ejecuta al seleccionar esta opci√≥n:\\
 
 \begin{lstlisting}[style=dnsmasq]
 > images/centos/7/x86_64/vmlinuz initrd=images/centos/7/x86_64/initrd.img rd.driver.pre=loop inst.
@@ -244,16 +244,16 @@ repo=http://repo01.demo.lan/centos/7/os/x86_64/ inst.ks=nfs:boot01.demo.lan:/kic
 .geoloc=0 inst.text BOOTIF=01-00-30-1b-a0-6f-cc
 \end{lstlisting}
 
-Los par·metros que no tienen el prefijo \emph{`inst'} ser·n interpretados directamente por el \emph{kernel} o por el subsistema \emph{Dracut}. Los par·metros que si que tienen el prefijo \emph{`inst'} van a ser interpretados m·s adelante por el instalador \emph{Anaconda}. El par·metro \emph{BOOTIF} que aparece al final, es consequencia de la opciÛn \emph{IPAPPEND 2} que hemos aÒadido en la configuraciÛn de \emph{PXELinux.0}. La direcciÛn \emph{MAC} que aparece, corresponde con la interfÌcie de red que ha iniciado el proceso \emph{PXE}, este valor tambiÈn ser· usado m·s adelante por \emph{Anaconda}.
+Los par√°metros que no tienen el prefijo \emph{`inst'} ser√°n interpretados directamente por el \emph{kernel} o por el subsistema \emph{Dracut}. Los par√°metros que si que tienen el prefijo \emph{`inst'} van a ser interpretados m√°s adelante por el instalador \emph{Anaconda}. El par√°metro \emph{BOOTIF} que aparece al final, es consequencia de la opci√≥n \emph{IPAPPEND 2} que hemos a√±adido en la configuraci√≥n de \emph{PXELinux.0}. La direcci√≥n \emph{MAC} que aparece, corresponde con la interf√≠cie de red que ha iniciado el proceso \emph{PXE}, este valor tambi√©n ser√° usado m√°s adelante por \emph{Anaconda}.
 
 \subsection{Dracut}
-Con el \emph{kernel} y el \emph{initramfs} ya cargados en memoria, \emph{PXELinux.0} entrega el control de ejecuciÛn, la direcciÛn de memoria donde se encuentra el \emph{initramfs} y los par·metros de arranque al \emph{kernel} de Linux. El \emph{kernel} se descomprime a sÌ mismo y extrae el \emph{initramfs} (que se encuentra en formato \emph{cpio}) mont·ndolo en el sistema de archivos raÌz o \emph{`root file system (rootfs)'} para, finalmente, transferir el control de ejecuciÛn al binario \emph{/init} que ahora se encuentra en la raiz del nuevo \emph{rootfs}.
+Con el \emph{kernel} y el \emph{initramfs} ya cargados en memoria, \emph{PXELinux.0} entrega el control de ejecuci√≥n, la direcci√≥n de memoria donde se encuentra el \emph{initramfs} y los par√°metros de arranque al \emph{kernel} de Linux. El \emph{kernel} se descomprime a s√≠ mismo y extrae el \emph{initramfs} (que se encuentra en formato \emph{cpio}) mont√°ndolo en el sistema de archivos ra√≠z o \emph{`root file system (rootfs)'} para, finalmente, transferir el control de ejecuci√≥n al binario \emph{/init} que ahora se encuentra en la raiz del nuevo \emph{rootfs}.
 
-En este contexto \emph{Dracut} tiene dos roles. Por un lado, es la herramienta de lÌnea de comandos que se usa para crear el \emph{initramfs} y por otro lado, es el propio subsistema que se encierra dentro del \emph{initramfs} y que es invocado al ejecutar \emph{/init}. La ˙nica tarea del subsistema \emph{Dracut} es localizar, cargar y conmutar a la imagen final de \emph{rootfs} que se usar· durante el posterior proceso de instalaciÛn.
+En este contexto \emph{Dracut} tiene dos roles. Por un lado, es la herramienta de l√≠nea de comandos que se usa para crear el \emph{initramfs} y por otro lado, es el propio subsistema que se encierra dentro del \emph{initramfs} y que es invocado al ejecutar \emph{/init}. La √∫nica tarea del subsistema \emph{Dracut} es localizar, cargar y conmutar a la imagen final de \emph{rootfs} que se usar√° durante el posterior proceso de instalaci√≥n.
 
-\subsubsection{Herramienta de lÌnea de comandos}
-Normalmente no va a ser necesario crear un \emph{initramfs} a medida. Sinembargo, uno de los servidores que se han usado para realizar este proyecto necesita soporte especÌfico para una tarjeta de red \emph{Nvidia}.
-Para generar el nuevo \emph{initramfs} que incorpora el driver obsoleto \emph{forcedeth}, se ha utilizado un contenedor de \emph{Docker} tal y como se muestra a continuaciÛn:\\
+\subsubsection{Herramienta de l√≠nea de comandos}
+Normalmente no va a ser necesario crear un \emph{initramfs} a medida. Sinembargo, uno de los servidores que se han usado para realizar este proyecto necesita soporte espec√≠fico para una tarjeta de red \emph{Nvidia}.
+Para generar el nuevo \emph{initramfs} que incorpora el driver obsoleto \emph{forcedeth}, se ha utilizado un contenedor de \emph{Docker} tal y como se muestra a continuaci√≥n:\\
 
 \begin{lstlisting}[style=dnsmasq]
 $ docker run -it --rm -e KVER='3.10.0-123' -v ${PWD}/initramfs:/initramfs h0tbird/centos bash -c "
@@ -269,14 +269,14 @@ dracut -v -m 'anaconda base plymouth kernel-modules' --add-drivers forcedeth \
 -f /initramfs/forcedeth.img --kver \${KVER}.el7.x86_64"
 \end{lstlisting}
 
-Tras ejecutar el comando anterior, aparecer· un nuevo subdirectorio en el directorio actual con el nombre \emph{initramfs}. Dentro se encuentra el \emph{initramfs} que acabamos de generar. Para listar su contenido podemos ejecutar \emph{`lsinitcpio initramfs/forcedeth.img'}.
+Tras ejecutar el comando anterior, aparecer√° un nuevo subdirectorio en el directorio actual con el nombre \emph{initramfs}. Dentro se encuentra el \emph{initramfs} que acabamos de generar. Para listar su contenido podemos ejecutar \emph{`lsinitcpio initramfs/forcedeth.img'}.
 
 \subsubsection{Subsistema Dracut}
-Muchas distribuciones de Linux utilizan un ˙nico \emph{kernel} genÈrico con el que pretenden arrancar la m·s amplia variedad de hardware posible.
-Los controladores de dispositivos para esta imagen genÈrica se incluyen como mÛdulos de carga din·mica o \emph{`loadable modules'} ya que no es posible compilarlos todos de forma est·tica en el \emph{kernel} sin hacerlo demasiado grande como para arrancarlo desde sistemas con poca memoria.
+Muchas distribuciones de Linux utilizan un √∫nico \emph{kernel} gen√©rico con el que pretenden arrancar la m√°s amplia variedad de hardware posible.
+Los controladores de dispositivos para esta imagen gen√©rica se incluyen como m√≥dulos de carga din√°mica o \emph{`loadable modules'} ya que no es posible compilarlos todos de forma est√°tica en el \emph{kernel} sin hacerlo demasiado grande como para arrancarlo desde sistemas con poca memoria.
 
-Se plantea el problema de detectar y cargar los mÛdulos necesarios para montar el sistema de ficheros raÌz durante el arranque o, para el caso, determinar dÛnde se encuentra y que constituye el \emph{rootfs}.
-\section{InstalaciÛn}
+Se plantea el problema de detectar y cargar los m√≥dulos necesarios para montar el sistema de ficheros ra√≠z durante el arranque o, para el caso, determinar d√≥nde se encuentra y que constituye el \emph{rootfs}.
+\section{Instalaci√≥n}
 
 \subsection{Anaconda}
 
@@ -296,7 +296,7 @@ En el siguiente diagrama de sequencia se pueden apreciar las interacciones que s
 %---------
 
 \chapter{Puppet}
-\section{TecnologÌas}
+\section{Tecnolog√≠as}
 \subsection{DSL: Domain Specific Language}
 \subsection{Cliente - Servidor}
 \subsection{Framework}
@@ -308,20 +308,20 @@ En el siguiente diagrama de sequencia se pueden apreciar las interacciones que s
 
 \begin{thebibliography}{2}
 
-%% Llibres:  Autor/s (cognoms i inicials dels noms), tÌtol del llibre (en cursiva), editor, ciutat i any de publicaciÛ. Quan es cita el capÌtol d'un llibre s'ha d'indicar el tÌtol del capÌtol (entre cometes), el tÌtol del llibre (en cursiva) i els n˙meros de p‡gines amb la primera i la darrera incloses.
+%% Llibres:  Autor/s (cognoms i inicials dels noms), t√≠tol del llibre (en cursiva), editor, ciutat i any de publicaci√≥. Quan es cita el cap√≠tol d'un llibre s'ha d'indicar el t√≠tol del cap√≠tol (entre cometes), el t√≠tol del llibre (en cursiva) i els n√∫meros de p√†gines amb la primera i la darrera incloses.
 
 %%  Exemple de capitol en llibre
 \bibitem{prova1}
 Cognoms-autor, Inicial-nom.
-``TÌtol del capÌtol''. {\it TÌtol del llibre}.
-(Editor. Ciutat. Any publicaciÛ): pagina1--paginaN.
+``T√≠tol del cap√≠tol''. {\it T√≠tol del llibre}.
+(Editor. Ciutat. Any publicaci√≥): pagina1--paginaN.
 
 %%  Exemple de d'article en revista
 \bibitem{prova2}
 Cognoms-autor, Inicial-nom.
-``TÌtol de l'article''. {\it TÌtol de la revista}.
+``T√≠tol de l'article''. {\it T√≠tol de la revista}.
 {\bf volum}(numero),
-pagina1--paginaN. (Any publicaciÛ)
+pagina1--paginaN. (Any publicaci√≥)
 
 \end{thebibliography}
 \end{document}
