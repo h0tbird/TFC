@@ -275,6 +275,7 @@ Tras ejecutar el comando anterior, aparecerá un nuevo subdirectorio en el direct
 Muchas distribuciones de Linux utilizan un único \emph{kernel} genérico con el que pretenden arrancar la más amplia variedad de hardware posible.
 Los controladores de dispositivos para esta imagen genérica se incluyen como módulos de carga dinámica o \emph{`loadable modules'} ya que no es posible compilarlos todos de forma estática en el \emph{kernel} sin hacerlo demasiado grande como para arrancarlo desde sistemas con poca memoria.
 
+Se plantea el problema de detectar y cargar los módulos necesarios para montar el sistema de ficheros raíz durante el arranque o, para el caso, determinar dónde se encuentra y que constituye el \emph{rootfs}.
 \section{Instalación}
 
 \subsection{Anaconda}
