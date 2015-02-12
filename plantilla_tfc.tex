@@ -70,6 +70,12 @@ Escriure aquí opcionalment la dedicatòria.
 
 \begin{intro}{Introducción}
 
+En este trabajo se presenta una plataforma que pretende dar solución a dos problemáticas de escalabilidad relacionadas con la gestión y la explotación de grandes infraestructuras de computación.
+
+Entendemos por escalabilidad de un sistema a la capacidad del mismo para crecer linealmente y acomodar incrementos de carga computacional. Por otra parte, la escalabilidad de su gestión, viene dada por la capacidad de mantener constante la complejidad de su carga administrativa. Veremos que para dar respuesta a una cuestión, nos centraremos en el ¿Qué? y para la otra en el ¿Cómo?
+
+\textbf{¿Qué?} La plataforma propuesta se cimienta sobre varias tecnologías que interactuan entre ellas. Las más destacables son: Linux (1991), KVM (2007), CoreOS (2013), Mesos (2011) y Marathon (2013). La principal virtud de la solución
+
 En el contexto de este trabajo entendemos por \emph{aprovisionamiento de un sistema} al conjunto de acciones que se deben realizar para disponer de un equipo, ya sea físico o virtual, con un mínimo sistema operativo instanciado y accesible a nivel TCP/IP\@. En el caso de los sistemas físicos, no consideramos las tareas de desempaquetado, ensamblaje, enracado y cableado de los hierros porque se deben realizar en cada centro de datos por un equipo local de operaciones.
 
 Aprovisionar un sistema de forma manual puede suponer entre 20 y 30 minutos. La mayor parte del tiempo se invierte esperando y respondiendo al asistente de instalación. Para ello, además, es necesario tener acceso a la entrada y salida estandar del equipo para visualizar e interactuar con el asistente. Típicamente, con un teclado y un monitor o una redirección de los mismos mediante protocolos tipo \emph{Remote Frame Buffer} o \emph{X Window System Core Protocol}.
@@ -275,7 +281,7 @@ Tras ejecutar el comando anterior, aparecerá un nuevo subdirectorio en el direc
 Muchas distribuciones de Linux utilizan un único \emph{kernel} genérico con el que pretenden arrancar la más amplia variedad de hardware posible.
 Los controladores de dispositivos para esta imagen genérica se incluyen como módulos de carga dinámica o \emph{`loadable modules'} ya que no es posible compilarlos todos de forma estática en el \emph{kernel} sin hacerlo demasiado grande como para arrancarlo desde sistemas con poca memoria.
 
-Se plantea el problema de detectar y cargar los módulos necesarios para montar el sistema de ficheros raíz durante el arranque o, para el caso, determinar dónde se encuentra y que constituye el \emph{rootfs}.
+Se plantea el problema de detectar y cargar los módulos necesarios para montar el sistema de ficheros raíz durante el arranque o, para el caso, determinar dónde se encuentra y qué constituye el \emph{rootfs}.
 \section{Instalación}
 
 \subsection{Anaconda}
