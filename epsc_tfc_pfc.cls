@@ -230,8 +230,6 @@
 \cleardoublepage
 }
 
-
-
 %% RESUM ENVIRONMENT
 %%%%%%%%%%%%%%%%%%%%%%
 \newenvironment{resum}[1]
@@ -293,7 +291,6 @@
     \begin{tabular}{|p{\textwidth}|}
       \hline
       \vspace{0.5em}
-
     }
     {
          \vspace*{\Hoverview} \\
