@@ -72,7 +72,6 @@ Escriure aquí opcionalment la dedicatòria.
 %---------------
 
 \begin{intro}{Introducción}
-
 En este trabajo se presenta una plataforma que pretende dar solución a dos problemáticas de escalabilidad relacionadas con la gestión y la explotación de grandes infraestructuras de computación.
 
 Entendemos por escalabilidad de un sistema a la capacidad del mismo para crecer linealmente y acomodar incrementos de carga computacional. Por otra parte, la escalabilidad de su gestión, viene dada por la capacidad de mantener constante la complejidad de su carga administrativa. Veremos que para dar respuesta a una cuestión, nos centraremos en el ¿Qué? y para la otra en el ¿Cómo?
@@ -94,15 +93,6 @@ Aprovisionar de forma manual es un requisito previo a la automatización ya que 
 No se trata de dar mucha inteligencia al sistema de aprovisionamiento sinó de consensar un modelo sencillo y predictible que resulte eficaz en su funcionamiento y simple de mantener. A lo largo de la etapa de aprovisionado intervienen distintas tecnologías que se complementan entre sí.
 
 Una vez aprovisionados, los sistemas sirven de base sobre la que podemos desplegar servicios. Los servicios determinan el rol o la razón de ser de cada equipo. Si bien en la fase de aprovisionado este rol se perfila sutilmente, no es hasta la fase de despliegue, donde se definen con exactitud las funciones de cada equipo y las interrelaciones entre los mismos.
-
-A vista de pájaro el sistema está compuesto por dos grandes bloques funcionales que aglutinan varios servicios; el primer bloque, representado por Cobbler, se encarga de todas las funciones relacionadas con el aprovisionamiento de sistemas. El segundo bloque, representado por Puppet, se encarga de desplegar los servicios y de mantenerlos en el estado deseado.
-
-\begin{figure}[b]
-  \centering
-    \includegraphics[scale=0.60]{intro}
-      \caption{A vista de pájaro}
-\end{figure}
-
 \end{intro}
 
 \pagestyle{fancy}
