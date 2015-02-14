@@ -33,13 +33,11 @@
 %----------
 
 \begin{resum}{15cm}
-Aquest document conté les pautes del format de presentació del treball o projecte de final de carrera. En tot cas, cal tenir en compte el que estableix la ``Normativa del treball de fi de carrera (TFC) i del projecte de fi de carrera (PFC)'' aprovada per la Comissió Permanent de l'EPSC, especialment l'apartat ``Requeriments del treball''.
 \end{resum}
 
 \selectlanguage{english}
 
 \begin{overview}{15cm}
-This document contains guidelines for writing your TFC/PFC\@. However, you should also take into consideration the standards established in the document Normativa del treball de fi de carrera (TFC) i del projecte de fi de carrera (PFC), paying special attention to the section Requeriments del treball, as this document has been approved by the EPSC Standing Committee
 \end{overview}
 
 \selectlanguage{spanish}
@@ -74,15 +72,24 @@ Escriure aquí opcionalment la dedicatòria.
 \begin{intro}{Introducción}
 En este trabajo se presenta una plataforma que pretende dar solución a dos problemáticas de escalabilidad relacionadas con la gestión y la explotación de grandes infraestructuras de computación.
 
-Entendemos por escalabilidad de un sistema a la capacidad del mismo para crecer linealmente y acomodar incrementos de carga computacional. Por otra parte, la escalabilidad de su gestión, viene dada por la capacidad de mantener constante la complejidad de su carga administrativa. Veremos que para dar respuesta a una cuestión, nos centraremos en el ¿Qué? y para la otra en el ¿Cómo?
+Entendemos por escalabilidad de un sistema la capacidad del mismo para crecer linealmente y acomodar incrementos de carga computacional. Por otra parte, la escalabilidad de su gestión, viene dada por la capacidad de mantener constante la complejidad de su carga administrativa. Veremos que para dar respuesta a una cuestión, nos centraremos en el ¿Qué? y para la otra en el ¿Cómo?
 
-\textbf{¿Qué?} La plataforma propuesta se cimienta sobre varias tecnologías que interactuan entre ellas. Las más destacables son: Linux (1991), KVM (2007), CoreOS (2013), Docker (2013), Mesos (2011) y Marathon (2013). Las principales virtudes de la solución son su capacidad para acomodar distintos tipos de carga simultáneamente (sin necesidad de realizar un particionado estático) y su simplicidad de escalado mediante la adición de nuevos nodos a base de hardware básico y/o común. En el siguiente esquema simplificado se pueden apreciar las relaciones de orden entre los distintos componentes:\\
+\textbf{¿Qué?} La plataforma propuesta se cimienta sobre varias tecnologías que interactúan entre sí. Las más destacables son: Linux (1991), KVM (2007), CoreOS (2013), Docker (2013), Mesos (2011) y Marathon (2013). Las principales virtudes de la solución son:
+\begin{itemize}
+  \item Capacidad para acomodar distintos tipos de carga (\emph{frameworks}) simultáneamente, sin necesidad de realizar un particionado estático de los recursos.
+  \item Alta densidad de servicios y por tanto, una mejor utilización de los recursos que se traduce a una mejor eficiencia energética.
+  \item Simplicidad del escalado mediante la adición de nuevos nodos a base de hardware básico y común.
+\end{itemize}
+
+En el siguiente esquema simplificado se pueden apreciar las relaciones de orden entre los distintos componentes:\\
 
 \begin{figure}[h]
   \centering
     \includegraphics[scale=1]{plataforma}
       \caption{Plataforma}
 \end{figure}
+
+\textbf{¿Cómo?} El grueso del trabajo se centra en 
 
 En el contexto de este trabajo entendemos por \emph{aprovisionamiento de un sistema} al conjunto de acciones que se deben realizar para disponer de un equipo, ya sea físico o virtual, con un mínimo sistema operativo instanciado y accesible a nivel TCP/IP\@. En el caso de los sistemas físicos, no consideramos las tareas de desempaquetado, ensamblaje, enracado y cableado de los hierros porque se deben realizar en cada centro de datos por un equipo local de operaciones.
 
