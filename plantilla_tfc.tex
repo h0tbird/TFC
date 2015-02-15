@@ -117,7 +117,7 @@ Empezaremos viendo algunos detalles sobre la plataforma de explotación y seguir
 
 \chapter{Plataforma de explotación}
 \section{Hardware}
-Para el proyecto se han utilizado 2 equipos de iguales características. Cada equipo simula un rack del centro de datos que contiene 4 servidores. Algunos de los \emph{frameworks} que pueden ser ejecutados en la plataforma tienen consciencia de rack (\emph{rack awareness}) y distribuyen réplicas de los datos de manera que optimizan el uso de la red (\emph{data locality}) y minimizan el riesgo de pérdida.
+Para el proyecto se han utilizado 2 equipos hipervisores de iguales características. Cada equipo simula un rack que contiene 4 servidores. Algunos de los \emph{frameworks} que pueden ser ejecutados en la plataforma tienen consciencia de rack (\emph{rack awareness}) y distribuyen réplicas de los datos de manera que optimizan el uso de la red (\emph{data locality}) y minimizan el riesgo de pérdida.
 
 Los equipos tienen las siguientes características:
 
@@ -130,11 +130,21 @@ Los equipos tienen las siguientes características:
     \multicolumn{1}{|l|}{Procesador Intel Xeon E3-1265Lv2 QuadCore} & 2                 & 344,93 \euro           \\ \hline
     \multicolumn{1}{|l|}{16GB (8GB x2) Crucial DDR3 1600MHz}        & 2                 & 141,30 \euro           \\ \hline
     \multicolumn{1}{|l|}{128GB SSD Crucial mSATA}                   & 2                 & 78,28 \euro            \\ \hline
-    \multicolumn{1}{|l|}{Carcasa Akasa Euler}                       & 2                 & 105,80 \euro           \\ \hline
+    \multicolumn{1}{|l|}{Carcasa Thin Mini-ITX Akasa Euler}         & 2                 & 105,80 \euro           \\ \hline
     \multicolumn{1}{|l|}{Cisco SLM2008T-EU 8 x 10/100/1000}         & 1                 & 114,75 \euro           \\ \hline
                                                                     & \textbf{Total}    & \textbf{1667,83 \euro} \\ \cline{2-3}
   \end{tabular}
 \end{table}
+
+Cada equipo dispone de dos tarjetas de red. En el siguiente esquema se puede apreciar el conexionado físico y lógico. La ONT es un terminal óptico de red que conecta con la red de fibra del operador Movistar.
+
+\begin{figure}[h]
+  \centering
+    \includegraphics[scale=1]{layout}
+      \caption{Disposición de red}
+\end{figure}
+
+El portátil va a ser el equipo que contenga la plataforma de \emph{bootstrapping} que veremos en el segundo capítulo.
 
 \section{KVM}
 \section{CoreOS}
