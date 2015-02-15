@@ -100,9 +100,9 @@ Para realizar la automatización se ha creado una plataforma paralela de \emph{b
       \caption{Plataforma de arranque}
 \end{figure}
 
-Veremos el rol de cada uno de los cuatro contenedores, su proceso de construcción y cómo interactuan entre ellos para aprovisionar los servidores y desplegar los servicios de la plataforma de explotación.
+Veremos el rol de cada uno de los cuatro contenedores, su proceso de construcción y cómo interactúan entre ellos para aprovisionar los servidores y desplegar los servicios de la plataforma de explotación.
 
-En el contexto de este trabajo entendemos por \emph{'aprovisionamiento de un sistema'}, el conjunto de acciones que se deben realizar para disponer de un equipo, ya sea físico o virtual, con un mínimo sistema operativo instanciado y accesible a nivel TCP/IP\@. No se trata de dar mucha inteligencia al sistema de aprovisionamiento sinó de consensar un modelo sencillo y predictible que resulte eficaz en su funcionamiento y simple de mantener.
+En el contexto de este trabajo entendemos por \emph{'aprovisionamiento de un sistema'}, el conjunto de acciones que se deben realizar para disponer de un equipo, ya sea físico o virtual, con un mínimo sistema operativo instanciado y accesible a nivel TCP/IP\@. No se trata de dar mucha inteligencia al sistema de aprovisionamiento sinó de consensar un modelo sencillo y predecible que resulte eficaz en su funcionamiento y simple de mantener.
 
 Una vez aprovisionados, los sistemas sirven de base sobre la que podemos desplegar servicios. Los servicios determinan el rol o la razón de ser de cada equipo. Si bien en la fase de aprovisionado este rol se perfila sutilmente, no es hasta la fase de despliegue, donde se definen con exactitud las funciones de cada equipo y las interrelaciones entre los mismos. Usaremos herramientas como \emph{r10k} y \emph{puppet}.
 
@@ -192,7 +192,7 @@ Puesto que no es lo mismo recuperar el software de arranque desde un \emph{MBR} 
 \subsection{PXE}
 \emph{PXE} (\emph{Pre-Execution Environment}) extiende las funcionalidades del \emph{firmware} dotándolo de capacidades comunicativas gracias a la inclusión de los protocolos \emph{IPv4}, \emph{UDP}, \emph{DHCP} y \emph{TFTP}, estos dos últimos con leves modificaciones. Con estas extensiones, el \emph{firmware} es capaz de localizar, descargar y transferir el control de ejecución al software de arranque \emph{PXELinux.0}, también conocido con el nombre genérico de \emph{NBP} (\emph{Network Bootstrap Program}), que se encuentra ubicado en otro equipo de la red local.
 
-De forma resumida, la mecánica del protocolo \emph{PXE} funciona de la siguiente manera. El cliente inicia el protocolo mediante un broadcast conocido como \emph{DHCPDISCOVER} que contiene unas extensiones (opciones 128 a 135 del \emph{RFC} 4578) que identifican la solicitud como procedente de un equipo que implementa el protocolo \emph{PXE}. En el log del servidor que recive la solicitud podemos ver los siguientes detalles:\\
+De forma resumida, la mecánica del protocolo \emph{PXE} funciona de la siguiente manera. El cliente inicia el protocolo mediante un broadcast conocido como \emph{DHCPDISCOVER} que contiene unas extensiones (opciones 128 a 135 del \emph{RFC} 4578) que identifican la solicitud como procedente de un equipo que implementa el protocolo \emph{PXE}. En el log del servidor que recibe la solicitud podemos ver los siguientes detalles:\\
 
 \begin{lstlisting}[style=dnsmasq]
 DHCPDISCOVER(eth1) 00:30:1b:a0:6f:cc
@@ -231,7 +231,7 @@ dnsmasq-tftp[15]: (*@\textcolor{softred}{sent /tftpboot/pxelinux.0 to 192.168.1.
 \subsubsection{PXELinux.0}
 \emph{PXELinux.0} actua como \emph{`Second Stage Boot Loader'} permitiendo localizar, descargar y pasar el control de ejecución al \emph{kernel} de Linux y a su correspondiente \emph{initramfs} (\emph{Initial RAM File System}). \emph{PXELinux.0} comunica al \emph{kernel} la dirección de memoria en la que ha cargado el \emph{initramfs}. La ejecución del \emph{kernel} puede ser parametrizada mediante un fichero de configuración que además, permite definir menús interactivos. El primer fichero que \emph{PXELinux.0} intenta descargar del servidor \emph{TFTP} es por tanto, su propio fichero de configuración.
 
-Cada cliente puede disponer de su propio fichero de configuración. El nombre del fichero de cada equipo queda determinado por su direcin \emph{MAC} o la conversión a hexadecimal de su direción \emph{IP}. Si no existe fichero alguno con ese nombre, se procede a eliminar un dígito hexadecimal del final del nombre y se repite la búsqueda sucesivamente tal y como se muestra en la siguiente captura:\\
+Cada cliente puede disponer de su propio fichero de configuración. El nombre del fichero de cada equipo queda determinado por su dirección \emph{MAC} o la conversión a hexadecimal de su dirección \emph{IP}. Si no existe fichero alguno con ese nombre, se procede a eliminar un dígito hexadecimal del final del nombre y se repite la búsqueda sucesivamente tal y como se muestra en la siguiente captura:\\
 
 \begin{lstlisting}[style=dnsmasq]
 dnsmasq-tftp[15]: file /tftpboot/pxelinux.cfg/01-00-30-1b-a0-6f-cc not found
@@ -306,15 +306,15 @@ repo=http://repo01.demo.lan/centos/7/os/x86_64/ inst.ks=nfs:boot01.demo.lan:/kic
 .geoloc=0 inst.text BOOTIF=01-00-30-1b-a0-6f-cc
 \end{lstlisting}
 
-Los parámetros que no tienen el prefijo \emph{`inst'} serán interpretados directamente por el \emph{kernel} o por el subsistema \emph{Dracut}. Los parámetros que si que tienen el prefijo \emph{`inst'} van a ser interpretados más adelante por el instalador \emph{Anaconda}. El parámetro \emph{BOOTIF} que aparece al final, es consequencia de la opción \emph{IPAPPEND 2} que hemos añadido en la configuración de \emph{PXELinux.0}. La dirección \emph{MAC} que aparece, corresponde con la interfície de red que ha iniciado el proceso \emph{PXE}, este valor también será usado más adelante por \emph{Anaconda}.
+Los parámetros que no tienen el prefijo \emph{`inst'} serán interpretados directamente por el \emph{kernel} o por el subsistema \emph{Dracut}. Los parámetros que si que tienen el prefijo \emph{`inst'} van a ser interpretados más adelante por el instalador \emph{Anaconda}. El parámetro \emph{BOOTIF} que aparece al final, es consecuencia de la opción \emph{IPAPPEND 2} que hemos añadido en la configuración de \emph{PXELinux.0}. La dirección \emph{MAC} que aparece, corresponde con la interfície de red que ha iniciado el proceso \emph{PXE}, este valor también será usado más adelante por \emph{Anaconda}.
 
 \subsection{Dracut}
-Con el \emph{kernel} y el \emph{initramfs} ya cargados en memoria, \emph{PXELinux.0} entrega el control de ejecución, la dirección de memoria donde se encuentra el \emph{initramfs} y los parámetros de arranque al \emph{kernel} de Linux. El \emph{kernel} se descomprime a sí mismo y extrae el \emph{initramfs} (que se encuentra en formato \emph{cpio}) montándolo en el sistema de archivos raíz o \emph{`root file system (rootfs)'} para, finalmente, transferir el control de ejecución al binario \emph{/init} que ahora se encuentra en la raiz del nuevo \emph{rootfs}.
+Con el \emph{kernel} y el \emph{initramfs} ya cargados en memoria, \emph{PXELinux.0} entrega el control de ejecución, la dirección de memoria donde se encuentra el \emph{initramfs} y los parámetros de arranque al \emph{kernel} de Linux. El \emph{kernel} se descomprime a sí mismo y extrae el \emph{initramfs} (que se encuentra en formato \emph{cpio}) montándolo en el sistema de archivos raíz o \emph{`root file system (rootfs)'} para, finalmente, transferir el control de ejecución al binario \emph{/init} que ahora se encuentra en la raíz del nuevo \emph{rootfs}.
 
 En este contexto \emph{Dracut} tiene dos roles. Por un lado, es la herramienta de línea de comandos que se usa para crear el \emph{initramfs} y por otro lado, es el propio subsistema que se encierra dentro del \emph{initramfs} y que es invocado al ejecutar \emph{/init}. La única tarea del subsistema \emph{Dracut} es localizar, cargar y conmutar a la imagen final de \emph{rootfs} que se usará durante el posterior proceso de instalación.
 
 \subsubsection{Herramienta de línea de comandos}
-Normalmente no va a ser necesario crear un \emph{initramfs} a medida. Sinembargo, uno de los servidores que se han usado para realizar este proyecto necesita soporte específico para una tarjeta de red \emph{Nvidia}.
+Normalmente no va a ser necesario crear un \emph{initramfs} a medida. Sin embargo, uno de los servidores que se han usado para realizar este proyecto necesita soporte específico para una tarjeta de red \emph{Nvidia}.
 Para generar el nuevo \emph{initramfs} que incorpora el driver obsoleto \emph{forcedeth}, se ha utilizado un contenedor de \emph{Docker} tal y como se muestra a continuación:\\
 
 \begin{lstlisting}[style=dnsmasq]
@@ -344,8 +344,8 @@ Se plantea el problema de detectar y cargar los módulos necesarios para montar 
 
 \section{Diagramas}
 
-\subsection{Diagrama de sequencia}
-En el siguiente diagrama de sequencia se pueden apreciar las interacciones que se producen entre el servidor de arranque \emph{`boot01.demo.lan'} y el cliente que queremos aprovisionar \emph{`kvm01.demo.lan'}.
+\subsection{Diagrama de secuencia}
+En el siguiente diagrama de secuencia se pueden apreciar las interacciones que se producen entre el servidor de arranque \emph{`boot01.demo.lan'} y el cliente que queremos aprovisionar \emph{`kvm01.demo.lan'}.
 
 \begin{figure}[h]
   \centering
