@@ -78,7 +78,7 @@ Entendemos por escalabilidad en la explotación de un sistema, la capacidad del 
 \textbf{¿Qué?} La plataforma propuesta se cimienta sobre varias tecnologías que interactúan entre sí. Las más destacables son: \emph{Linux} (1991), \emph{KVM} (2007), \emph{CoreOS} (2013), \emph{Docker} (2013), \emph{Mesos} (2011) y \emph{Marathon} (2013). Las principales virtudes de la solución son:
 \begin{itemize}
   \item Capacidad para acomodar distintos tipos de carga (\emph{frameworks}) simultáneamente, sin necesidad de realizar un particionado estático de los recursos.
-  \item Alta densidad de servicios y por tanto, una mejor utilización de los recursos que se traduce a una mayor eficiencia energética y menor coste.
+  \item Alta densidad de servicios y por tanto, una mejor utilización de los recursos que se traduce en una mayor eficiencia energética y menor coste.
   \item Simplicidad del escalado mediante la adición de nuevos nodos a base de hardware básico y común.
 \end{itemize}
 
@@ -92,7 +92,7 @@ En el siguiente esquema simplificado se pueden apreciar las relaciones de orden 
 
 \textbf{¿Cómo?} El grueso del trabajo no se centra en la explotación de la plataforma sino en la automatización de su despliegue. Se detallará el proceso completo, desde el servidor vacío que nos entrega el fabricante hasta la primera ejecución de un trabajo en el \emph{framework} de \emph{Marathon}.\\
 
-Para realizar la automatización se ha creado una plataforma paralela de \emph{bootstrapping} compuesta por cuatro elementos funcionales que han sido encapsulados en contenedores de \emph{Docker}. El siguiente esquema simplificado conecta con el anterior esquema de plataforma:
+Para realizar la automatización se ha creado una plataforma paralela de arranque o \emph{bootstrapping} compuesta por cinco elementos funcionales que han sido encapsulados en contenedores de \emph{Docker}. El siguiente esquema simplificado conecta con el anterior esquema de plataforma:
 
 \begin{figure}[h]
   \centering
@@ -100,13 +100,13 @@ Para realizar la automatización se ha creado una plataforma paralela de \emph{b
       \caption{Plataforma de arranque}
 \end{figure}
 
-Veremos el rol de cada uno de los cuatro contenedores, su proceso de construcción y cómo interactúan entre ellos para aprovisionar los servidores y desplegar los servicios de la plataforma de explotación.
+Veremos el rol de cada uno de los cinco contenedores, su proceso de construcción y cómo interactúan entre ellos para aprovisionar los servidores y desplegar los servicios de la plataforma de explotación.
 
 En el contexto de este trabajo entendemos por \emph{'aprovisionamiento de un sistema'}, el conjunto de acciones que se deben realizar para disponer de un equipo, ya sea físico o virtual, con un mínimo sistema operativo instanciado y accesible a nivel TCP/IP\@. No se trata de dar mucha inteligencia al sistema de aprovisionamiento sinó de consensar un modelo sencillo y predecible que resulte eficaz en su funcionamiento y simple de mantener.
 
 Una vez aprovisionados, los sistemas sirven de base sobre la que podemos desplegar servicios. Los servicios determinan el rol o la razón de ser de cada equipo. Si bien en la fase de aprovisionado este rol se perfila sutilmente, no es hasta la fase de despliegue, donde se definen con exactitud las funciones de cada equipo y las interrelaciones entre los mismos. Usaremos herramientas como \emph{r10k} y \emph{puppet}.
 
-Empezaremos viendo algunos detalles sobre la plataforma de explotación y seguiremos con el funcionamiento de la plataforma de arranque o \emph{bootstrapping}.
+Empezaremos viendo algunos detalles sobre la plataforma de explotación y seguiremos con el funcionamiento de la plataforma de \emph{bootstrapping}.
 \end{intro}
 
 \pagestyle{fancy}
@@ -136,36 +136,56 @@ Los equipos tienen las siguientes características:
   \end{tabular}
 \end{table}
 
-Cada equipo dispone de dos tarjetas de red. En el siguiente esquema se puede apreciar el conexionado físico y lógico. La ONT es un terminal óptico de red que conecta con la red de fibra del operador Movistar.
+Cada equipo dispone de dos tarjetas de red. En el siguiente esquema se puede apreciar el conexionado físico y lógico. La ONT es un terminal óptico de red que conecta con la red de fibra del operador Movistar, sobre la VLAN 6 se establece una conexión PPPoE para datos y la VLAN 3 se reserva para voz. Los detalles de conexión con el operador no tienen mayor interés para este trabajo.
 
 \begin{figure}[h]
   \centering
     \includegraphics[scale=1]{layout}
-      \caption{Disposición de red}
+      \caption{Disposición de la red}
 \end{figure}
 
 El portátil va a ser el equipo que contenga la plataforma de \emph{bootstrapping} que veremos en el segundo capítulo.
 
-\section{KVM}
+\section{Network}
+
+La red se divide en externa e interna. La red externa es la que nos proporciona nuestro operador y normalmente nuestra capacidad para influir sobre su diseño es limitada o nula, por lo que tenemos que adaptarnos a ella. Para realizar este trabajo se ha utilizado una red doméstica FTTH de Movistar.
+
+La red interna es la red sobre la que desplegaremos tanto la plataforma de explotación como la plataforma de \emph{bootstrapping}. Una red interna es suficiente para la simulación de este proyecto pero en casos de carga real hay que separar las redes en función de su carga y requisitos de seguridad. Por ejemplo, podríamos dedicar una red exclusivamente a tecnologías de almacenamiento de datos.
+
+En la siguiente figura se pueden apreciar los distintos elementos de red que conectan el mundo virtual con el mundo físico.
 
 \begin{figure}[h]
   \centering
     \includegraphics[scale=1]{sdnet}
-      \caption{Red definida por software}
+      \caption{Red definida mediante software}
 \end{figure}
 
-\section{CoreOS}
-\subsection{Etcd}
-\subsection{Fleet}
-\subsection{Docker}
-\section{Mesos}
+La red se define mediante software y a lo largo de distintas fases coordinadas por la plataforma de \emph{bootstrapping}. En el esquema se han coloreado de forma distinta los elementos de red en función de la pieza de software que los configura.
+
+\section{Software}
+
+La pila o \emph{stack} de software
+
+\begin{figure}[h]
+  \centering
+    \includegraphics[scale=0.75]{detailed_stack}
+      \caption{Pila de software}
+\end{figure}
+
+\subsection{CoreUp}
+\subsection{KVM}
+\subsection{CoreOS}
+\subsubsection{Etcd}
+\subsubsection{Fleet}
+\subsubsection{Docker}
+\subsection{Mesos}
 \subsection{Marathon}
 
 %----------------
 % Bootstrapping:
 %----------------
 
-\chapter{Bootstrapping}
+\chapter{Plataforma de arranque}
 \section{Pre arranque}
 Al pulsar el botón de encendido en un servidor, se inicia el proceso de pre arranque o \emph{`pre boot sequence'}. En el mismo instante en que existe diferencia de potencial, se empiezan a ejecutar una serie de procedimientos basados en hardware que realizan comprobaciones funcionales de la propia electrónica del equipo.
 
@@ -352,7 +372,7 @@ Se plantea el problema de detectar y cargar los módulos necesarios para montar 
 \section{Diagramas}
 
 \subsection{Diagrama de secuencia}
-En el siguiente diagrama de secuencia se pueden apreciar las interacciones que se producen entre el servidor de arranque \emph{`boot01.demo.lan'} y el cliente que queremos aprovisionar \emph{`kvm01.demo.lan'}.
+En el siguiente diagrama de secuencia se pueden apreciar las interacciones que se producen entre el servidor de arranque \emph{`boot01.demo.lan'}, el servidor de datos \emph{`data01.demo.lan'} y el cliente que queremos aprovisionar \emph{`kvm01.demo.lan'}.
 
 \begin{figure}[h]
   \centering
