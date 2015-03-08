@@ -134,6 +134,7 @@ Los equipos tienen las siguientes características:
     \multicolumn{1}{|l|}{Cisco SLM2008T-EU 8 x 10/100/1000}         & 1                 & 114,75 \euro           \\ \hline
                                                                     & \textbf{Total}    & \textbf{1667,83 \euro} \\ \cline{2-3}
   \end{tabular}
+  \caption{Coste del material}
 \end{table}
 
 Cada equipo dispone de dos tarjetas de red. En el siguiente esquema se puede apreciar el conexionado físico y lógico. La ONT es un terminal óptico de red que conecta con la red de fibra del operador Movistar, sobre la VLAN 6 se establece una conexión PPPoE para datos y la VLAN 3 se reserva para voz. Los detalles de conexión con el operador no tienen mayor interés para este trabajo.
@@ -230,7 +231,7 @@ http://core02:4001
 
 \subsubsection{Fleet}
 
-\emph{Fleet} es una herramienta de gestión de clusters que utiliza \emph{Etcd} para la compartición de configuraciones. \emph{Fleet} controla los sistemas de inicialización de servicios (\emph{systemd}) de todos los nodos del cluster, proporcionando así una visión unificada.
+\emph{Fleet} es una herramienta de gestión de clusters que utiliza \emph{Etcd} para la compartición de configuraciones. \emph{Fleet} controla los sistemas de inicialización de servicios (\emph{systemd}) de todos los nodos del cluster, proporcionando así una gestión unificada.
 
 Podemos consultar el listado de nodos que forman parte del cluster de \emph{Fleet} con el siguiente comando:\\
 
@@ -269,8 +270,93 @@ En la plataforma de explotación se utiliza \emph{Fleet} para arrancar todos los
 
 \subsubsection{Docker}
 
+\emph{Docker} es un proyecto de código abierto que automatiza el despliegue de aplicaciones encapsulándolas dentro de contenedores de software. \emph{Docker} utiliza tecnologías de aislamiento de recursos, como los \emph{cgroups} o los \emph{namespaces}, que se encuentran disponibles en el kernel de Linux.
+
+En una misma instancia de Linux se pueden crear múltiples contenedores, independientes los unos de los otros y sin la sobrecarga que supondría crear máquinas virtuales.
+
+La visión del sistema operativo que tiene la aplicación queda completamente aislada, incluyendo el árbol de procesos, la pila de red, los sistemas de ficheros y los identificadores de usuarios, así como los recursos de CPU, memoria, I/O y red.
+
+Las principales ventajas que aporta la containerización son:
+\begin{itemize}
+  \item \textbf{Inmutabilidad:} Entornos estáticos para albergar las aplicaciones y proporcionar fiabilidad en el despliegue de las mismas cuando éste se realiza en plataformas distintas a la de desarollo.
+  \item \textbf{Portabilidad:} Los contenedores son artefactos ejecutables que se pueden mover, almacenar, copiar o destruir con facilidad.
+  \item \textbf{Desacoplamiento:} Las aplicaciones más complejas se componen a base de múltiples aplicaciones ligeras que se interrelacionan entre sí (microservicios).
+\end{itemize}
+
+En cualquier instancia de \emph{CoreOS} de la maqueta se puede consultar el listado de imágenes de contenedores descargadas y listas para ser instanciadas:\\
+
+\begin{lstlisting}[style=dnsmasq]
+core@core01# docker images
+REPOSITORY                          TAG          IMAGE ID           CREATED           VIRTUAL SIZE
+regi01.demo.lan:5000/marathon       latest       beccb9c8de89       5 weeks ago       1.248 GB
+regi01.demo.lan:5000/marathon       v0.7.5       beccb9c8de89       5 weeks ago       1.248 GB
+regi01.demo.lan:5000/mesos-slave    0.20.1       cb1584229bc1       4 months ago      1.168 GB
+regi01.demo.lan:5000/mesos-slave    latest       cb1584229bc1       4 months ago      1.168 GB
+regi01.demo.lan:5000/mesos-master   0.20.1       fd7f7e5c4513       4 months ago      1.168 GB
+regi01.demo.lan:5000/mesos-master   latest       fd7f7e5c4513       4 months ago      1.168 GB
+\end{lstlisting}
+
+También podemos consultar el listado de contenedores instanciados:\\
+
+\begin{lstlisting}[style=dnsmasq]
+core@core01# docker ps
+CONTAINER ID  IMAGE                COMMAND              CREATED        STATUS       NAMES
+b709ae465b18  mesos-master:0.20.1  mesos-master --ip=1  10 hours ago   Up 10 hours  mesos_master
+f1cfa94270cb  marathon:latest      ./bin/start --maste  10 hours ago   Up 10 hours  marathon
+e18163eab926  mesos-slave:0.20.1   mesos-slave --ip=19  10 hours ago   Up 10 hours  mesos_slave
+\end{lstlisting}
+
 \subsection{Mesos}
+
+\emph{Mesos} proporciona una capa de abstracción sobre los recursos de CPU, de memoria y de disco presentes en flotas de servidores. Esta capa ligera sirve de base sobre la que construir sistemas distribuidos, elásticos y tolerantes a fallos.
+
+De forma análoga a la relación que se establece entre las aplicaciones, el kernel y los recursos de hardware, \emph{Mesos} sirve de gestor de recursos y planificador de tareas entre los \emph{frameworks} y los recursos hardware del centro de datos. En otras palabras, \emph{Mesos} es el kernel del centro de datos.
+
+\emph{Mesos} ofrece recursos a los \emph{frameworks} y éstos pueden aceptar o declinar las ofertas. En caso de ser aceptadas, es tarea de los \emph{frameworks} planificar los trabajos que se van a llevar a cabo con los recursos adquiridos. Las ofertas son bloqueantes lo que significa que no se ofrecerán los mismos recursos a dos \emph{frameworks} distintos simultáneamente. Por todo ello, también se describe a \emph{Mesos} como un `planificador pesimista de dos niveles'.
+
+En la maqueta del proyecto podemos consultar el listado de tareas en ejecución utilizando un contenedor creado específicamente para ejecutar comandos en \emph{Mesos}:\\
+
+\begin{lstlisting}[style=dnsmasq]
+# docker run -it --rm --env MESOS_MASTER=zk://core02:2181/mesos h0tbird/mcli mesos ps
+
+   TIME   STATE   RSS    CPU  %MEM          COMMAND          USER                        ID
+ 0:00:00    R    0.00 B   0   0.00  sh -c 'nc -p $PORT0...'  root  hostname.11e4-8c27-0242ac110002
+ 0:00:00    R    0.00 B   0   0.00  sh -c 'nc -p $PORT0...'  root  hostname.11e4-8c27-0242ac110002
+ 0:00:00    R    0.00 B   0   0.00  sh -c 'nc -p $PORT0...'  root  hostname.11e4-8c27-0242ac110002
+ 0:00:00    R    0.00 B   0   0.00  sh -c 'nc -p $PORT0...'  root  hostname.11e4-8c27-0242ac110002
+ 0:00:00    R    0.00 B   0   0.00  sh -c 'nc -p $PORT0...'  root  hostname.11e4-8c27-0242ac110002
+ 0:00:00    R    0.00 B   0   0.00  sh -c 'nc -p $PORT0...'  root  hostname.11e4-8c27-0242ac110002
+ 0:00:00    R    0.00 B   0   0.00  sh -c 'nc -p $PORT0...'  root  hostname.11e4-8c27-0242ac110002
+ 0:00:00    R    0.00 B   0   0.00  sh -c 'nc -p $PORT0...'  root  hostname.11e4-8c27-0242ac110002
+\end{lstlisting}
+
 \subsubsection{Marathon}
+
+\emph{Marathon} es un \emph{framework} de \emph{Mesos} especialmente diseñado para ejecutar aplicaciones que tienen una esperanza de vida larga, como por ejemplo, un servidor web \emph{Apache} o una base de datos de clave valor \emph{Redis}.
+
+\emph{Marathon} y \emph{Fleet} son herramientas similares. Las dos son consideradas \emph{`init systems'} distribuidos; sin embargo, \emph{Marathon} ofrece más prestaciones que \emph{Fleet}. Es por ello que el papel de \emph{Fleet} queda relegado a arrancar los servicios de \emph{Mesos} y \emph{Marathon}.
+
+\emph{Marathon} proporciona una API REST para arrancar, parar y escalar applicaciones, está escrito en \emph{Scala} y puede funcionar en alta disponibilidad arrancando múltiples instancias.
+
+El siguiente ejemplo muestra cómo arrancar una aplicación muy simple en \emph{Marathon}.\\
+
+\begin{lstlisting}[style=dnsmasq]
+curl -s -H "Content-Type: application/json" http://core01:8080/v2/apps -d \
+  ' {
+      "id": "hostname",
+      "cmd": "nc -p $PORT0 -ll -e hostname",
+      "cpus": 0.2,
+      "mem": 2.0,
+      "instances": 1,
+      "container": {
+        "type": "DOCKER",
+        "docker": {
+          "image": "busybox:latest"
+        }
+      }
+    }
+  ' | jq '.'
+\end{lstlisting}
 
 %----------------
 % Bootstrapping:
