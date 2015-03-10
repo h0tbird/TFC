@@ -358,11 +358,18 @@ curl -s -H "Content-Type: application/json" http://core01:8080/v2/apps -d \
   ' | jq '.'
 \end{lstlisting}
 
+%-------------------------
+% Plataforma de arranque:
+%-------------------------
+
+\chapter{Plataforma de arranque}
+
 %----------------
 % Bootstrapping:
 %----------------
 
-\chapter{Plataforma de arranque}
+\chapter{Secuencia de arranque}
+
 \section{Pre arranque}
 Al pulsar el botón de encendido en un servidor, se inicia el proceso de pre arranque o \emph{`pre boot sequence'}. En el mismo instante en que existe diferencia de potencial, se empiezan a ejecutar una serie de procedimientos basados en hardware que realizan comprobaciones funcionales de la propia electrónica del equipo.
 
@@ -506,19 +513,27 @@ Si pulsamos \emph{[Tab]} sobre la opción \emph{`Unattended CentOS 7 installatio
 
 \begin{lstlisting}[style=dnsmasq]
 > images/centos/7/x86_64/vmlinuz initrd=images/centos/7/x86_64/initrd.img rd.driver.pre=loop inst.
-repo=http://data01.demo.lan/centos/7/os/x86_64/ inst.ks=http://data01.demo.lan:/kickstarts/akasa.ks inst
-.geoloc=0 inst.text BOOTIF=01-00-30-1b-a0-6f-cc
+repo=http://data01.demo.lan/centos/7/os/x86_64/ inst.ks=http://data01.demo.lan:/kickstarts/akasa.ks
+inst.geoloc=0 inst.text BOOTIF=01-00-30-1b-a0-6f-cc
 \end{lstlisting}
 
 Los parámetros que no tienen el prefijo \emph{`inst'} serán interpretados directamente por el \emph{kernel} o por el subsistema \emph{Dracut}. Los parámetros que si que tienen el prefijo \emph{`inst'} van a ser interpretados más adelante por el instalador \emph{Anaconda}. El parámetro \emph{BOOTIF} que aparece al final, es consecuencia de la opción \emph{IPAPPEND 2} que hemos añadido en la configuración de \emph{PXELinux.0}. La dirección \emph{MAC} que aparece, corresponde con la interfície de red que ha iniciado el proceso \emph{PXE}, este valor también será usado más adelante por \emph{Anaconda}.
 
+En el siguiente esquema se representan las interacciones que se establecen entre los gestores de arranque del servidor que queremos aprovisionar \emph{kvm01} y el contenedor de arranque \emph{boot01}:\\
+
+\begin{figure}[h]
+  \centering
+    \includegraphics[scale=0.85]{bootstrap_1}
+      \caption{Gestor de arranque}
+\end{figure}
+
 \subsection{Dracut}
 Con el \emph{kernel} y el \emph{initramfs} ya cargados en memoria, \emph{PXELinux.0} entrega el control de ejecución, la dirección de memoria donde se encuentra el \emph{initramfs} y los parámetros de arranque al \emph{kernel} de Linux. El \emph{kernel} se descomprime a sí mismo y extrae el \emph{initramfs} (que se encuentra en formato \emph{cpio}) montándolo en el sistema de archivos raíz o \emph{`root file system (rootfs)'} para, finalmente, transferir el control de ejecución al binario \emph{/init} que ahora se encuentra en la raíz del nuevo \emph{rootfs}.
 
-En este contexto \emph{Dracut} tiene dos roles. Por un lado, es la herramienta de línea de comandos que se usa para crear el \emph{initramfs} y por otro lado, es el propio subsistema que se encierra dentro del \emph{initramfs} y que es invocado al ejecutar \emph{/init}. La única tarea del subsistema \emph{Dracut} es localizar, cargar y conmutar a la imagen final de \emph{rootfs} que se usará durante el posterior proceso de instalación.
+En este contexto \emph{Dracut} tiene dos roles. Por un lado, es la herramienta de línea de comandos que se usa para crear el \emph{initramfs} y por otro lado, es el propio subsistema que se encierra dentro del \emph{initramfs} y que es invocado al ejecutar \emph{/init}. La única tarea del subsistema \emph{Dracut} es localizar, cargar y conmutar a la imagen final de \emph{rootfs} que contiene el instalador \emph{Anaconda} y que se usará durante el posterior proceso de instalación.
 
 \subsubsection{Herramienta de línea de comandos}
-Normalmente no va a ser necesario crear un \emph{initramfs} a medida. Sin embargo, uno de los servidores que se han usado para realizar este proyecto necesita soporte específico para una tarjeta de red \emph{Nvidia}.
+Normalmente no es necesario crear un \emph{initramfs} a medida. Sin embargo, uno de los servidores que se han utilizado para realizar pruebas, necesita soporte específico para una tarjeta de red \emph{Nvidia}.
 Para generar el nuevo \emph{initramfs} que incorpora el driver obsoleto \emph{forcedeth}, se ha utilizado un contenedor de \emph{Docker} tal y como se muestra a continuación:\\
 
 \begin{lstlisting}[style=dnsmasq]
@@ -541,25 +556,59 @@ Tras ejecutar el comando anterior, aparecerá un nuevo subdirectorio en el direc
 Muchas distribuciones de Linux utilizan un único \emph{kernel} genérico con el que pretenden arrancar la más amplia variedad de hardware posible.
 Los controladores de dispositivos para esta imagen genérica se incluyen como módulos de carga dinámica o \emph{`loadable modules'} ya que no es posible compilarlos todos de forma estática en el \emph{kernel} sin hacerlo demasiado grande como para arrancarlo desde sistemas con poca memoria.
 
-Se plantea el problema de detectar y cargar los módulos necesarios para montar el sistema de ficheros raíz durante el arranque o, para el caso, determinar dónde se encuentra y qué constituye el \emph{rootfs}.
+Se plantea entonces el problema de detectar los dispositivos y cargar los módulos necesarios para montar el sistema de ficheros raíz durante el arranque o, para el caso, determinar dónde se encuentra y qué constituye el \emph{rootfs}.
+
+La misión principal del subsitema \emph{Dracut} es montar el \emph{rootfs} detectando dispositivos y cargando los drivers que sean necesarios para ello.
+
+En el siguiente esquema se representan las interacciones que se establecen entre \emph{Dracut} y el contenedor de datos \emph{data01}:\\
+
+\begin{figure}[h]
+  \centering
+    \includegraphics[scale=0.85]{bootstrap_2}
+      \caption{Dracut}
+\end{figure}
+
 \section{Instalación}
 
 \subsection{Anaconda}
 
-\section{Diagramas}
+\emph{Anaconda} es el programa de instalación usado por \emph{RedHat}, \emph{Fedora} y otras distribuciones de \emph{Linux}. Durante la instalación se detecta y configura el hardware del equipo y se prepara el sistema de ficheros adecuado para cada arquitectura. El instalador permite al usuario instalar y/o actualizar software en el equipo final. Una vez terminada la instalación, es necesario reiniciar el equipor para arrancar el nuevo sistema.
 
-\subsection{Diagrama de secuencia}
-En el siguiente diagrama de secuencia se pueden apreciar las interacciones que se producen entre el servidor de arranque \emph{`boot01.demo.lan'}, el servidor de datos \emph{`data01.demo.lan'} y el cliente que queremos aprovisionar \emph{`kvm01.demo.lan'}.
+\emph{Anaconda} es un instalador muy completo. Permite instalar desde fuentes locales y remotas como CDs y DVDs o imágenes almacenadas en disco, \emph{NFS}, \emph{HTTP} o \emph{FTP}. Pero la característica más destacable de \emph{Anaconda} para este proyecto es su capacidad para automatizar las instalaciones mediante ficheros \emph{kickstart}.
+
+\subsubsection{Kickstart}
+
+Blah
+
+En el siguiente esquema se representan las interacciones que se establecen entre \emph{Anaconda}, el contenedor de datos \emph{data01} y el contenedor de repositorios de código \emph{gito01}:
 
 \begin{figure}[h]
   \centering
-    \includegraphics[scale=0.65]{bootstrap}
-      \caption{Bootstrapping}
+    \includegraphics[scale=0.85]{bootstrap_3}
+      \caption{Anaconda}
 \end{figure}
 
-%---------
-% Puppet:
-%---------
+\subsection{R10K}
+
+\subsection{Puppet}
+
+\emph{R10K} descarga los módulos de \emph{Puppet} y \emph{Puppet} los aplica en el servidor para convertirlo en un hipervisor e instanciar las cuatro máqinas virtuales con \emph{CoreOS}. Dentro de \emph{CoreOS} \emph{Fleet} y \emph{Marathon} se conectan al registro de \emph{Docker} para descargar las imágenes de los contenedores:
+
+\begin{figure}[h]
+  \centering
+    \includegraphics[scale=0.85]{bootstrap_4}
+      \caption{R10K, Puppet y CoreOS}
+\end{figure}
+
+%------------------------
+% Guía de inicio rápido:
+%------------------------
+
+\chapter{Guía de inicio rápido}
+
+%------------
+% Biografía:
+%------------
 
 \begin{thebibliography}{2}
 
