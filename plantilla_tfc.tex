@@ -187,9 +187,10 @@ Una de las características que KVM posee es la estrategia de \emph{overcommit}.
 
 \subsection{CoreUp}
 
-\emph{CoreUp} es un script de 200 líneas escrito en \emph{Bash}. Su cometido principal es preparar el entorno para instanciar \emph{CoreOS}, es la `argamasa' entre KVM y \emph{CoreOS}. Una vez ejecutado no queda residente en memoria. Se encarga de:
+\emph{CoreUp} es un script de 300 líneas escrito en \emph{Bash}. Su cometido principal es preparar el entorno para instanciar \emph{CoreOS}, es la `argamasa' entre KVM y \emph{CoreOS}. Una vez ejecutado no queda residente en memoria. Se encarga de:
 
 \begin{itemize}
+  \item Verificar que el entorno es el adecuado para instanciar los servidores virtuales.
   \item Descargar la imagen de disco de CoreOS. Esta imagen se sirve desde el contenedor \emph{data01} para evitar la dependencia con internet.
   \item Incrementar el tamaño de disco de la imagen descargada a 20GB ya que el tamaño por defecto es únicamente de 3GB.
   \item Generar de forma dinámica la configuración de \emph{cloud-config} para las distintas instancias de CoreOS.
@@ -197,6 +198,30 @@ Una de las características que KVM posee es la estrategia de \emph{overcommit}.
   \item Generar direcciones MAC deterministas (siempre las mismas) para evitar colisiones entre las máquinas virtuales.
   \item Instanciar 4 servidores virtuales en cada hipervisor.
 \end{itemize}
+
+A continuación vemos como \emph{CoreUp} inicia por primera vez la máquina virtual \emph{core01}.
+\\
+
+\begin{lstlisting}[style=dnsmasq]
+[root@kvm01 ~]# coreup core01
+Checking VM is not running...                                                           [  OK  ]
+Checking hostname is not in use...                                                      [  OK  ]
+Checking VM limit is not reached...                                                     [  OK  ]
+Downloading CoreOS image file...                                                        [  OK  ]
+Resizing CoreOS disk image...                                                           [  OK  ]
+Generating cloud-config...                                                              [  OK  ]
+Generating TAP interfaces...                                                            [  OK  ]
+Starting the virtual machine...                                                         [  OK  ]
+Testing SSH port...                                                                     [  OK  ]
+Restarting after first boot...                                                          [  OK  ]
+Checking VM is not running...                                                           [  OK  ]
+Checking hostname is not in use...                                                      [  OK  ]
+Checking VM limit is not reached...                                                     [  OK  ]
+Generating cloud-config...                                                              [  OK  ]
+Generating TAP interfaces...                                                            [  OK  ]
+Starting the virtual machine...                                                         [  OK  ]
+Testing SSH port...                                                                     [  OK  ]
+\end{lstlisting}
 
 \subsection{CoreOS}
 
