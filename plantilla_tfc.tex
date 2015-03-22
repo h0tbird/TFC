@@ -357,7 +357,7 @@ En la maqueta del proyecto podemos consultar el listado de tareas en ejecución 
 
 \subsubsection{Marathon}
 
-\emph{Marathon} es un \emph{framework} de \emph{Mesos} especialmente diseñado para ejecutar aplicaciones que tienen una esperanza de vida larga, como por ejemplo, un servidor web \emph{Apache} o una base de datos de clave valor \emph{Redis}.
+\emph{Marathon} es un \emph{framework} de \emph{Mesos} especialmente diseñado para ejecutar aplicaciones que tienen una esperanza de vida larga como, por ejemplo, un servidor web \emph{Apache} o una base de datos de clave valor \emph{Redis}.
 
 \emph{Marathon} y \emph{Fleet} son herramientas similares. Las dos son consideradas \emph{`init systems'} distribuidos; sin embargo, \emph{Marathon} ofrece más prestaciones que \emph{Fleet}. Es por ello que el papel de \emph{Fleet} queda relegado a arrancar los servicios de \emph{Mesos} y \emph{Marathon}.
 
@@ -555,10 +555,10 @@ En el siguiente esquema se representan las interacciones que se establecen entre
 \subsection{Dracut}
 Con el \emph{kernel} y el \emph{initramfs} ya cargados en memoria, \emph{PXELinux.0} entrega el control de ejecución, la dirección de memoria donde se encuentra el \emph{initramfs} y los parámetros de arranque al \emph{kernel} de Linux. El \emph{kernel} se descomprime a sí mismo y extrae el \emph{initramfs} (que se encuentra en formato \emph{cpio}) montándolo en el sistema de archivos raíz o \emph{`root file system (rootfs)'} para, finalmente, transferir el control de ejecución al binario \emph{/init} que ahora se encuentra en la raíz del nuevo \emph{rootfs}.
 
-En este contexto \emph{Dracut} tiene dos roles. Por un lado, es la herramienta de línea de comandos que se usa para crear el \emph{initramfs} y por otro lado, es el propio subsistema que se encierra dentro del \emph{initramfs} y que es invocado al ejecutar \emph{/init}. La única tarea del subsistema \emph{Dracut} es localizar, cargar y conmutar a la imagen final de \emph{rootfs} que contiene el instalador \emph{Anaconda} y que se usará durante el posterior proceso de instalación.
+En este contexto \emph{Dracut} tiene dos roles. Por un lado, es la herramienta de línea de comandos que se usa para crear el \emph{initramfs} y, por otro lado, es el propio subsistema que se encierra dentro del \emph{initramfs} y que es invocado al ejecutar \emph{/init}. La única tarea del subsistema \emph{Dracut} es localizar, cargar y conmutar a la imagen final de \emph{rootfs} que contiene el instalador \emph{Anaconda} y que se usará durante el posterior proceso de instalación.
 
 \subsubsection{Herramienta de línea de comandos}
-Normalmente no es necesario crear un \emph{initramfs} a medida. Sin embargo, uno de los servidores que se han utilizado para realizar pruebas, necesita soporte específico para una tarjeta de red \emph{Nvidia}.
+Normalmente no es necesario crear un \emph{initramfs} a medida. Sin embargo, uno de los servidores que se han utilizado para realizar pruebas necesita soporte específico para una tarjeta de red \emph{Nvidia}.
 Para generar el nuevo \emph{initramfs} que incorpora el driver obsoleto \emph{forcedeth}, se ha utilizado un contenedor de \emph{Docker} tal y como se muestra a continuación:\\
 
 \begin{lstlisting}[style=dnsmasq]
@@ -579,7 +579,7 @@ Tras ejecutar el comando anterior, aparecerá un nuevo subdirectorio en el direc
 
 \subsubsection{Subsistema Dracut}
 Muchas distribuciones de Linux utilizan un único \emph{kernel} genérico con el que pretenden arrancar la más amplia variedad de hardware posible.
-Los controladores de dispositivos para esta imagen genérica se incluyen como módulos de carga dinámica o \emph{`loadable modules'} ya que no es posible compilarlos todos de forma estática en el \emph{kernel} sin hacerlo demasiado grande como para arrancarlo desde sistemas con poca memoria.
+Los controladores de dispositivos para esta imagen genérica se incluyen como módulos de carga dinámica o \emph{`loadable modules'}. Se procede de esta manera ya que no es posible compilarlos todos de forma estática en el \emph{kernel} sin hacerlo demasiado grande como para arrancarlo desde sistemas con poca memoria.
 
 Se plantea entonces el problema de detectar los dispositivos y cargar los módulos necesarios para montar el sistema de ficheros raíz durante el arranque o, para el caso, determinar dónde se encuentra y qué constituye el \emph{rootfs}.
 
@@ -597,7 +597,7 @@ En el siguiente esquema se representan las interacciones que se establecen entre
 
 \subsection{Anaconda}
 
-\emph{Anaconda} es el programa de instalación usado por \emph{RedHat}, \emph{Fedora} y otras distribuciones de \emph{Linux}. Durante la instalación se detecta y configura el hardware del equipo y se prepara el sistema de ficheros adecuado para cada arquitectura. El instalador permite al usuario instalar y/o actualizar software en el equipo final. Una vez terminada la instalación, es necesario reiniciar el equipor para arrancar el nuevo sistema.
+\emph{Anaconda} es el programa de instalación usado por \emph{RedHat}, \emph{Fedora} y otras distribuciones de \emph{Linux}. Durante la instalación se detecta y configura el hardware del equipo y se prepara el sistema de ficheros adecuado para cada arquitectura. El instalador permite al usuario instalar y/o actualizar software en el equipo final. Una vez terminada la instalación, es necesario reiniciar el equipo para arrancar el nuevo sistema.
 
 \emph{Anaconda} es un instalador muy completo. Permite instalar desde fuentes locales y remotas como CDs y DVDs o imágenes almacenadas en disco, \emph{NFS}, \emph{HTTP} o \emph{FTP}. Pero la característica más destacable de \emph{Anaconda} para este proyecto es su capacidad para automatizar las instalaciones mediante ficheros \emph{kickstart}.
 
@@ -665,9 +665,49 @@ En el siguiente esquema se representan las interacciones que se establecen entre
 
 \subsection{R10K}
 
+\emph{R10K} es una pequeña herramienta escrita en \emph{Ruby} que se ejecuta en el cliente y se encarga de gestionar módulos y entornos de \emph{Puppet}. En este trabajo los clientes son los equipos físicos \emph{kvm01} y \emph{kvm02} que ejercerán funciones de hipervisor. La configuración de \emph{R10K} se encuentra en un repositorio de control llamado \emph{r10k-kvm}.
+
+El repositorio contiene un fichero de configuración llamado \emph{Puppetfile} y un fichero de datos en formato \emph{YAML}. El fichero de configuración contiene un listado de módulos de \emph{Puppet}, versiones y ubicaciones de descarga. El fichero de datos contiene parámetros que se le entregan al código para controlar su comportamiento. El cometido de \emph{R10K} es descargar el código y los datos para que \emph{Puppet} pueda entrar en acción.
+
+A continuación vemos parte del contenido del fichero \emph{Puppetfile} usado por \emph{R10K} en los hipervisores para descargar el código de \emph{Puppet}:\\
+
+\begin{lstlisting}[style=dnsmasq]
+mod 'r_kvm',
+  :git => 'http://gito01.demo.lan/cgit/puppet-r_kvm'
+
+mod 'r_base',
+  :git => 'http://gito01.demo.lan/cgit/puppet-r_base'
+
+mod 'stdlib',
+  :git => 'http://gito01.demo.lan/cgit/puppet-m_stdlib',
+  :tag => '4.3.2'
+\end{lstlisting}
+
+El fichero de datos contiene parámetros que serán entregados al código en tiempo de compilación. A modo de muestra, el siguiente fragmento define algunas propiedades del super usuario de sistema \emph{root}:\\
+
+\begin{lstlisting}[style=dnsmasq]
+Users:
+ root: &User_root
+  linux:
+   uid: '0'
+   gid: '0'
+   comment: 'root'
+   pass: '!!'
+   home: '/root'
+   shell: '/bin/bash'
+   keys:
+    marc.villacorta:
+     key: *SshKey_marc_villacorta
+    deborah.aguilar:
+     key: *SshKey_deborah_aguilar
+   profiles:
+    - 'root'
+    - 'marc.villacorta'
+    - 'deborah.aguilar'
+\end{lstlisting}
+
 \subsection{Puppet}
 
-\emph{R10K} descarga los módulos de \emph{Puppet} y \emph{Puppet} los aplica en el servidor para convertirlo en un hipervisor e instanciar las cuatro máqinas virtuales con \emph{CoreOS}. Dentro de \emph{CoreOS} \emph{Fleet} y \emph{Marathon} se conectan al registro de \emph{Docker} para descargar las imágenes de los contenedores:
 
 \begin{figure}[h]
   \centering
