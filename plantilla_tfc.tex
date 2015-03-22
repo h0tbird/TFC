@@ -603,7 +603,57 @@ En el siguiente esquema se representan las interacciones que se establecen entre
 
 \subsubsection{Kickstart}
 
-Blah
+La idea que hay detrás de los ficheros \emph{kickstart} es muy sencilla. Se trata de proporcionar al instalador \emph{Anaconda} un fichero con todas las respuestas a las preguntas que normalmente se hacen durante el proceso de instalación. El objetivo es que la instalación sea totalment desatendida.
+
+Un fichero \emph{kickstart} no es más que un fichero de texto que contiene distintos elementos agrupados por secciones ordenadas. A continuación se muestra un fragmento del fichero \emph{kvm-akasa.ks} utilizado para aprovisionar los hipervisores de este proyecto:\\
+
+\begin{lstlisting}[style=dnsmasq]
+install
+url --url="http://data01.demo.lan/centos/7/os/x86_64/"
+text
+keyboard es
+lang en_US.UTF-8
+eula --agreed
+network --bootproto=dhcp --device=bootif --onboot=on
+rootpw password
+timezone Europe/Madrid --isUtc
+services --disabled auditd,avahi-daemon,NetworkManager,postfix,microcode,tuned
+services --enabled network,sshd
+selinux --disabled
+firewall --disabled
+repo --name="CentOS" --baseurl=http://data01.demo.lan/centos/7/os/x86_64/
+repo --name="Updates" --baseurl=http://data01.demo.lan/centos/7/updates/
+repo --name="EPEL" --baseurl=http://data01.demo.lan/centos/7/epel/
+repo --name="Misc" --baseurl=http://data01.demo.lan/centos/7/misc/
+repo --name="Puppet-products" --baseurl=http://data01.demo.lan/puppet/puppetlabs-products/
+repo --name="Puppet-deps" --baseurl=http://data01.demo.lan/puppet/puppetlabs-deps/
+ignoredisk --only-use=sda
+bootloader --location=mbr
+zerombr
+clearpart --all --initlabel
+part swap --asprimary --fstype="swap" --size=1024
+part /boot --fstype xfs --size=200
+part / --fstype ext4 --size=1024 --grow
+reboot
+\end{lstlisting}
+
+En la sección \emph{post} del fichero se le indica a \emph{Anaconda} que utilice \emph{R10K} para instalar el código que posteriormente será utilizado por \emph{Puppet}:\\
+
+\begin{lstlisting}[style=dnsmasq]
+% post --log=/root/ks-post-chroot.log
+cat << EOF > /etc/r10k.yaml
+cachedir: /var/cache/r10k
+sources:
+ puppet:
+  remote: 'http://gito01.demo.lan/cgit/r10k-kvm'
+   basedir: /etc/puppet/environments
+EOF
+
+rm -rf /etc/puppet
+git clone http://gito01.demo.lan/cgit/puppet-config /etc/puppet
+rm -rf /etc/puppet/environments/*
+/usr/local/bin/r10k deploy environment
+\end{lstlisting}
 
 En el siguiente esquema se representan las interacciones que se establecen entre \emph{Anaconda}, el contenedor de datos \emph{data01} y el contenedor de repositorios de código \emph{gito01}:
 
