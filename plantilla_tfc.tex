@@ -389,6 +389,68 @@ curl -s -H "Content-Type: application/json" http://core01:8080/v2/apps -d \
 
 \chapter{Plataforma de arranque}
 
+La plataforma de arranque o \emph{bootstrapping} esta compuesta por 6 contenedores de \emph{Docker} conectados entre sí mediante un bridge que a su vez los conecta con la red física. En el siguiente esquema se representan los 6 contenedores, las interfaces de red y los sistemas físicos que queremos aprovisionar y que constituirán la plataforma de explotación:
+
+\begin{figure}[h]
+  \centering
+    \includegraphics[scale=1]{booddies2}
+      \caption{Plataforma de arranque}
+\end{figure}
+
+En la tabla que sigue se detallan los siguientes conceptos:
+
+\begin{itemize}
+  \item \textbf{Imagen:} Nombre público de la imagen que se utiliza como base sobre la que instanciar el contenedor.
+  \item \textbf{Container ID:} Identificador del contenedor una vez instanciado a partir de su imagen base.
+  \item \textbf{Binario:} Ruta completa al binario que se ejecuta como único proceso dentro del contenedor.
+  \item \textbf{Servicios:} Listado de los servicios proporcionados por cada instancia del contenedor.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|l|c|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Imagen}}    & \textbf{Container ID} & \multicolumn{1}{c|}{\textbf{Binario}} & \textbf{Servicio} \\ \hline
+h0tbird/boot                             & boot01                & \textit{/usr/sbin/dnsmasq}            & PXE,DHCP,TFTP,DNS \\ \hline
+h0tbird/data                             & data01                & \textit{/usr/sbin/httpd}              & HTTP,YUM          \\ \hline
+h0tbird/gito                             & gito01                & \textit{/usr/sbin/sshd}               & SSH,GIT           \\ \hline
+h0tbird/cgit                             & cgit01                & \textit{/usr/sbin/httpd}              & HTTP,CGIT         \\ \hline
+h0tbird/regi                             & regi01                & \textit{/usr/bin/gunicorn}            & Docker registry   \\ \hline
+h0tbird/ntpd                             & ntpd01                & \textit{ntpd}                         & NTP               \\ \hline
+\end{tabular}
+\caption{Imágenes, contenedores y servicios}
+\end{table}
+
+\begin{lstlisting}[style=dnsmasq]
+# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+h0tbird/gito        latest              c48d28d1b611        8 days ago          321.7 MB
+h0tbird/cgit        latest              8d41334e9359        8 days ago          338.6 MB
+h0tbird/regi        latest              f5cd3db745e7        8 days ago          286.4 MB
+h0tbird/data        latest              77d8e6f858f7        8 days ago          317.8 MB
+h0tbird/boot        latest              c58be2afc754        8 days ago          250.7 MB
+\end{lstlisting}
+
+\begin{lstlisting}[style=dnsmasq]
+# docker ps
+CONTAINER ID    IMAGE                  COMMAND                 CREATED        STATUS        NAMES
+1c804df5ba93    h0tbird/cgit:latest    "/init /usr/sbin/htt    7 hours ago    Up 7 hours    cgit01
+196677cc770b    h0tbird/data:latest    "/init /usr/sbin/htt    7 hours ago    Up 7 hours    data01
+4438c7893f3f    h0tbird/regi:latest    "/init /usr/bin/pyth    7 hours ago    Up 7 hours    regi01
+c1c76bdde097    h0tbird/gito:latest    "/init /usr/sbin/ssh    7 hours ago    Up 7 hours    gito01
+b989bf902735    h0tbird/boot:latest    "/init /usr/sbin/dns    7 hours ago    Up 7 hours    boot01
+\end{lstlisting}
+
+\begin{lstlisting}[style=dnsmasq]
+# brctl show
+bridge name    bridge id          STP   enabled interfaces
+br0            8000.5215caf87b70  no    eth0
+                                        veth-boot01
+                                        veth-data01
+                                        veth-gito01
+                                        veth-regi01
+\end{lstlisting}
+
 %----------------
 % Bootstrapping:
 %----------------
@@ -708,7 +770,7 @@ Users:
 
 \subsection{Puppet}
 
-\emph{Puppet} es una herramienta de gestión de configuraciones que incorpora un lenguaje declarativo específicamente diseñado para este cometido. Suele usarse de forma centralizada gracias a su arquitectura cliente servidor.
+\emph{Puppet} es una herramienta de gestión de configuraciones que incorpora un lenguaje declarativo específicamente diseñado para este cometido. Suele usarse de forma centralizada gracias a su arquitectura cliente-servidor.
 
 El usuario utiliza el lenguaje para describir el estado deseado para su sistema cliente. Al código resultante se le llama \emph{'manifest'} y se almacena en el servidor. Los clientes toman la iniciativa y solicitan su configuración al servidor cada cierto tiempo.
 
@@ -728,9 +790,9 @@ operatingsystem => CentOS
 
 El servidor, que ahora se encuentra en posesión del \emph{manifest} y de los \emph{facts}, interpola los valores y compila el código produciendo, de esta manera, el catálogo o \emph{'catalog'} que se entrega al cliente.
 
-En este punto, el cliente realiza una introspección para obtener la visión de cual es su estado actual. El estado actual del sistema se compara con el estado deseado del sistema (definido en el catálogo) y \emph{Puppet} determina y ejecuta las transiciones que deben llevarse a cabo para pasar de un estado al otro.
+En este punto el cliente realiza una introspección para obtener la visión de cual es su estado actual. El estado actual del sistema se compara con el estado deseado del sistema (definido en el catálogo) y \emph{Puppet} determina y ejecuta las transiciones que deben llevarse a cabo para pasar de un estado al otro.
 
-En este proyecto no se utiliza la arquitectura cliente servidor de \emph{Puppet}. Todo el procedimiento descrito se realiza en el cliente de forma totalmente descentralizada también conocida como \emph{Masterless}. El \emph{manifest} de cada cliente se sincroniza con \emph{R10K} que lo recupera de un servidor \emph{gitolite} de repositorios \emph{Git}.
+En este proyecto no se utiliza la arquitectura cliente-servidor de \emph{Puppet}. Todo el procedimiento descrito se realiza en el cliente de forma totalmente descentralizada. Esta arquitectura en la que no existe servidor, se conoce también con el nombre de \emph{Masterless}. El \emph{manifest} de cada cliente se sincroniza con \emph{R10K} que lo recupera de un servidor \emph{gitolite} de repositorios \emph{Git}.
 
 En el siguiente esquema se pueden apreciar las relaciones que se establecen entre el servidor que queremos aprovisionar \emph{kvm01} y los contenedores \emph{gito01}, \emph{data01} y \emph{regi01}:\\
 
