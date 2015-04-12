@@ -708,6 +708,31 @@ Users:
 
 \subsection{Puppet}
 
+\emph{Puppet} es una herramienta de gestión de configuraciones que incorpora un lenguaje declarativo específicamente diseñado para este cometido. Suele usarse de forma centralizada gracias a su arquitectura cliente servidor.
+
+El usuario utiliza el lenguaje para describir el estado deseado para su sistema cliente. Al código resultante se le llama \emph{'manifest'} y se almacena en el servidor. Los clientes toman la iniciativa y solicitan su configuración al servidor cada cierto tiempo.
+
+En la solicitud del cliente se incorpora un informe de hechos o \emph{'facts'}. Este informe no es más que un listado de pares de clave y valor con datos descriptivos del sistema cliente.
+
+Veamos un ejemplo de \emph{facter}, la herramienta que utiliza el cliente para generar sus \emph{facts}:\\
+
+\begin{lstlisting}[style=dnsmasq]
+[root@kvm01 ~]# facter architecture bios_vendor fqdn ipaddress operatingsystem kernel
+architecture => x86_64
+bios_vendor => Intel Corp.
+fqdn => kvm01.demo.lan
+ipaddress => 192.168.1.113
+kernel => Linux
+operatingsystem => CentOS
+\end{lstlisting}
+
+El servidor, que ahora se encuentra en posesión del \emph{manifest} y de los \emph{facts}, interpola los valores y compila el código produciendo, de esta manera, el catálogo o \emph{'catalog'} que se entrega al cliente.
+
+En este punto, el cliente realiza una introspección para obtener la visión de cual es su estado actual. El estado actual del sistema se compara con el estado deseado del sistema (definido en el catálogo) y \emph{Puppet} determina y ejecuta las transiciones que deben llevarse a cabo para pasar de un estado al otro.
+
+En este proyecto no se utiliza la arquitectura cliente servidor de \emph{Puppet}. Todo el procedimiento descrito se realiza en el cliente de forma totalmente descentralizada también conocida como \emph{Masterless}. El \emph{manifest} de cada cliente se sincroniza con \emph{R10K} que lo recupera de un servidor \emph{gitolite} de repositorios \emph{Git}.
+
+En el siguiente esquema se pueden apreciar las relaciones que se establecen entre el servidor que queremos aprovisionar \emph{kvm01} y los contenedores \emph{gito01}, \emph{data01} y \emph{regi01}:\\
 
 \begin{figure}[h]
   \centering
