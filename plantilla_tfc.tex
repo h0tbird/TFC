@@ -11,6 +11,11 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage{eurosym}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{wrapfig,booktabs}
+\usepackage[justification=centering]{caption}
+\usepackage{wrapfig}
+\usepackage{enumitem}
 
 %---------------------------------
 % Code snippets style definition:
@@ -92,7 +97,7 @@ En el siguiente esquema simplificado se pueden apreciar las relaciones de orden 
 
 \textbf{¿Cómo?} El grueso del trabajo no se centra en la explotación de la plataforma sino en la automatización de su despliegue. Se detallará el proceso completo, desde el servidor vacío que nos entrega el fabricante hasta la primera ejecución de un trabajo en el \emph{framework} de \emph{Marathon}.\\
 
-Para realizar la automatización se ha creado una plataforma paralela de arranque, o \emph{bootstrapping}, compuesta por cinco elementos funcionales que han sido encapsulados como microservicios dentro de contenedores de \emph{Docker}. El siguiente esquema simplificado conecta con el anterior esquema de la plataforma de explotación:
+Para realizar la automatización se ha creado una plataforma paralela de arranque, o \emph{bootstrapping}, compuesta por seis elementos funcionales que han sido encapsulados como microservicios dentro de contenedores de \emph{Docker}. El siguiente esquema simplificado conecta con el anterior esquema de la plataforma de explotación:
 
 \begin{figure}[h]
   \centering
@@ -100,7 +105,7 @@ Para realizar la automatización se ha creado una plataforma paralela de arranqu
       \caption{Plataforma de arranque}
 \end{figure}
 
-Más adelante se detallará el rol de cada uno de los cinco contenedores, su proceso de construcción y cómo interactúan entre ellos para aprovisionar los servidores y desplegar los servicios de la plataforma de explotación.
+Más adelante se detallará el rol de cada uno de los seis contenedores, su proceso de construcción y cómo interactúan entre ellos para aprovisionar los servidores y desplegar los servicios de la plataforma de explotación.
 
 En el contexto de este trabajo entendemos por \emph{'aprovisionamiento de un sistema'} el conjunto de acciones que se deben realizar para disponer de un equipo, ya sea físico o virtual, con un mínimo sistema operativo instanciado y accesible a nivel TCP/IP\@. No se trata de dar mucha inteligencia al sistema de aprovisionamiento, sino de consensuar un modelo sencillo y predecible que resulte eficaz en su funcionamiento y simple de mantener.
 
@@ -165,7 +170,7 @@ La red se define mediante software y a lo largo de distintas fases coordinadas p
 
 \section{Software}
 
-La pila o \emph{stack} de software es aparentemente compleja, sin embargo, se repite para cada nodo del cluster de manera que el escalado se convierte en una tarea sencilla. En la siguiente figura se pueden apreciar con algo más de detalle los distintos componentes que constituyen la plataforma de explotación.
+La pila o \emph{stack} de software es aparentemente compleja, sin embargo, se repite para cada nodo del cluster de manera que el escalado horizontal se convierte en una tarea sencilla. En la siguiente figura se pueden apreciar con algo más de detalle los distintos componentes que constituyen la plataforma de explotación.
 
 \begin{figure}[h]
   \centering
@@ -187,7 +192,7 @@ Una de las características que KVM posee es la estrategia de \emph{overcommit}.
 
 \subsection{CoreUp}
 
-\emph{CoreUp} es un script de 300 líneas escrito en \emph{Bash}. Su cometido principal es preparar el entorno para instanciar \emph{CoreOS}, es la `argamasa' entre KVM y \emph{CoreOS}. Una vez ejecutado no queda residente en memoria. Se encarga de:
+\emph{CoreUp} es un script de unas 300 líneas escrito en \emph{Bash}. Su cometido principal es preparar el entorno para instanciar \emph{CoreOS}, es la `argamasa' entre KVM y \emph{CoreOS}. Una vez ejecutado no queda residente en memoria. Se encarga de:
 
 \begin{itemize}
   \item Verificar que el entorno es el adecuado para instanciar los servidores virtuales.
@@ -196,6 +201,7 @@ Una de las características que KVM posee es la estrategia de \emph{overcommit}.
   \item Generar de forma dinámica la configuración de \emph{cloud-config} para las distintas instancias de CoreOS.
   \item Generar dispositivos TAP de red (capa 2) para interconectar las VMs con el host anfitrión.
   \item Generar direcciones MAC deterministas (siempre las mismas) para evitar colisiones entre las máquinas virtuales.
+  \item Determinar los recursos de cada VM en función de los recursos de cada hipervisor y del factor de \emph{overcommit} definido.
   \item Instanciar 4 servidores virtuales en cada hipervisor.
 \end{itemize}
 
@@ -389,22 +395,29 @@ curl -s -H "Content-Type: application/json" http://core01:8080/v2/apps -d \
 
 \chapter{Plataforma de arranque}
 
-La plataforma de arranque o \emph{bootstrapping} esta compuesta por 6 contenedores de \emph{Docker} conectados entre sí mediante un bridge que a su vez los conecta con la red física. En el siguiente esquema se representan los 6 contenedores, las interfaces de red y los sistemas físicos que queremos aprovisionar y que constituirán la plataforma de explotación:
+\section{A vista de pájaro}
 
-\begin{figure}[h]
-  \centering
-    \includegraphics[scale=1]{booddies2}
-      \caption{Plataforma de arranque}
-\end{figure}
+La plataforma de arranque o \emph{bootstrapping} esta compuesta por seis contenedores de \emph{Docker} conectados entre sí mediante un \emph{bridge} que a su vez los conecta con la red física. En el siguiente esquema se representan los seis contenedores, las interfaces de red y los sistemas físicos que queremos aprovisionar y que constituirán la plataforma de explotación:
 
-En la tabla que sigue se detallan los siguientes conceptos:
+\begin{wrapfigure}{r}{0.35\textwidth}
+\vspace{-15pt}
+\begin{center}
+  \includegraphics[scale=1]{booddies2}
+  \caption{Plataforma de arranque}
+\end{center}
+\vspace{-110pt}
+\end{wrapfigure}
 
-\begin{itemize}
-  \item \textbf{Imagen:} Nombre público de la imagen que se utiliza como base sobre la que instanciar el contenedor.
+En la tabla de abajo se detallan, para cada uno de los seis contenedores, los siguientes conceptos:
+
+\begin{itemize}[leftmargin=20pt]
+  \item \textbf{Imagen:} Nombre público de la imagen de \emph{Docker} que se utiliza como base sobre la que instanciar el contenedor.
   \item \textbf{Container ID:} Identificador del contenedor una vez instanciado a partir de su imagen base.
   \item \textbf{Binario:} Ruta completa al binario que se ejecuta como único proceso dentro del contenedor.
   \item \textbf{Servicios:} Listado de los servicios proporcionados por cada instancia del contenedor.
 \end{itemize}
+
+\vspace{30pt}
 
 \begin{table}[h]
 \centering
@@ -421,6 +434,12 @@ h0tbird/ntpd                             & ntpd01                & \textit{ntpd}
 \caption{Imágenes, contenedores y servicios}
 \end{table}
 
+Más adelante, en el capítulo 4, veremos cómo instalar la plataforma de arranque. En este capítulo se supone que la plataforma ya ha sido instalada de manera que podemos explorar su estado utilizando varios comandos que nos darán visión sobre los contenedores y los distintos elementos de red.
+
+\section{Explorando la plataforma}
+
+El comando \emph{'docker images'} sirve para mostrar el listado de imágenes de \emph{Docker} que han sido previamente descargadas en el sistema local:\\
+
 \begin{lstlisting}[style=dnsmasq]
 # docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
@@ -429,7 +448,10 @@ h0tbird/cgit        latest              8d41334e9359        8 days ago          
 h0tbird/regi        latest              f5cd3db745e7        8 days ago          286.4 MB
 h0tbird/data        latest              77d8e6f858f7        8 days ago          317.8 MB
 h0tbird/boot        latest              c58be2afc754        8 days ago          250.7 MB
+h0tbird/ntpd        latest              1234567890ab        8 days ago          233.7 MB
 \end{lstlisting}
+
+El comando \emph{'docker ps'} sirve para mostrar el listado de contenedores instanciados a partir de las imágenes anteriores:\\
 
 \begin{lstlisting}[style=dnsmasq]
 # docker ps
@@ -439,7 +461,10 @@ CONTAINER ID    IMAGE                  COMMAND                 CREATED        ST
 4438c7893f3f    h0tbird/regi:latest    "/init /usr/bin/pyth    7 hours ago    Up 7 hours    regi01
 c1c76bdde097    h0tbird/gito:latest    "/init /usr/sbin/ssh    7 hours ago    Up 7 hours    gito01
 b989bf902735    h0tbird/boot:latest    "/init /usr/sbin/dns    7 hours ago    Up 7 hours    boot01
+1234567890ab    h0tbird/ntpd:latest    "/init /something/so    7 hours ago    Up 7 hours    ntpd01
 \end{lstlisting}
+
+El comando \emph{'brctl show'} sirve para mostrar el estado de los \emph{'bridges'} así como de las \emph{'interfaces'} que tienen vinculadas:\\
 
 \begin{lstlisting}[style=dnsmasq]
 # brctl show
@@ -448,8 +473,230 @@ br0            8000.5215caf87b70  no    eth0
                                         veth-boot01
                                         veth-data01
                                         veth-gito01
+                                        veth-ntpd01
                                         veth-regi01
 \end{lstlisting}
+
+Podemos, también, ejecutar \emph{'systemctl status'} para consultar el estado de los distintos servicios:\\
+
+\begin{lstlisting}[style=dnsmasq]
+# systemctl status boot data gito cgit regi ntpd
+\end{lstlisting}
+
+A continuación veremos cada uno de los seis contenedores usados en la plataforma de arranque.
+
+\clearpage
+
+\section{Los seis contenedores}
+
+\subsection{boot01}
+
+El contenedor \emph{boot01} es el primer contenedor de la plataforma de \emph{bootstrapping} que hay que arrancar puesto que se encargará de asignar direcciones \emph{IP} a los cinco contenedores restantes.
+Podemos inspeccionar su estado con el siguiente comando:\\
+
+\begin{lstlisting}[style=dnsmasq]
+# journalctl -f -u boot
+\end{lstlisting}
+
+Dentro de \emph{boot01} se ejecuta \emph{'dnsmasq'} como único proceso. \emph{Dnsmasq} proporciona infraestructura de red aportando funcionalidades tales como DHCP, PXE, TFTP y DNS.
+
+A parte de la propia imagen del contenedor (descargada de forma automática la primera vez que se inicia el servicio), \emph{boot01} dispone de los siguientes ficheros de configuración y directorios de datos:
+
+\begin{table}[h]
+
+  \centering
+
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{Configuración}        & \textit{/etc/booddies/boot.conf}          \\
+    \midrule
+    \rowcolor[HTML]{EFEFEF}
+    \textbf{Fichero de servicio}  & \textit{/etc/systemd/system/boot.service} \\
+    \midrule
+    \textbf{Fichero de control}   & \textit{/usr/local/sbin/runctl-boot}      \\
+    \midrule
+    \rowcolor[HTML]{EFEFEF}
+    \textbf{Directorio de datos}  & \textit{/data/boot}                       \\
+    \bottomrule
+  \end{tabular}
+
+  \caption{Ficheros y directorios de boot01}
+
+\end{table}
+
+La imagen del contenedor ha sido producida aplicando la siguiente receta o \emph{Dockerfile}:\\
+
+\begin{lstlisting}[style=dnsmasq]
+FROM centos:7
+MAINTAINER Marc Villacorta Morera <marc.villacorta@gmail.com>
+RUN rpm --import http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
+RUN yum update -y && yum clean all
+RUN yum install -y dnsmasq syslinux-tftpboot && yum clean all
+RUN mkdir /tftpboot && \
+ln /var/lib/tftpboot/pxelinux.0 /tftpboot/ && \
+ln /var/lib/tftpboot/menu.c32 /tftpboot/
+ADD rootfs /
+ENTRYPOINT ["/init", "/usr/sbin/dnsmasq", "-k"]
+\end{lstlisting}
+
+\subsection{data01}
+
+El contenedor \emph{data01} arranca en paralelo con los contenedores \emph{gito01}, \emph{regi01} y \emph{ntpd01}.
+Este contenedor ejecuta un servidor web \emph{Apache} que se utiliza como servidor de ficheros estáticos.
+Principalmente repositorios \emph{YUM}, la imagen del instalador \emph{Anaconda}, la imagen de disco del sistema operativo \emph{CoreOS} y ficheros \emph{kickstart}.
+
+Podemos ver la actividad del servidor web con el siguiente comando:\\
+
+\begin{lstlisting}[style=dnsmasq]
+# docker exec -it data01 bash -c "tail -f /var/log/httpd/*"
+\end{lstlisting}
+
+Relación de ficheros que influyen sobre el comportamiento de \emph{data01}:
+
+\begin{table}[h]
+
+  \centering
+
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{Configuración}        & \textit{/etc/booddies/data.conf}          \\
+    \midrule
+    \rowcolor[HTML]{EFEFEF}
+    \textbf{Fichero de servicio}  & \textit{/etc/systemd/system/data.service} \\
+    \midrule
+    \textbf{Fichero de control}   & \textit{/usr/local/sbin/runctl-data}      \\
+    \midrule
+    \rowcolor[HTML]{EFEFEF}
+    \textbf{Directorio de datos}  & \textit{/data/data}                       \\
+    \bottomrule
+  \end{tabular}
+
+  \caption{Ficheros y directorios de data01}
+
+\end{table}
+
+La imagen del contenedor ha sido producida aplicando la siguiente receta o \emph{Dockerfile}:\\
+
+\begin{lstlisting}[style=dnsmasq]
+FROM centos:7
+MAINTAINER Marc Villacorta Morera <marc.villacorta@gmail.com>
+RUN rpm --import http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
+RUN rpm --import http://yum.puppetlabs.com/RPM-GPG-KEY-puppetlabs
+RUN rpm --import http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
+RUN yum update -y && yum clean all
+RUN yum install -y epel-release \
+    http://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm && \
+    yum clean all
+RUN yum install -y httpd wget rsync yum-utils createrepo repoview && \
+    yum clean all
+RUN rm -f /etc/httpd/conf.d/welcome.conf
+ADD rootfs /
+ENTRYPOINT ["/init", "/usr/sbin/httpd", "-DFOREGROUND"]
+\end{lstlisting}
+
+\subsection{gito01}
+
+El contenedor \emph{gito01}
+
+\begin{table}[h]
+
+  \centering
+
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{Configuración}        & \textit{/etc/booddies/gito.conf}          \\
+    \midrule
+    \rowcolor[HTML]{EFEFEF}
+    \textbf{Fichero de servicio}  & \textit{/etc/systemd/system/gito.service} \\
+    \midrule
+    \textbf{Fichero de control}   & \textit{/usr/local/sbin/runctl-gito}      \\
+    \midrule
+    \rowcolor[HTML]{EFEFEF}
+    \textbf{Directorio de datos}  & \textit{/data/gito}                       \\
+    \bottomrule
+  \end{tabular}
+
+  \caption{Ficheros y directorios de gito01}
+
+\end{table}
+
+\subsection{cgit01}
+
+El contenedor \emph{cgit01}
+
+\begin{table}[h]
+
+  \centering
+
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{Configuración}        & \textit{/etc/booddies/cgit.conf}          \\
+    \midrule
+    \rowcolor[HTML]{EFEFEF}
+    \textbf{Fichero de servicio}  & \textit{/etc/systemd/system/cgit.service} \\
+    \midrule
+    \textbf{Fichero de control}   & \textit{/usr/local/sbin/runctl-cgit}      \\
+    \midrule
+    \rowcolor[HTML]{EFEFEF}
+    \textbf{Directorio de datos}  & \textit{/data/cgit}                       \\
+    \bottomrule
+  \end{tabular}
+
+  \caption{Ficheros y directorios de cgit01}
+
+\end{table}
+
+\subsection{regi01}
+
+El contenedor \emph{regi01}
+
+\begin{table}[h]
+
+  \centering
+
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{Configuración}        & \textit{/etc/booddies/regi.conf}          \\
+    \midrule
+    \rowcolor[HTML]{EFEFEF}
+    \textbf{Fichero de servicio}  & \textit{/etc/systemd/system/regi.service} \\
+    \midrule
+    \textbf{Fichero de control}   & \textit{/usr/local/sbin/runctl-regi}      \\
+    \midrule
+    \rowcolor[HTML]{EFEFEF}
+    \textbf{Directorio de datos}  & \textit{/data/regi}                       \\
+    \bottomrule
+  \end{tabular}
+
+  \caption{Ficheros y directorios de regi01}
+
+\end{table}
+
+\subsection{ntpd01}
+
+El contenedor \emph{ntpd01}
+
+\begin{table}[h]
+
+  \centering
+
+  \begin{tabular}{ll}
+    \toprule
+    \textbf{Configuración}        & \textit{/etc/booddies/ntpd.conf}          \\
+    \midrule
+    \rowcolor[HTML]{EFEFEF}
+    \textbf{Fichero de servicio}  & \textit{/etc/systemd/system/ntpd.service} \\
+    \midrule
+    \textbf{Fichero de control}   & \textit{/usr/local/sbin/runctl-ntpd}      \\
+    \midrule
+    \rowcolor[HTML]{EFEFEF}
+    \textbf{Directorio de datos}  & \textit{/data/ntpd}                       \\
+    \bottomrule
+  \end{tabular}
+
+  \caption{Ficheros y directorios de ntpd01}
+
+\end{table}
 
 %----------------
 % Bootstrapping:
