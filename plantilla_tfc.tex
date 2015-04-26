@@ -397,7 +397,7 @@ curl -s -H "Content-Type: application/json" http://core01:8080/v2/apps -d \
 
 \section{A vista de pájaro}
 
-La plataforma de arranque o \emph{bootstrapping} esta compuesta por seis contenedores de \emph{Docker} conectados entre sí mediante un \emph{bridge} que a su vez los conecta con la red física. En el siguiente esquema se representan los seis contenedores, las interfaces de red y los sistemas físicos que queremos aprovisionar y que constituirán la plataforma de explotación:
+La plataforma de arranque o \emph{bootstrapping} está compuesta por seis contenedores de \emph{Docker} conectados entre sí mediante un \emph{bridge} que, a su vez, los conecta con la red física. En el siguiente esquema se representan los seis contenedores, las interfaces de red y los sistemas físicos que queremos aprovisionar y que constituirán la plataforma de explotación:
 
 \begin{wrapfigure}{r}{0.35\textwidth}
 \vspace{-15pt}
@@ -434,7 +434,7 @@ h0tbird/ntpd                             & ntpd01                & \textit{ntpd}
 \caption{Imágenes, contenedores y servicios}
 \end{table}
 
-Más adelante, en el capítulo 4, veremos cómo instalar la plataforma de arranque. En este capítulo se supone que la plataforma ya ha sido instalada de manera que podemos explorar su estado utilizando varios comandos que nos darán visión sobre los contenedores y los distintos elementos de red.
+Más adelante, en el capítulo 4, veremos cómo instalar la plataforma de arranque. En el presente capítulo se supone que la plataforma ya ha sido instalada de manera que podemos explorar su estado utilizando varios comandos que nos darán visión sobre los contenedores y los distintos elementos de red.
 
 \section{Explorando la plataforma}
 
@@ -464,7 +464,7 @@ b989bf902735    h0tbird/boot:latest    "/init /usr/sbin/dns    7 hours ago    Up
 1234567890ab    h0tbird/ntpd:latest    "/init /something/so    7 hours ago    Up 7 hours    ntpd01
 \end{lstlisting}
 
-El comando \emph{'brctl show'} sirve para mostrar el estado de los \emph{'bridges'} así como de las \emph{'interfaces'} que tienen vinculadas:\\
+El comando \emph{'brctl show'} sirve para mostrar el estado de los \emph{'bridges'} así como el listado de las \emph{'interfaces'} que tienen vinculadas:\\
 
 \begin{lstlisting}[style=dnsmasq]
 # brctl show
@@ -483,7 +483,7 @@ Podemos, también, ejecutar \emph{'systemctl status'} para consultar el estado d
 # systemctl status boot data gito cgit regi ntpd
 \end{lstlisting}
 
-A continuación veremos cada uno de los seis contenedores usados en la plataforma de arranque.
+A continuación veremos detalles sobre cada uno de los seis contenedores usados en la plataforma de arranque.
 
 \clearpage
 
@@ -542,8 +542,8 @@ ENTRYPOINT ["/init", "/usr/sbin/dnsmasq", "-k"]
 \subsection{data01}
 
 El contenedor \emph{data01} arranca en paralelo con los contenedores \emph{gito01}, \emph{regi01} y \emph{ntpd01}.
-Este contenedor ejecuta un servidor web \emph{Apache} que se utiliza como servidor de ficheros estáticos.
-Principalmente repositorios \emph{YUM}, la imagen del instalador \emph{Anaconda}, la imagen de disco del sistema operativo \emph{CoreOS} y ficheros \emph{kickstart}.
+
+Este contenedor ejecuta un servidor web \emph{Apache} que se utiliza como servidor de ficheros estáticos, principalmente sirve repositorios \emph{YUM}, la imagen del instalador \emph{Anaconda}, la imagen de disco del sistema operativo \emph{CoreOS} y ficheros \emph{kickstart}.
 
 Podemos ver la actividad del servidor web con el siguiente comando:\\
 
@@ -551,7 +551,7 @@ Podemos ver la actividad del servidor web con el siguiente comando:\\
 # docker exec -it data01 bash -c "tail -f /var/log/httpd/*"
 \end{lstlisting}
 
-Relación de ficheros que influyen sobre el comportamiento de \emph{data01}:
+A continuación se presenta la relación de directorios de datos y ficheros de configuración que influyen sobre el comportamiento de \emph{data01}:
 
 \begin{table}[h]
 
@@ -596,8 +596,9 @@ ENTRYPOINT ["/init", "/usr/sbin/httpd", "-DFOREGROUND"]
 
 \subsection{gito01}
 
-El contenedor \emph{gito01}
+El contenedor \emph{gito01} ejecuta un servidor \emph{SSH} que tiene acoplado un backend de \emph{Gitolite}. De esta forma se utiliza \emph{SSH} como protocolo de transporte y \emph{Gitolite} como gestor de acceso a los repositorios \emph{Git}.
 
+Los ficheros de configuración y directorios de datos asociados a \emph{gito01} son los siguientes:
 \begin{table}[h]
 
   \centering
@@ -620,9 +621,38 @@ El contenedor \emph{gito01}
 
 \end{table}
 
+La imagen del contenedor ha sido producida aplicando la siguiente receta o \emph{Dockerfile}:\\
+
+\begin{lstlisting}[style=dnsmasq]
+FROM centos:7
+MAINTAINER Marc Villacorta Morera <marc.villacorta@gmail.com>
+RUN rpm --import http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
+RUN rpm --import http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
+RUN yum update -y && yum clean all
+RUN yum install -y epel-release && yum clean all
+RUN yum install -y gitolite3 hostname openssh-server && yum clean all
+RUN adduser -m -G gitolite3 git && \
+    mkdir /home/git/.ssh && \
+    chmod 700 /home/git/.ssh
+ADD rootfs /
+VOLUME /home/git/projects
+VOLUME /home/git/repositories
+ENTRYPOINT ["/init", "/usr/sbin/sshd", "-D"]
+\end{lstlisting}
+
 \subsection{cgit01}
 
-El contenedor \emph{cgit01}
+El contenedor \emph{cgit01} utiliza la misma pila TCP/IP que el contenedor \emph{gito01} y por ello tiene que arrancar después de que \emph{gito01} haya inicializado su configuración de red.
+
+El hecho de compartir la pila TCP/IP permite que los dos contenedores se comuniquen utilizando la dirección local \emph{127.0.0.1}. Además, los dos contenedores también comparten un par de volúmenes de datos de manera que los dos tienen visibilidad sobre los datos escritos en los volúmenes compartidos.
+
+Podemos ver la actividad de \emph{cgit} ejecutando el siguiente comando:\\
+
+\begin{lstlisting}[style=dnsmasq]
+# docker exec -it cgit01 bash -c "tail -f /var/log/httpd/*"
+\end{lstlisting}
+
+Los ficheros de configuración y directorios de datos asociados a \emph{cgit01} son los siguientes:
 
 \begin{table}[h]
 
@@ -645,6 +675,22 @@ El contenedor \emph{cgit01}
   \caption{Ficheros y directorios de cgit01}
 
 \end{table}
+
+La imagen del contenedor ha sido producida aplicando la siguiente receta o \emph{Dockerfile}:\\
+
+\begin{lstlisting}[style=dnsmasq]
+FROM centos:7
+MAINTAINER Marc Villacorta Morera <marc.villacorta@gmail.com>
+RUN rpm --import http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
+RUN rpm --import http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
+RUN yum update -y && yum clean all
+RUN yum install -y epel-release && yum clean all
+RUN yum install -y cgit highlight policycoreutils-python httpd && yum clean all
+RUN adduser -m git && chmod 755 /home/git && \
+    rm -f /etc/httpd/conf.d/welcome.conf
+ADD rootfs /
+ENTRYPOINT ["/init", "/usr/sbin/httpd", "-DFOREGROUND"]
+\end{lstlisting}
 
 \subsection{regi01}
 
