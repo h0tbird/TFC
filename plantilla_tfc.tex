@@ -23,7 +23,12 @@
 
 \definecolor{softgray}{RGB}{245,245,245}
 \definecolor{softred}{RGB}{222,55,55}
-\lstdefinestyle{dnsmasq}{basicstyle=\scriptsize,frame=single,backgroundcolor=\color{softgray},escapeinside={(*@}{@*)}}
+\lstdefinestyle{dnsmasq}{
+  basicstyle=\scriptsize,
+  frame=single,
+  backgroundcolor=\color{softgray},
+  escapeinside={(*@}{@*)}
+}
 
 %-------------------------------
 % Content is about to commence:
@@ -196,7 +201,7 @@ Una de las características que KVM posee es la estrategia de \emph{overcommit}.
 
 \begin{itemize}
   \item Verificar que el entorno es el adecuado para instanciar los servidores virtuales.
-  \item Descargar la imagen de disco de CoreOS. Esta imagen se sirve desde el contenedor \emph{data01} para evitar la dependencia con internet.
+  \item Descargar la imagen de disco de CoreOS\@. Esta imagen se sirve desde el contenedor \emph{data01} para evitar la dependencia con internet.
   \item Incrementar el tamaño de disco de la imagen descargada a 20GB ya que el tamaño por defecto es únicamente de 3GB.
   \item Generar de forma dinámica la configuración de \emph{cloud-config} para las distintas instancias de CoreOS.
   \item Generar dispositivos TAP de red (capa 2) para interconectar las VMs con el host anfitrión.
@@ -372,21 +377,21 @@ En la maqueta del proyecto podemos consultar el listado de tareas en ejecución 
 El siguiente ejemplo muestra cómo arrancar una aplicación muy simple en \emph{Marathon}.\\
 
 \begin{lstlisting}[style=dnsmasq]
-curl -s -H "Content-Type: application/json" http://core01:8080/v2/apps -d \
-  ' {
-      "id": "hostname",
-      "cmd": "nc -p $PORT0 -ll -e hostname",
-      "cpus": 0.2,
-      "mem": 2.0,
-      "instances": 1,
-      "container": {
-        "type": "DOCKER",
-        "docker": {
-          "image": "busybox:latest"
-        }
-      }
-    }
-  ' | jq '.'
+%curl -s -H "Content-Type: application/json" http://core01:8080/v2/apps -d \
+%  ' {
+%      "id": "hostname",
+%      "cmd": "nc -p $PORT0 -ll -e hostname",
+%      "cpus": 0.2,
+%      "mem": 2.0,
+%      "instances": 1,
+%      "container": {
+%        "type": "DOCKER",
+%        "docker": {
+%          "image": "busybox:latest"
+%        }
+%      }
+%    }
+%  ' | jq '.'
 \end{lstlisting}
 
 %-------------------------
@@ -644,7 +649,7 @@ ENTRYPOINT ["/init", "/usr/sbin/sshd", "-D"]
 
 El contenedor \emph{cgit01} utiliza la misma pila TCP/IP que el contenedor \emph{gito01} y por ello tiene que arrancar después de que \emph{gito01} haya inicializado su configuración de red.
 
-El hecho de compartir la pila TCP/IP permite que los dos contenedores se comuniquen utilizando la dirección local \emph{127.0.0.1}. Además, los dos contenedores también comparten un par de volúmenes de datos de manera que los dos tienen visibilidad sobre los datos escritos en los volúmenes compartidos.
+El hecho de compartir la pila TCP/IP permite que los dos contenedores se comuniquen entre sí utilizando la dirección local \emph{127.0.0.1}. Además, los dos contenedores también comparten un par de volúmenes de datos de manera que los dos tienen visibilidad sobre los datos escritos en los volúmenes compartidos.
 
 Podemos ver la actividad de \emph{cgit} ejecutando el siguiente comando:\\
 
@@ -694,7 +699,15 @@ ENTRYPOINT ["/init", "/usr/sbin/httpd", "-DFOREGROUND"]
 
 \subsection{regi01}
 
-El contenedor \emph{regi01}
+El contenedor \emph{regi01} contiene un \emph{'Docker Registry'} que sirve para almacenar y posteriormente recuperar imágenes de contenedores de \emph{Docker}. De forma análoga a la relación que se establece entre los paquetes \emph{RPM} y los repositorios \emph{YUM}, podemos considerar a \emph{'Docker Registry'} como un repositorio de imágenes de contenedores de \emph{Docker}.
+
+Podemos ver la actividad del contenedor \emph{regi01} con el siguiente comando:\\
+
+\begin{lstlisting}[style=dnsmasq]
+# journalctl -f -u regi
+\end{lstlisting}
+
+Los ficheros de configuración y directorios de datos asociados a \emph{regi01} son los siguientes:
 
 \begin{table}[h]
 
@@ -718,9 +731,38 @@ El contenedor \emph{regi01}
 
 \end{table}
 
+La imagen del contenedor ha sido producida aplicando la siguiente receta o \emph{Dockerfile}:\\
+
+\begin{lstlisting}[style=dnsmasq]
+FROM centos:7
+MAINTAINER Marc Villacorta Morera <marc.villacorta@gmail.com>
+RUN rpm --import http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
+RUN rpm --import http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
+RUN yum update -y && yum clean all
+RUN yum install -y epel-release && yum clean all
+RUN yum install -y docker-registry && yum clean all
+ADD rootfs /
+ENTRYPOINT [``/init'', ``/usr/bin/python'', ``/usr/bin/gunicorn'', ``--access-logfile'',
+``-'', ``--error-logfile'', ``-'', ``--debug'', ``--max-requests'', ``100'',
+``--graceful-timeout'',``3600'', ``-t'', ``3600'', ``-k'', ``gevent'', ``-b'', ``0.0.0.0:5000'',
+``-w'', ``8'', ``docker_registry.wsgi:application'']
+\end{lstlisting}
+
 \subsection{ntpd01}
 
-El contenedor \emph{ntpd01}
+El contenedor \emph{ntpd01} proporciona el servicio de sincronización de relojes. En sistemas distribuidos es muy importante disponer de una base de tiempo fiable y común.
+
+Para la maqueta de este proyecto no es estrictamente necesario utilizar este contenedor puesto que la sincronización se puede realizar contra servidores externos en internet.
+
+En un entorno productivo y autocontenido sí que toma mucha importancia el hecho de disponer de una fuente de tiempo fiable y altamente disponible. Se recomienda conectar el servidor NTP a la red GPS (\emph{stratum-0}) y conseguir de esta manera estar a un único salto de una fuente de referencia (\emph{stratum-1}).
+
+Podemos ver la actividad del contenedor \emph{ntpd01} con el siguiente comando:\\
+
+\begin{lstlisting}[style=dnsmasq]
+# journalctl -f -u ntpd
+\end{lstlisting}
+
+Los ficheros de configuración y directorios de datos asociados a \emph{ntpd01} son los siguientes:
 
 \begin{table}[h]
 
@@ -743,6 +785,12 @@ El contenedor \emph{ntpd01}
   \caption{Ficheros y directorios de ntpd01}
 
 \end{table}
+
+La imagen del contenedor ha sido producida aplicando la siguiente receta o \emph{Dockerfile}:\\
+
+\begin{lstlisting}[style=dnsmasq]
+
+\end{lstlisting}
 
 %----------------
 % Bootstrapping:
@@ -1100,6 +1148,42 @@ En el siguiente esquema se pueden apreciar las relaciones que se establecen entr
 %------------------------
 
 \chapter{Guía de inicio rápido}
+
+En este último capítulo veremos paso a paso como instalar la plataforma de arranque en un sistema Linux. Al finalizar la instalación, nuestro sistema estará listo para desplegar la plataforma de explotación.
+
+La instalación de la plataforma de arranque despliega la siguiente estructura de ficheros y directorios:\\
+
+\begin{lstlisting}[style=dnsmasq,extendedchars=\true,literate={ó}{{\'o}}1]
+data <------------------------ Directorios de datos persistentes montados por los contenedores.
+  boot/
+  data/
+  gito/
+  regi/
+etc
+  booddies <------------------ Ficheros de configuración de cada contenedor.
+    boot.conf
+    cgit.conf
+    data.conf
+    gito.conf
+    regi.conf
+  systemd
+    system <------------------ Ficheros de configuración para los servicios de systemd.
+      boot.service
+      cgit.service
+      data.service
+      gito.service
+      regi.service
+usr
+  local
+    sbin <-------------------- Lógica de ejecución.
+      runctl-boot
+      runctl-cgit
+      runctl-data
+      runctl-gito
+      runctl-regi
+\end{lstlisting}
+
+
 
 %------------
 % Biografía:
