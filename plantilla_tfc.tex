@@ -43,12 +43,30 @@
 % Resumen:
 %----------
 
-\begin{resum}{15cm}
+\begin{resum}{1cm}
+No hay que retroceder mucho en el tiempo para constatar que tanto las estrategias de gestión de configuraciones como las de asignación de recursos en flotas de servidores han evolucionado muy rápidamente. El servidor deja de ser el centro de gravitación y pierde protagonismo a la vez que el centro de datos se consolida como la nueva capa de abstracción. Sobre ésta se ejecutan todo tipo de cargas computacionales.\\
+
+En este proyecto se presentan dos plataformas en simbiosis, la plataforma de arranque o \emph{bootstrapping} y la plataforma de explotación. La primera sirve para desplegar y gestionar la siguiente que, a su vez, unifica los recursos del centro de datos y los asigna de forma dinámica en función de la demanda instantánea. El proyecto tiene componentes de diseño, desarroyo e integración.\\
+
+La plataforma de explotación es la más extensa en cuanto al número de componentes que la integran, sin embargo, solamente ha requerido de un esfuerzo de integración. En el proyecto se detallan los distintos elementos que la conforman, sus funciones y cómo se interrelacionan entre sí.\\
+
+La plataforma de arranque, siendo la más pequeña tiene las mayores componentes de diseño y desarroyo. En el proyecto se detallan los distintos elementos que la conforman, sus funciones, su proceso de construción y el flujo completo de interacciones.\\
+
+El proyecto termina con una guia de instalación de la plataforma de arranque para que el lector pueda desplegar en su propia infraestructura una plataforma de explotación.
 \end{resum}
 
 \selectlanguage{english}
 
-\begin{overview}{15cm}
+\begin{overview}{1cm}
+Regarding fleets of servers, you don't have to go back far in time to verify that both configuration management and resources allocation polices have evolved very fast. The server is no longer the gravitation center and the data center consolidates as the new abstraction layer where computation happens.\\
+
+This project presents two platforms in simbiosis, the bootstrapping platform and the exploitation platform. The former is used to bootstrapp and manage the latter, which in turn unifies the data center resources and performs dynamic resources allocation based on demand. The project has a balanced effort of design, development and integration phases.\\
+
+The exploitation platform is larger in terms of number of components however, it just required an integration effort. All the building blocks are detailed in the project as well as its functions and its interactions.\\
+
+Despite being the smaller one, the bootstrapping platform requires the higher design and development efforts. All the building blocks are detailed in the project as well as its functions, building recips and full structural and procedural diagrams.\\
+
+The project ends with an installation guide that helps the reader to deploy a bootstrapping platform which in turn can be used to deploy an exploitation platform.
 \end{overview}
 
 \selectlanguage{spanish}
@@ -114,7 +132,7 @@ Más adelante se detallará el rol de cada uno de los seis contenedores, su proc
 
 En el contexto de este trabajo entendemos por \emph{'aprovisionamiento de un sistema'} el conjunto de acciones que se deben realizar para disponer de un equipo, ya sea físico o virtual, con un mínimo sistema operativo instanciado y accesible a nivel TCP/IP\@. No se trata de dar mucha inteligencia al sistema de aprovisionamiento, sino de consensuar un modelo sencillo y predecible que resulte eficaz en su funcionamiento y simple de mantener.
 
-Una vez aprovisionados, los sistemas sirven de base sobre la que podemos desplegar servicios. Los servicios determinan el rol o la razón de ser de cada equipo. Si bien en la fase de aprovisionado este rol se perfila sutilmente, no es hasta la fase de despliegue donde se definen con exactitud las funciones de cada equipo y las interrelaciones entre los mismos. Usaremos herramientas como \emph{r10k} y \emph{puppet}.
+Una vez aprovisionados, los sistemas sirven de base sobre la que podemos desplegar servicios. Los servicios determinan el rol o la razón de ser de cada equipo. Si bien en la fase de aprovisionado este rol se perfila sutilmente, no es hasta la fase de despliegue donde se definen con exactitud las funciones de cada equipo y las interrelaciones entre los mismos. Por ejemplo, usaremos herramientas como \emph{r10k} y \emph{puppet} para transformar los equipos físicos en hipervisores \emph{KVM}.
 
 Empezaremos viendo algunos detalles sobre la plataforma de explotación y seguiremos con el funcionamiento de la plataforma de \emph{bootstrapping}.
 \end{intro}
@@ -147,7 +165,7 @@ Los equipos tienen las siguientes características:
   \caption{Coste del material}
 \end{table}
 
-Cada equipo dispone de dos tarjetas de red. En el siguiente esquema se puede apreciar el conexionado físico y lógico. La ONT es un terminal óptico de red que conecta con la red de fibra del operador Movistar, sobre la VLAN 6 se establece una conexión PPPoE para datos y la VLAN 3 se reserva para voz. Los detalles de conexión con el operador no tienen mayor interés para este trabajo.
+Cada equipo dispone de dos tarjetas de red. En el siguiente esquema se puede apreciar el conexionado físico (izquierda) y lógico (derecha). La ONT es un terminal óptico de red que conecta con la red de fibra del operador Movistar, sobre la VLAN 6 se establece una conexión PPPoE para datos y la VLAN 3 se reserva para voz. Los detalles de conexión con el operador no tienen mayor interés para este trabajo.
 
 \begin{figure}[h]
   \centering
@@ -1299,6 +1317,8 @@ readonly COREOS_CHANNEL='beta'
 
 El resto de ficheros de configuración que hay en \emph{'/etc/booddies'} no tienen mayor complicación.
 
+\clearpage
+
 \subsection{Arrancar los servicios}
 
 La primera vez que se arrancan los servicios se descargan las imágenes del registro públic en \emph{Docker Hub}:\\
@@ -1315,7 +1335,7 @@ Podemos monitorizar el proceso de la siguiente manera:\\
 
 \section{Segundo paso: Sincronizar los datos}
 
-Descargar todos los datos ahora permite a la plataforma de arranque operar de manera totalmente independiente de internet. Durante todo el proceso de sincronización se puede consultar el fichero \emph{'/tmp/booddies.log'} para ver los detalles del progreso.
+Descargar todos los datos ahora permite a la plataforma de arranque operar de manera totalmente independiente de internet. Durante todo el proceso de sincronización se puede consultar el fichero \emph{'/tmp/booddies.log'} para ver los detalles sobre el progreso.
 
 \subsection{Sincronizar los repositorios YUM}
 
@@ -1346,7 +1366,7 @@ De los datos descargados en el paso anterior, realizamos una copia tanto del \em
 
 \subsection{Sincronizar el registro privado}
 
-En este paso descargamos imágenes de contenedores que están publicadas en el registro público \emph{Docker Hub} y las almacenamos en el registro privado \emph{regi}:\\
+En este paso descargamos imágenes de contenedores que están publicadas en el registro público de \emph{Docker Hub} y las almacenamos en el registro privado \emph{regi}:\\
 
 \begin{lstlisting}[style=dnsmasq]
 :: Seeking 'zookeeper/3.4.6' private image...                               [DONE]
@@ -1354,6 +1374,41 @@ En este paso descargamos imágenes de contenedores que están publicadas en el r
 :: Seeking 'mesos-slave/0.22.1-1.0.ubuntu1404' private image...             [DONE]
 :: Seeking 'marathon/v0.8.1' private image...                               [DONE]
 \end{lstlisting}
+
+\subsection{Sincronizar los repositorios de código}
+
+Terminamos la sincronización importando los repositorios de código que contienen las recetas de \emph{Puppet}. Estas recetas o \emph{'manifests'} se utilizarán principalmente para configurar el hipervisor y para preparar el contexto necesario para el arranque de \emph{CoreOS}.\\
+
+\begin{lstlisting}[style=dnsmasq]
+# ./bin/feed-gito
+
+:: Synchronizing 'https://github.com/h0tbird/puppet-p_ssh.git'...                  [DONE]
+:: Synchronizing 'https://github.com/h0tbird/puppet-m_terminfo.git'...             [DONE]
+:: Synchronizing 'https://github.com/h0tbird/puppet-r_kvm.git'...                  [DONE]
+:: Synchronizing 'https://github.com/puppetlabs/puppetlabs-stdlib.git'...          [DONE]
+:: Synchronizing 'https://github.com/h0tbird/puppet-m_misclib.git'...              [DONE]
+:: Synchronizing 'https://github.com/h0tbird/r10k-kvm.git'...                      [DONE]
+:: Synchronizing 'https://github.com/h0tbird/puppet-m_users.git'...                [DONE]
+:: Synchronizing 'https://github.com/h0tbird/puppet-m_ssh.git'...                  [DONE]
+:: Synchronizing 'https://github.com/h0tbird/coreos-mesos.git'...                  [DONE]
+:: Synchronizing 'https://github.com/h0tbird/puppet-r_base.git'...                 [DONE]
+:: Synchronizing 'https://github.com/h0tbird/puppet-config.git'...                 [DONE]
+\end{lstlisting}
+
+\section{Tercer paso: Configurar}
+
+El último paso antes de arrancar los equipos físicos via \emph{PXE}, consiste en realizar las adaptaciones necesarias sobre los ficheros de arranque de \emph{'pxelinux'} y los ficheros de instalación de \emph{'kickstart'}.
+
+La ubicación de estos ficheros es la siguiente:\\
+
+\begin{lstlisting}[style=dnsmasq]
+# ll -d /data/{boot/pxelinux,data/kickstarts}
+
+drwxr-xr-x 2 root root 4.0K Apr 20 19:59 /data/boot/pxelinux/
+drwxr-xr-x 3 root root 4.0K Apr 12 11:36 /data/data/kickstarts/
+\end{lstlisting}
+
+A modo de referencia, se pueden utilizar los ficheros de ejemplo que hay en el repositorio. Estos ficheros son válidos para los sistemas que se han usado para montar la maqueta. Incluso es posible que se puedan reutilizar para otros equipos sin modificación alguna.
 
 %------------
 % Biografía:
