@@ -52,7 +52,7 @@ La plataforma de explotación es la más extensa en cuanto al número de compone
 
 La plataforma de arranque, siendo la más pequeña tiene las mayores componentes de diseño y desarroyo. En el proyecto se detallan los distintos elementos que la conforman, sus funciones, su proceso de construción y el flujo completo de interacciones.\\
 
-El proyecto termina con una guia de instalación de la plataforma de arranque para que el lector pueda desplegar en su propia infraestructura una plataforma de explotación.
+El proyecto termina con una guía de instalación de la plataforma de arranque para que el lector pueda desplegar en su propia infraestructura una plataforma de explotación.
 \end{resum}
 
 \selectlanguage{english}
@@ -1355,7 +1355,7 @@ En este paso se van a descargar unos 15GB de datos:\\
 
 \subsection{Sincronizar el kernel y el initrd}
 
-De los datos descargados en el paso anterior, realizamos una copia tanto del \emph{kernel} como del \emph{initrd}. Esta copia será la que el contenedor \emph{boot} servirá via \emph{PXE}:\\
+De los datos descargados en el paso anterior, realizamos una copia tanto del \emph{kernel} como del \emph{initrd}. Esta copia será la que el contenedor \emph{boot} servirá vía \emph{PXE}:\\
 
 \begin{lstlisting}[style=dnsmasq]
 # ./bin/feed-boot
@@ -1397,7 +1397,7 @@ Terminamos la sincronización importando los repositorios de código que contien
 
 \section{Tercer paso: Configurar}
 
-El último paso antes de arrancar los equipos físicos via \emph{PXE}, consiste en realizar las adaptaciones necesarias sobre los ficheros de arranque de \emph{'pxelinux'} y los ficheros de instalación de \emph{'kickstart'}.
+El último paso antes de arrancar los equipos físicos vía \emph{PXE}, consiste en realizar las adaptaciones necesarias sobre los ficheros de arranque de \emph{'pxelinux'} y los ficheros de instalación de \emph{'kickstart'}.
 
 La ubicación de estos ficheros es la siguiente:\\
 
