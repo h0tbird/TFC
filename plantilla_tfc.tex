@@ -100,6 +100,39 @@ A Débora por todo su amor y soporte.
 %---------------
 
 \begin{intro}{Introducción}
+
+  Según un estudio publicado por Netcraft [1], en Abril del 2015 habían 850 millones de páginas web alojadas en 5 millones de servidores expuestos en la red (\emph{web-facing}). Muchos de estos servidores, a su vez, no son más que la punta del iceberg de estructuras internas más complejas con servidores no expuestos que realizan otro tipo de funciones. Sería el caso de sitios web de la categoría de Google, Facebook o Twitter.
+
+  Google, por ejemplo, tiene 13 centros de datos distribuidos por todo el planeta [2] con no menos de 75 mil servidores en cada uno de ellos. Los equipos humanos que gestionan estas infraestructuras son proporcionalmente muy reducidos pero, aún y así, consiguen unos niveles de eficiencia muy elevados. ¿Cómo lo hacen?
+
+Los problemas que se manifiestan en grandes infraestructuras existen en estado latente en infraestructuras pequeñas y medianas. Las empresas pioneras que cruzan por primera vez órdenes de magnitud inexplorados tienen que asumir el coste de desarrollar la tecnología que les permita seguir avanzando. El resto de empresas navegan sobre la estela de la verdadera innovación tecnológica.
+
+Este trabajo se sitúa en dicha estela con la intención de anticipar soluciones de forma preventiva en infraestructuras de tamaño medio. Los dos principales problemas que se han identificado son:
+
+\textbf{Primero: Utilización ineficiente de los recursos del centro de datos}
+
+Varios estudios estiman que la utilización de los recursos de los centros de datos de toda la industria se situa entre el 6\% [3] y el 12\% [4,5]. La principal causa de esta ineficiencia viene dada por la combinación de dos factores:
+\begin{enumerate}
+  \item La utilización de estrategias de asignación estática de recursos.
+  \item Los desarrolladores no entienden la dinámica de sus cargas de trabajo y, por lo tanto, no pueden anticipar los requerimientos de recursos físicos que demandan sus bases de código.
+\end{enumerate}
+
+En la siguiente figura se representa el desperdicio de recursos que supone la reserva estática (3 nodos) frente a la multiplexación dinámica de recursos (1 nodo).
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[scale=0.55]{static}
+    \caption{Particionado estático vs dinámico.}
+\end{figure}
+
+En este trabajo se detalla una plataforma de explotación que es capaz de asignar recursos de forma dinámica a distintas cargas de trabajo simultáneas y, así, mejorar los niveles de utilización de los recursos en una flota de servidores.
+
+\textbf{Segundo: Incremento de la complejidad de la gestión administrativa}
+
+La complejidad de la gestión incrementa linealmente \emph{O(n)} con el número de servidores pero lo hace de forma no lineal \emph{O(n\^{}2)} con la diversidad de sistemas administrados.
+
+La plataforma de explotación propuesta homogeniza la instalación de la flota de servidores y desplaza la diversidad de las distintas cargas de trabajo a 
+
 En este trabajo se presentan dos plataformas que pretenden dar solución a dos problemáticas de escalabilidad relacionadas con la gestión y la explotación de grandes infraestructuras de computación.
 
 Entendemos por escalabilidad de explotación de un sistema, la capacidad del mismo para crecer linealmente y acomodar incrementos de carga computacional. Por otra parte, la escalabilidad de su gestión viene dada por la capacidad de mantener constante la complejidad de su carga administrativa. Veremos que para dar respuesta al primer reto nos centraremos en el ¿qué? y para el segundo en el ¿cómo?
@@ -1413,25 +1446,46 @@ A modo de referencia, se pueden utilizar los ficheros de ejemplo que hay en el r
 
 %% Llibres:  Autor/s (cognoms i inicials dels noms), títol del llibre (en cursiva), editor, ciutat i any de publicació. Quan es cita el capítol d'un llibre s'ha d'indicar el títol del capítol (entre cometes), el títol del llibre (en cursiva) i els números de pàgines amb la primera i la darrera incloses.
 
-\bibitem{prova1}
-Turnbull, J. / McCune, J.
-{\it Pro Puppet}.
-(Apress. New York. 2011)
+\bibitem{item1}
+Netcraft: April 2015 Web Server Survey (http://news.netcraft.com/archives/2015/04/20/april-2015-web-server-survey.html)
 
-\bibitem{prova2}
-Turnbull, J.
-{\it The Docker Book}.
-(2014)
+\bibitem{item2}
+Google data center locations (http://www.google.com/about/datacenters/inside/locations/index.html)
 
-\bibitem{prova3}
+\bibitem{item3}
+McKinsey \& Company ``Revolutionizing data center efficiency''. {\it Uptime Institute Symposium}
+(2008)
+
+\bibitem{item4}
+Gartner says efficient data center design can lead to 300 percent capacity growth in 60 percent less space. (http://www.gartner.com/newsroom/id/1472714)
+
+\bibitem{item5}
+Arunchandar Vasan / Anand Sivasubramaniam / Vikrant Shimpi / T. Sivabalan / Rajesh Subbiah. ``Worth their watts? an empirical study of datacenter servers.'' {\it In Proc. of the 16th International Symposium on High Performance Computer Architecture (HPCA). Bangalore, India} (2010)
+
+\bibitem{item6}
 Schwarzkopf, M. / Konwinski, A. / Abd-El-Malek, M. / Wilkes, J.
 ``Omega: flexible, scalable schedulers for large compute clusters''. {\it EuroSys}.
 (2013)
 
-\bibitem{prova4}
+\bibitem{item7}
 Hindman, B. / Konwinski, A. / Zaharia, M. / Ghodsi, A. / Joseph, A. / Katz, R. / Shenker, S. / Stoica, I.
 ``Mesos: A Platform for Fine-Grained Resource Sharing in the Data Center''. {\it U.C. Berkeley}.
 (2013)
+
+\bibitem{item8}
+Delimitrou, C. / Kozyrakis, C.
+``Quasar: Resource-Efficient and QoS-Aware Cluster Management''. {\it Stanford University}.
+(2014)
+
+\bibitem{item9}
+Turnbull, J. / McCune, J.
+{\it Pro Puppet}.
+(Apress. New York. 2011)
+
+\bibitem{item10}
+Turnbull, J.
+{\it The Docker Book}.
+(2014)
 
 \end{thebibliography}
 \end{document}
