@@ -105,7 +105,7 @@ A Débora por todo su amor y soporte.
 
   Google, por ejemplo, tiene 13 centros de datos distribuidos por todo el planeta [2] con no menos de 75 mil servidores en cada uno de ellos. Los equipos humanos que gestionan estas infraestructuras son proporcionalmente muy reducidos pero, aún y así, consiguen unos niveles de eficiencia muy elevados. ¿Cómo lo hacen?
 
-Los problemas que se manifiestan en grandes infraestructuras existen en estado latente en infraestructuras pequeñas y medianas. Las empresas pioneras que cruzan por primera vez órdenes de magnitud inexplorados tienen que asumir el coste de desarrollar la tecnología que les permita seguir avanzando. El resto de empresas navegan sobre la estela de la verdadera innovación tecnológica.
+Los problemas que se manifiestan en grandes infraestructuras también existen en estado latente en infraestructuras pequeñas y medianas. Las empresas pioneras que cruzan por primera vez órdenes de magnitud inexplorados tienen que asumir el coste de desarrollar la tecnología que les permita seguir avanzando. El resto de empresas navegan sobre la estela de la verdadera innovación tecnológica.
 
 Este trabajo se sitúa en dicha estela con la intención de anticipar soluciones de forma preventiva en infraestructuras de tamaño medio. Los dos principales problemas que se han identificado son:
 
@@ -129,11 +129,17 @@ En este trabajo se detalla una plataforma de explotación que es capaz de asigna
 
 \textbf{Segundo: Incremento de la complejidad de la gestión administrativa}
 
-La complejidad de la gestión administrativa incrementa linealmente \emph{O(n)} con el número de servidores pero lo hace de forma no lineal \emph{O(n\^{}2)} con la diversidad de sistemas administrados.
+La complejidad de la gestión administrativa incrementa linealmente \emph{O(n)} con el número de servidores pero lo hace de forma cuadrática \emph{O(n\^{}2)} con la diversidad de sistemas administrados. Es preferible administrar muchos servidores iguales que unos pocos muy diversos.
+
+\begin{figure}[h]
+  \centering
+    \includegraphics[scale=0.25]{complex}
+      \caption{Complejidad de la gestión}
+\end{figure}
 
 La plataforma de explotación propuesta homogeniza la instalación de la flota de servidores y desplaza la diversidad de las distintas cargas de trabajo hacia capas superiores de software llamadas \emph{'frameworks'}.
 
-En este trabajo se presentan dos plataformas que pretenden dar solución a dos problemáticas de escalabilidad relacionadas con la gestión y la explotación de grandes infraestructuras de computación.
+Para dar solución a estas dos problemáticas de escalabilidad, se presentan dos plataformas en simbiosis.
 
 Entendemos por escalabilidad de explotación de un sistema, la capacidad del mismo para crecer linealmente y acomodar incrementos de carga computacional. Por otra parte, la escalabilidad de su gestión viene dada por la capacidad de mantener constante la complejidad de su carga administrativa. Veremos que para dar respuesta al primer reto nos centraremos en el ¿qué? y para el segundo en el ¿cómo?
 
