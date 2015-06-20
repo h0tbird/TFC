@@ -284,8 +284,7 @@ Una de las características que KVM posee es la estrategia de \emph{overcommit}.
   \item Instanciar 4 servidores virtuales en cada hipervisor.
 \end{itemize}
 
-A continuación vemos como \emph{CoreUp} inicia por primera vez la máquina virtual \emph{core01}.
-\\
+A continuación vemos como \emph{CoreUp} inicia por primera vez la máquina virtual \emph{core01}.\\
 
 \begin{lstlisting}[style=dnsmasq]
 [root@kvm01 ~]# coreup core01
@@ -307,6 +306,8 @@ Generating TAP interfaces...                                                    
 Starting the virtual machine...                                                         [  OK  ]
 Testing SSH port...                                                                     [  OK  ]
 \end{lstlisting}
+
+El primer test verifica que no exista ya una máquina virtual con el mismo identificador en el hipervisor local. El segundo test realiza una verificación DNS para asegurarse de que no existe ya otra máquina en la red con el mismo nombre. El tercer test verifica que no se supere el límite establecido de máquinas virtuales por hipervisor.
 
 \subsection{CoreOS}
 
@@ -344,6 +345,8 @@ http://core02:4001
 \emph{Fleet} es una herramienta de gestión de clusters que utiliza \emph{Etcd} para la compartición de configuraciones. \emph{Fleet} controla los sistemas de inicialización de servicios (\emph{systemd}) de todos los nodos del cluster, proporcionando así una gestión unificada.
 
 Podemos consultar el listado de nodos que forman parte del cluster de \emph{Fleet} con el siguiente comando:\\
+
+\clearpage
 
 \begin{lstlisting}[style=dnsmasq]
 core@core01# fleetctl list-machines
@@ -437,12 +440,11 @@ En la maqueta del proyecto podemos consultar el listado de tareas en ejecución 
  0:00:00    R    0.00 B   0   0.00  sh -c 'nc -p $PORT0...'  root  hostname.11e4-8c27-0242ac110002
  0:00:00    R    0.00 B   0   0.00  sh -c 'nc -p $PORT0...'  root  hostname.11e4-8c27-0242ac110002
  0:00:00    R    0.00 B   0   0.00  sh -c 'nc -p $PORT0...'  root  hostname.11e4-8c27-0242ac110002
- 0:00:00    R    0.00 B   0   0.00  sh -c 'nc -p $PORT0...'  root  hostname.11e4-8c27-0242ac110002
 \end{lstlisting}
 
 \subsubsection{Marathon}
 
-\emph{Marathon} es un \emph{framework} de \emph{Mesos} especialmente diseñado para ejecutar aplicaciones que tienen una esperanza de vida larga como, por ejemplo, un servidor web \emph{Apache} o una base de datos de clave valor \emph{Redis}.
+\emph{Marathon} [15] es un \emph{framework} de \emph{Mesos} especialmente diseñado para ejecutar aplicaciones que tienen una esperanza de vida larga como, por ejemplo, un servidor web \emph{Apache} o una base de datos de clave valor \emph{Redis}.
 
 \emph{Marathon} y \emph{Fleet} son herramientas similares. Las dos son consideradas \emph{`init systems'} distribuidos; sin embargo, \emph{Marathon} ofrece más prestaciones que \emph{Fleet}. Es por ello que el papel de \emph{Fleet} queda relegado a arrancar los servicios de \emph{Mesos} y \emph{Marathon}.
 
@@ -1524,6 +1526,10 @@ Docker
 \bibitem{item14}
 Mesos
 {\it http://mesos.apache.org/}
+
+\bibitem{item15}
+Marathon
+{\it https://mesosphere.github.io/marathon/}
 
 \end{thebibliography}
 \end{document}
