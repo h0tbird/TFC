@@ -263,7 +263,7 @@ A continuación, veremos algunos detalles sobre cada uno de los componentes más
 
 \subsection{KVM}
 
-KVM (Kernel-based Virtual Machine) es una respuesta a la necesidad de implementar virtualización completa con Linux. Se compone de un módulo del núcleo (\emph{kvm.ko}) y herramientas en el espacio de usuario. El componente KVM para el núcleo está incluido en Linux desde la versión 2.6.20.
+KVM [11] (Kernel-based Virtual Machine) es una respuesta a la necesidad de implementar virtualización completa con Linux. Se compone de un módulo del núcleo (\emph{kvm.ko}) y herramientas en el espacio de usuario. El componente KVM para el núcleo está incluido en Linux desde la versión 2.6.20.
 
 KVM permite ejecutar máquinas virtuales utilizando imágenes de disco que contienen sistemas operativos. Cada máquina virtual tiene su propio hardware virtualizado: tarjetas de red, discos duros, CPUs, etc.
 
@@ -310,7 +310,7 @@ Testing SSH port...                                                             
 
 \subsection{CoreOS}
 
-\emph{CoreOS} es una distribución de Linux minimalista. Los servicios que proporciona están orientados a cimentar infraestructuras de clusters. La distribución promueve el uso de contenedores como modelo de distribución de software abandonando así los tradicionales gestores de paquetes. Los servicios de \emph{CoreOS} que usaremos para este proyecto son \emph{Etcd}, \emph{Fleet} y \emph{Docker}.
+\emph{CoreOS} [12] es una distribución de Linux minimalista. Los servicios que proporciona están orientados a cimentar infraestructuras de clusters. La distribución promueve el uso de contenedores como modelo de distribución de software abandonando así los tradicionales gestores de paquetes. Los servicios de \emph{CoreOS} que usaremos para este proyecto son \emph{Etcd}, \emph{Fleet} y \emph{Docker}.
 
 \subsubsection{Etcd}
 
@@ -380,7 +380,7 @@ En la plataforma de explotación se utiliza \emph{Fleet} para arrancar todos los
 
 \subsubsection{Docker}
 
-\emph{Docker} es un proyecto de código abierto que automatiza el despliegue de aplicaciones encapsulándolas dentro de contenedores de software. \emph{Docker} utiliza tecnologías de aislamiento de recursos, como los \emph{cgroups} o los \emph{namespaces}, que se encuentran disponibles en el kernel de Linux.
+\emph{Docker} [13] es un proyecto de código abierto que automatiza el despliegue de aplicaciones encapsulándolas dentro de contenedores de software. \emph{Docker} utiliza tecnologías de aislamiento de recursos, como los \emph{cgroups} o los \emph{namespaces}, que se encuentran disponibles en el kernel de Linux.
 
 En una misma instancia de Linux se pueden crear múltiples contenedores, independientes los unos de los otros y sin la sobrecarga que supondría crear máquinas virtuales.
 
@@ -418,7 +418,7 @@ e18163eab926  mesos-slave:0.20.1   mesos-slave --ip=19  10 hours ago   Up 10 hou
 
 \subsection{Mesos}
 
-\emph{Mesos} proporciona una capa de abstracción sobre los recursos de CPU, de memoria y de disco presentes en flotas de servidores. Esta capa ligera sirve de base sobre la que construir sistemas distribuidos, elásticos y tolerantes a fallos.
+\emph{Mesos} [14] proporciona una capa de abstracción sobre los recursos de CPU, de memoria y de disco presentes en flotas de servidores. Esta capa ligera sirve de base sobre la que construir sistemas distribuidos, elásticos y tolerantes a fallos.
 
 De forma análoga a la relación que se establece entre las aplicaciones, el kernel y los recursos de hardware, \emph{Mesos} sirve de gestor de recursos y planificador de tareas entre los \emph{frameworks} y los recursos hardware del centro de datos. En otras palabras, \emph{Mesos} es el kernel del centro de datos.
 
@@ -1508,6 +1508,22 @@ Turnbull, J. / McCune, J.
 Turnbull, J.
 {\it The Docker Book}.
 (2014)
+
+\bibitem{item11}
+Kernel Virtual Machine
+{\it http://www.linux-kvm.org/}
+
+\bibitem{item12}
+CoreOS
+{\it https://coreos.com/}
+
+\bibitem{item13}
+Docker
+{\it https://www.docker.com/}
+
+\bibitem{item14}
+Mesos
+{\it http://mesos.apache.org/}
 
 \end{thebibliography}
 \end{document}
