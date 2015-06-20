@@ -44,6 +44,8 @@
 %----------
 
 \begin{resum}{1cm}
+En este proyecto se intenta dar solución a dos problemáticas relacionadas con la escalabilidad de grandes infraestructuras de computación: La utilización ineficiente de los recursos del centro de datos y el incremento de la complejidad de la gestión administrativa.
+
 No hay que retroceder mucho en el tiempo para constatar que tanto las estrategias de gestión de configuraciones como las de asignación de recursos en flotas de servidores han evolucionado muy rápidamente. El servidor deja de ser el centro de gravitación y pierde protagonismo a la vez que el centro de datos se consolida como la nueva capa de abstracción. Sobre ésta se ejecutan todo tipo de cargas computacionales.\\
 
 En este proyecto se presentan dos plataformas en simbiosis, la plataforma de arranque o \emph{bootstrapping} y la plataforma de explotación. La primera sirve para desplegar y gestionar la siguiente que, a su vez, unifica los recursos del centro de datos y los asigna de forma dinámica en función de la demanda instantánea. El proyecto tiene componentes de diseño, desarroyo e integración.\\
@@ -58,6 +60,8 @@ El proyecto termina con una guía de instalación de la plataforma de arranque p
 \selectlanguage{english}
 
 \begin{overview}{1cm}
+The aim of this project is to provide a solution to two scalability issues that arise in big computation infraestructures: Inefficient resources utilization in the data center and the increase of the management complexity.
+
 Regarding fleets of servers, you don't have to go back far in time to verify that both configuration management and resources allocation polices have evolved very fast. The server is no longer the gravitation center and the data center consolidates as the new abstraction layer where computation happens.\\
 
 This project presents two platforms in simbiosis, the bootstrapping platform and the exploitation platform. The former is used to bootstrapp and manage the latter, which in turn unifies the data center resources and performs dynamic resources allocation based on demand. The project has a balanced effort of design, development and integration phases.\\
@@ -184,10 +188,18 @@ Empezaremos viendo algunos detalles sobre la plataforma de explotación y seguir
 %----------------------------
 
 \chapter{Plataforma de explotación}
-\section{Hardware}
-Para el proyecto se han utilizado 2 equipos hipervisores de iguales características. Cada equipo simula un rack que contiene 4 servidores. Algunos de los \emph{frameworks} que pueden ser ejecutados en la plataforma tienen consciencia de rack (\emph{rack awareness}) y distribuyen réplicas de los datos de manera que optimizan el uso de la red (\emph{data locality}) y minimizan el riesgo de pérdida.
+En este capítulo se detalla la plataforma de explotación. Veremos el \emph{hardware} que se ha utilizado para montar la maqueta, también veremos detalles sobre la disposición de la red y finalmente los distintos componentes \emph{software} que conforman la plataforma. El diseño de la plataforma ha sido concebido para dar respuesta a las dos problemáticas de escalabilidad descritas en la introducción.
 
-Los equipos tienen las siguientes características:
+\section{Hardware}
+Para el proyecto se han utilizado 2 equipos hipervisores de iguales características. Cada equipo simula un rack que contiene 4 servidores. Algunos de los \emph{frameworks} que pueden ser ejecutados en la plataforma tienen consciencia de rack (\emph{rack awareness}) y distribuyen réplicas de los datos de manera que optimizan el uso de la red (\emph{data locality}) y minimizan el riesgo de pérdida.\\
+
+\begin{figure}[h]
+  \centering
+    \includegraphics[scale=0.32]{hardware}
+      \caption{Hardware}
+\end{figure}
+
+La elección del hardware responde a la necesidad de reducir el consumo eléctrico y el ruido. No hay partes móviles y toda la electrónica es de estado sólido. La propia carcasa se utiliza de disipador para la \emph{CPU}. Los equipos tienen las siguientes características:
 
 \begin{table}[h]
   \centering
@@ -213,7 +225,9 @@ Cada equipo dispone de dos tarjetas de red. En el siguiente esquema se puede apr
       \caption{Disposición de la red}
 \end{figure}
 
-El portátil va a ser el equipo que contenga la plataforma de \emph{bootstrapping} que veremos en el segundo capítulo.
+El portátil que aparece en el esquema va a ser el equipo que contenga la plataforma de \emph{bootstrapping} que veremos en el segundo capítulo.
+
+\clearpage
 
 \section{Network}
 
