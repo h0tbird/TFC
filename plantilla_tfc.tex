@@ -44,15 +44,15 @@
 %----------
 
 \begin{resum}{1cm}
-En este proyecto se intenta dar solución a dos problemáticas relacionadas con la escalabilidad de grandes infraestructuras de computación: La utilización ineficiente de los recursos del centro de datos y el incremento de la complejidad de la gestión administrativa.
+En este proyecto se intenta dar solución a dos problemáticas relacionadas con la escalabilidad de grandes infraestructuras de computación: la utilización ineficiente de los recursos del centro de datos y el incremento de la complejidad de la gestión administrativa.
 
 No hay que retroceder mucho en el tiempo para constatar que tanto las estrategias de gestión de configuraciones como las de asignación de recursos en flotas de servidores han evolucionado muy rápidamente. El servidor deja de ser el centro de gravitación y pierde protagonismo a la vez que el centro de datos se consolida como la nueva capa de abstracción. Sobre ésta se ejecutan todo tipo de cargas computacionales.\\
 
-En este proyecto se presentan dos plataformas en simbiosis, la plataforma de arranque o \emph{bootstrapping} y la plataforma de explotación. La primera sirve para desplegar y gestionar la siguiente que, a su vez, unifica los recursos del centro de datos y los asigna de forma dinámica en función de la demanda instantánea. El proyecto tiene componentes de diseño, desarroyo e integración.\\
+En este proyecto se presentan dos plataformas en simbiosis, la plataforma de arranque o \emph{bootstrapping} y la plataforma de explotación. La primera sirve para desplegar y gestionar la siguiente que, a su vez, unifica los recursos del centro de datos y los asigna de forma dinámica en función de la demanda instantánea. El proyecto tiene componentes de diseño, desarrollo e integración.\\
 
-La plataforma de explotación es la más extensa en cuanto al número de componentes que la integran, sin embargo, solamente ha requerido de un esfuerzo de integración. En el proyecto se detallan los distintos elementos que la conforman, sus funciones y cómo se interrelacionan entre sí.\\
+La plataforma de explotación es la más extensa en cuanto al número de componentes que la integran. Sin embargo, solamente ha requerido de un esfuerzo de integración. En el proyecto se detallan los distintos elementos que la conforman, sus funciones y cómo se interrelacionan entre sí.\\
 
-La plataforma de arranque, siendo la más pequeña tiene las mayores componentes de diseño y desarroyo. En el proyecto se detallan los distintos elementos que la conforman, sus funciones, su proceso de construción y el flujo completo de interacciones.\\
+La plataforma de arranque, siendo la más pequeña, tiene los mayores componentes de diseño y desarrollo. En el proyecto se detallan los distintos elementos que la conforman, sus funciones, su proceso de construción y el flujo completo de interacciones.\\
 
 El proyecto termina con una guía de instalación de la plataforma de arranque para que el lector pueda desplegar en su propia infraestructura una plataforma de explotación.
 \end{resum}
@@ -109,7 +109,7 @@ A Débora por todo su amor y soporte.
 
   Google, por ejemplo, tiene 13 centros de datos distribuidos por todo el planeta [2] con no menos de 75 mil servidores en cada uno de ellos. Los equipos humanos que gestionan estas infraestructuras son proporcionalmente muy reducidos pero, aún y así, consiguen unos niveles de eficiencia muy elevados. ¿Cómo lo hacen?
 
-Los problemas que se manifiestan en grandes infraestructuras también existen en estado latente en infraestructuras pequeñas y medianas. Las empresas pioneras que cruzan por primera vez órdenes de magnitud inexplorados tienen que asumir el coste de desarrollar la tecnología que les permita seguir avanzando. El resto de empresas navegan sobre la estela de la verdadera innovación tecnológica.
+Los problemas que se manifiestan en grandes infraestructuras también existen en estado latente en infraestructuras medianas y pequeñas. Las empresas pioneras que cruzan por primera vez órdenes de magnitud inexplorados tienen que asumir el coste de desarrollar la tecnología que les permita seguir avanzando. El resto de empresas navegan sobre la estela de la verdadera innovación tecnológica.
 
 Este trabajo se sitúa en dicha estela con la intención de anticipar soluciones de forma preventiva en infraestructuras de tamaño medio. Los dos principales problemas que se han identificado son:
 
@@ -117,7 +117,7 @@ Este trabajo se sitúa en dicha estela con la intención de anticipar soluciones
 
 Varios estudios estiman que la utilización de los recursos de los centros de datos de toda la industria se situa entre el 6\% [3] y el 12\% [4,5]. La principal causa de esta ineficiencia viene dada por la combinación de dos factores:
 \begin{enumerate}
-  \item La utilización de estrategias de asignación estática de recursos.
+  \item El uso de estrategias de asignación estática de recursos.
   \item Los desarrolladores no entienden la dinámica de sus cargas de trabajo y, por lo tanto, no pueden anticipar los requerimientos de recursos físicos que demandan sus bases de código.
 \end{enumerate}
 
@@ -129,7 +129,7 @@ En la siguiente figura se representa el desperdicio de recursos que supone la re
     \caption{Particionado estático vs dinámico.}
 \end{figure}
 
-En este trabajo se detalla una plataforma de explotación que es capaz de asignar recursos de forma dinámica a distintas cargas de trabajo simultáneas y, así, mejorar los niveles de utilización de los recursos en una flota de servidores.
+En este trabajo se detalla una plataforma de explotación que es capaz de asignar recursos de forma dinámica a distintas cargas de trabajo simultáneas y, de esta manera, mejorar los niveles de utilización de los recursos en una flota de servidores.
 
 \textbf{Segundo: Incremento de la complejidad de la gestión administrativa}
 
@@ -137,15 +137,15 @@ La complejidad de la gestión administrativa incrementa linealmente \emph{O(n)} 
 
 \begin{figure}[h]
   \centering
-    \includegraphics[scale=0.25]{complex}
+    \includegraphics[scale=0.27]{complex}
       \caption{Complejidad de la gestión}
 \end{figure}
 
-La plataforma de explotación propuesta homogeniza la instalación de la flota de servidores y desplaza la diversidad de las distintas cargas de trabajo hacia capas superiores de software llamadas \emph{'frameworks'}.
+La plataforma de explotación propuesta homogeneiza la instalación de la flota de servidores y desplaza la diversidad de las distintas cargas de trabajo hacia capas superiores de software llamadas \emph{'frameworks'}.
 
 Para dar solución a estas dos problemáticas de escalabilidad, se presentan dos plataformas en simbiosis.
 
-Entendemos por escalabilidad de explotación de un sistema, la capacidad del mismo para crecer linealmente y acomodar incrementos de carga computacional. Por otra parte, la escalabilidad de su gestión viene dada por la capacidad de mantener constante la complejidad de su carga administrativa. Veremos que para dar respuesta al primer reto nos centraremos en el ¿qué? y para el segundo en el ¿cómo?
+Entendemos por escalabilidad de explotación de un sistema la capacidad del mismo para crecer linealmente y acomodar incrementos de carga computacional. Por otra parte, la escalabilidad de su gestión viene dada por la capacidad de mantener constante la complejidad de su carga administrativa. Veremos que para dar respuesta al primer reto nos centraremos en el ¿qué? y para el segundo en el ¿cómo?
 
 \textbf{¿Qué?} La plataforma propuesta se cimienta sobre varias tecnologías que interactúan entre sí. Las más destacables son: \emph{Linux} (1991), \emph{KVM} (2007), \emph{CoreOS} (2013), \emph{Docker} (2013), \emph{Mesos} (2011) y \emph{Marathon} (2013). Las principales virtudes de ésta son:
 \begin{itemize}
